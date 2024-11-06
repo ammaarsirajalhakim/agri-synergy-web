@@ -1,0 +1,93 @@
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100vh;
+    background-color: #13382C;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+    overflow-y: auto;
+}
+
+
+.logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 20px 0;
+}
+
+.logo img {
+    max-width: 100px;
+    height: auto;
+    margin-left: 70px;
+    margin-top: 25px;
+}
+
+.separator {
+    width: 75%;
+    height: 1px;
+    background-color: white;
+    margin: 10px 0;
+    border: none;
+}
+
+.menu {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+
+.menu ul li {
+    margin-bottom: 5px;
+}
+
+.menu ul li a {
+    display: flex;
+    align-items: center;
+    color: white;
+    text-decoration: none;
+    padding: 20px 70px; 
+    width: 100%; 
+    box-sizing: border-box; 
+    position: relative;
+}
+
+.menu ul li a:hover {
+    background-color: #216851; 
+}
+
+.menu ul li a.active {
+    background-color: #216851; 
+    color: #FFF; 
+}
+
+.menu ul li a.active::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0; 
+    width: 8px; 
+    height: 100%; 
+    background-color: #EEF1F4; 
+}
+
+.menu ul li img {
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+    margin-left: 25px;
+    margin-top: 18px; 
+}
+
