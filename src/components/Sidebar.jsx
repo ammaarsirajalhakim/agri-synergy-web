@@ -39,13 +39,13 @@ const Sidebar = () => {
     }, [location.pathname]);
 
     return (
-        <div className="sidebar">
-            <div className="logo">
+        <div className="sidebar1">
+            <div className="logo1">
                 <img src={Logo} alt="Logo" />
             </div>
-            <hr className="separator" />
+            <hr className="separator1" />
 
-            <div className="menu">
+            <div className="menu1">
                 <ul>
                     <li>
                         <Link

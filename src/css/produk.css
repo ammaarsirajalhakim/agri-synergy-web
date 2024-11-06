@@ -1,17 +1,18 @@
-.card {
+
+.card1 {
     width: 78%; 
     margin: 60px 300px; 
     padding: 20px; 
     border-radius: 8px; 
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); 
     border: 1px solid #e3dcdc;
-}
+  }
   
-  .button {
+  .button1 {
     margin: 10px 0;
 }
 
-.button button {
+.button1 button {
     background-color: #4388F9;
     color: white; 
     border: none; 
@@ -22,7 +23,7 @@
     transition: background-color 0.3s ease; 
 }
 
-.button button:hover {
+.button1 button:hover {
     background-color: #2f73e1; 
 }
 
@@ -48,14 +49,14 @@
   }
   
   
-.title{
+.title1{
     margin-bottom: 10px;
     font-size: 30px;
     font-weight: bold;
 }
 
 
-.update, .delete {
+.update1, .delete1 {
     background: none;
     border: none;
     cursor: pointer;
@@ -63,18 +64,18 @@
     margin-left: 15px;
 }
 
-.icon {
+.icon1 {
     width: 20px; 
     height: 20px; 
     background-size: cover; 
   
 }
 
-.update-icon {
+.update-icon1 {
     background-image: url('../assets/icons/update.png'); 
 }
 
-.delete-icon {
+.delete-icon1 {
     background-image: url('../assets/icons/delete.png'); 
 }
 
@@ -84,6 +85,10 @@
     justify-content: space-between; 
     align-items: center; 
     margin: 10px 0; 
+}
+
+.entri-text{
+    color: #9c9c9c;
 }
 
 .pagination {
@@ -112,3 +117,21 @@
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px; 
 }
+
+
+.pagination-button.active {
+    background-color: #9c9c9c;
+    color: white;
+  }
+  
+  .pagination-button.disabled {
+    cursor: not-allowed;
+    color: #ccc;
+    background-color: #f5f5f5;
+  }
+  
+  .pagination-button:hover:not(.disabled) {
+    background-color: #e3dcdc;
+  }
+  
+  
