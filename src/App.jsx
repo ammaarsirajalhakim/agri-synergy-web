@@ -11,6 +11,7 @@ import SidebarProfile from './components/SidebarProfile'
 import Kategori from './pages/admin/Kategori'
 import Produk from './pages/admin/Produk'
 import DetailSaldo from './pages/admin/Detailsaldo'
+import Petalahan from './pages/admin/Petalahan'
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
       <Route path='/kategori' element={<Kategori/>}/>
       <Route path='/produk' element={<Produk/>}/>
       <Route path='/detail-saldo' element={<DetailSaldo/>}/>
+      <Route path='/peta-lahan' element={<Petalahan/>}/>
     </Routes>
    </Router>
   )

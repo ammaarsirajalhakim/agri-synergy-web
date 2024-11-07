@@ -36,26 +36,28 @@ const DetailSaldo = () => {
 
       <div className="card3">
         <div className="title3">
-            <h6>Transaksi Sukses</h6>
+          <h6>Transaksi Sukses</h6>
         </div>
-        <table>
+        <div className="table">
+          <table>
             <thead>
-                <tr>
-                    <th>Order Id</th>
-                    <th>Status</th>
-                    <th>Date</th>
-                    <th>Total</th>
-                </tr>
+              <tr>
+                <th>Order Id</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th>Total</th>
+              </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>#96459761</td>
-                    <td style={{ color: 'green'}}>COMPLETED</td>
-                    <td>Oct 24, 2019 23:26</td>
-                    <td>Rp 150.000,-</td>
-                </tr>
+              <tr>
+                <td>#96459761</td>
+                <td style={{ color: "green" }}>COMPLETED</td>
+                <td>Oct 24, 2019 23:26</td>
+                <td>Rp 150.000,-</td>
+              </tr>
             </tbody>
-        </table>
+          </table>
+        </div>
       </div>
     </>
   );

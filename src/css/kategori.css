@@ -112,3 +112,122 @@
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px; 
 }
+
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 500px;
+    width: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+  }
+  
+  .modal-header,
+  .modal-body,
+  .modal-footer {
+    width: 100%; 
+  }
+  
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ddd; 
+    padding-bottom: 10px;
+  }
+  
+  .modal-header h5 {
+    margin: 0;
+    font-size: 20px;
+  }
+  
+  .close-button {
+    background: none;
+    border: none;
+    font-size: 30px;
+    cursor: pointer;
+  }
+  
+  .modal-body {
+    flex-grow: 1;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd; 
+  }
+  
+  .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+  
+  .cancel-button,
+  .save-button,
+  .save-buttonUpdate {
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .cancel-button {
+    background: #f0f0f0;
+  }
+  
+  .save-button {
+    background: #4388F9;
+    color: white;
+  }
+
+  .save-buttonUpdate {
+    background: #FF9D00;
+    color: white;
+  }
+  
+  .save-button:hover,
+  .cancel-button:hover,
+  .save-buttonUpdate:hover {
+    opacity: 0.8;
+  }
+  
+  .form-group {
+    margin-bottom: 10px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+  }
+  
+  .form-group input:focus {
+    border: 2px solid black; 
+    outline: none; 
+  }
+  

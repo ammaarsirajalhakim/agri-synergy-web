@@ -5,11 +5,32 @@ import "../../css/produk.css";
 
 const Produk = () => {
   const [activePage, setActivePage] = useState(1);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [currentProduct, setCurrentProduct] = useState(null);
 
   const handlePageChange = (page) => {
     if (page >= 1 && page <= 3) {
       setActivePage(page);
     }
+  };
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const openUpdateModal = (product) => {
+    setCurrentProduct(product);
+    setIsUpdateModalOpen(true);
+  };
+
+  const closeUpdateModal = () => {
+    setIsUpdateModalOpen(false);
+    setCurrentProduct(null);
   };
 
   return (
@@ -20,41 +41,55 @@ const Produk = () => {
           <h6>List Produk</h6>
         </div>
         <div className="button1">
-          <button>+ Tambah</button>
+          <button onClick={openModal}>+ Tambah</button>
         </div>
-        <table>
-          <thead>
-            <tr>
-              <th>Gambar</th>
-              <th>Nama</th>
-              <th>Stok</th>
-              <th>Harga</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <img
-                  src={Testing}
-                  alt="Gambar"
-                  style={{ width: "70px", height: "50px" }}
-                />
-              </td>
-              <td>Produk 1</td>
-              <td>10</td>
-              <td>Rp. 100.000,00</td>
-              <td>
-                <button className="update1">
-                  <span className="icon update-icon1" />
-                </button>
-                <button className="delete1">
-                  <span className="icon delete-icon1" />
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div className="table">
+          <table>
+            <thead>
+              <tr>
+                <th>Kategori</th>
+                <th>Gambar</th>
+                <th>Nama</th>
+                <th>Stok</th>
+                <th>Harga</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Produk</td>
+                <td>
+                  <img
+                    src={Testing}
+                    alt="Gambar"
+                    style={{ width: "70px", height: "50px" }}
+                  />
+                </td>
+                <td>Produk 1</td>
+                <td>10</td>
+                <td>Rp. 100.000,00</td>
+                <td>
+                  <button
+                    className="update1"
+                    onClick={() =>
+                      openUpdateModal({
+                        name: "",
+                        stock: "",
+                        price: "",
+                        category: "",
+                      })
+                    }
+                  >
+                    <span className="icon update-icon1" />
+                  </button>
+                  <button className="delete1">
+                    <span className="icon delete-icon1" />
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
         <div className="entri">
           <p className="entri-text">Menampilkan 1 dari 1 entri</p>
@@ -91,6 +126,155 @@ const Produk = () => {
           </div>
         </div>
       </div>
+
+      {isModalOpen && (
+        <div className="modal-overlay1" onClick={closeModal}>
+          <div className="modal-content1" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header1">
+              <h5>Tambah Produk</h5>
+              <button className="close-button1" onClick={closeModal}>
+                ×
+              </button>
+            </div>
+
+            <div className="modal-body1">
+              <div className="form-group1">
+                <label htmlFor="productName">Nama Produk</label>
+                <input
+                  type="text"
+                  id="productName"
+                  placeholder="Masukkan nama produk"
+                />
+              </div>
+              <div className="form-group1">
+                <label htmlFor="productStock">Stok</label>
+                <input
+                  type="number"
+                  id="productStock"
+                  placeholder="Masukkan stok"
+                />
+              </div>
+              <div className="form-group1">
+                <label htmlFor="productPrice">Harga</label>
+                <input
+                  type="text"
+                  id="productPrice"
+                  placeholder="Masukkan harga"
+                />
+              </div>
+              <div className="form-group1">
+                <label htmlFor="productImage">Gambar Produk</label>
+                <input type="file" id="productImage" accept="image/*" />
+              </div>
+              <div className="form-group1 full-width">
+                <label htmlFor="productKategori">Kategori</label>
+                <select id="productKategori" placeholder="Pilih Kategori">
+                  <option value="">Pilih Kategori</option>
+                  <option value="elektronik">Elektronik</option>
+                  <option value="fashion">Fashion</option>
+                  <option value="makanan">Makanan</option>
+                  <option value="perabot">Perabot</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="modal-footer1">
+              <button className="cancel-button1" onClick={closeModal}>
+                Kembali
+              </button>
+              <button className="save-button1">Simpan</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {isUpdateModalOpen && currentProduct && (
+        <div className="modal-overlay1" onClick={closeUpdateModal}>
+          <div className="modal-content1" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header1">
+              <h5>Update Produk</h5>
+              <button className="close-button1" onClick={closeUpdateModal}>
+                ×
+              </button>
+            </div>
+
+            <div className="modal-body1">
+              <div className="form-group1">
+                <label htmlFor="updateProductName">Nama Produk</label>
+                <input
+                  type="text"
+                  id="updateProductName"
+                  value={currentProduct.name}
+                  onChange={(e) =>
+                    setCurrentProduct({
+                      ...currentProduct,
+                      name: e.target.value,
+                    })
+                  }
+                />
+              </div>
+              <div className="form-group1">
+                <label htmlFor="updateProductStock">Stok</label>
+                <input
+                  type="number"
+                  id="updateProductStock"
+                  value={currentProduct.stock}
+                  onChange={(e) =>
+                    setCurrentProduct({
+                      ...currentProduct,
+                      stock: e.target.value,
+                    })
+                  }
+                />
+              </div>
+              <div className="form-group1">
+                <label htmlFor="updateProductPrice">Harga</label>
+                <input
+                  type="text"
+                  id="updateProductPrice"
+                  value={currentProduct.price}
+                  onChange={(e) =>
+                    setCurrentProduct({
+                      ...currentProduct,
+                      price: e.target.value,
+                    })
+                  }
+                />
+              </div>
+              <div className="form-group1">
+                <label htmlFor="updateProductImage">Gambar Produk</label>
+                <input type="file" id="updateProductImage" accept="image/*" />
+              </div>
+              <div className="form-group1 full-width">
+                <label htmlFor="updateProductKategori">Kategori</label>
+                <select
+                  id="updateProductKategori"
+                  value={currentProduct.category}
+                  onChange={(e) =>
+                    setCurrentProduct({
+                      ...currentProduct,
+                      category: e.target.value,
+                    })
+                  }
+                >
+                  <option value="">Pilih Kategori</option>
+                  <option value="elektronik">Elektronik</option>
+                  <option value="fashion">Fashion</option>
+                  <option value="makanan">Makanan</option>
+                  <option value="perabot">Perabot</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="modal-footer1">
+              <button className="cancel-button1" onClick={closeUpdateModal}>
+                Kembali
+              </button>
+              <button className="save-button1Update">Update</button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };
