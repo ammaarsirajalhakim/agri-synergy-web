@@ -7,7 +7,7 @@ const DropshipperPage = ({ setActivePage }) => {
 
   return (
     <div className="dropshipper-page">
-      <h2>Gabung Jadi Dropshipper di AGRI SYNERGI, Raih Penghasilan Tambahan Tanpa Ribet!</h2>
+      <h2 className='dropshipper-page-h2'>Gabung Jadi Dropshipper di AGRI SYNERGI, Raih Penghasilan Tambahan Tanpa Ribet!</h2>
       <p>Ingin memulai bisnis tanpa modal besar? Bergabunglah bersama kami sebagai dropshipper! Kami menawarkan:</p>
       <ul>
         <li> Produk Berkualitas</li>

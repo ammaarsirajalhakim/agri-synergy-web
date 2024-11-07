@@ -37,7 +37,7 @@ const Register = () => {
 
             <div className="form-container">
                 <img src={Icon} alt="Logo Agri Synergy" className="logo1" /> {/* Ganti dengan path logo kamu */}
-                <h2>Bergabunglah dengan Komunitas Kami</h2>
+                <h2 className="log-h2">Bergabunglah dengan Komunitas Kami</h2>
                 <p className='keterangan'>Dapatkan Dukungan, Pelajari Lebih Dalam tentang Pertanian</p>
                 <button className="google-login"><img src={google_icon} alt="google_icon" /> Login with Google</button>
                 <div className="or-container">

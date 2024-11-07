@@ -6,7 +6,7 @@ import { FaUser, FaPhone, FaEnvelope, FaLock } from 'react-icons/fa';
 function ProfilePage() {
   return (
     <div className="profile-page">
-      <h2>Basic Information</h2>
+      <h2 className='dropshipper-page-h2'>Basic Information</h2>
       <div className="profile-section">
         <div className="profile-image-section">
           <img
@@ -33,7 +33,7 @@ function ProfilePage() {
         </div>
       </div>
 
-      <h2>Update Password</h2>
+      <h2 className='dropshipper-page-h2'>Update Password</h2>
       <div className="password-section">
         <div className="input-group">
           <FaLock className="input-icon" />

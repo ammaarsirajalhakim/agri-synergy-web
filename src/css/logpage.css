@@ -26,7 +26,7 @@
 }
 
 .logo1 {
-  width: 156px;
+  width: 156px !important;
   height: 121px;
   margin-bottom: 12px;
   display: flex;
@@ -34,7 +34,7 @@
   align-items: center;
 }
 
-h2 {
+.log-h2 {
   padding-top: 12px;
   padding-bottom: 12px;
   color: #f6fb7a;
@@ -45,9 +45,9 @@ h2 {
 }
 
 .keterangan {
-  font-size: 11px;
-  text-align: center;
-  padding-bottom: 22px;
+  font-size: 11px !important;
+  text-align: center !important;
+  padding-bottom: 22px !important;
 }
 
 .google-login {

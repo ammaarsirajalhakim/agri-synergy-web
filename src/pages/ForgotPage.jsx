@@ -37,7 +37,7 @@ const Forgot = () => {
 
             <div className="form-container-forgot form-container">
                 <img src={Icon} alt="Logo Agri Synergy" className="logo1" />
-                <h2>Reset Kata Sandi</h2>
+                <h2 className="log-h2">Reset Kata Sandi</h2>
                 <p className='keterangan'>Kami akan mengirim kode ke email untuk mereset sandi kamu</p>
                 <p className='title_input_email'>Masukan Email</p>
                 <div class="input-container">

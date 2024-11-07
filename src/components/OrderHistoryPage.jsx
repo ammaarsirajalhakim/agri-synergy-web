@@ -10,7 +10,7 @@ function OrderHistoryPage() {
 
   return (
     <div className="order-history-page">
-      <h2>Order History</h2>
+      <h2 className='dropshipper-page-h2' >Order History</h2>
       <table className="order-history-table">
         <thead>
           <tr>

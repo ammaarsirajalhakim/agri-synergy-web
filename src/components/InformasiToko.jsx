@@ -34,7 +34,7 @@ const InformasiToko = ({ setActivePage }) => {
 
       {currentStep === 1 && (
         <form className="form">
-          <h2>Informasi Toko</h2>
+          <h2 className='dropshipper-page-h2'>Informasi Toko</h2>
           <div className="form-row">
             <label>
               Nama Toko
@@ -73,7 +73,7 @@ const InformasiToko = ({ setActivePage }) => {
 
       {currentStep === 2 && (
         <form className="form">
-          <h2>Upload Produk</h2>
+          <h2 className='dropshipper-page-h2'>Upload Produk</h2>
           <div className="form-row">
             <label>
               Gambar
