@@ -1,36 +1,36 @@
-import React from 'react'
-import logo1 from '../assets/AGRI_SYNERGY.png'
-import '../css/homepage.css'
-import profile from '../assets/profileicon.png'
-import market from '../assets/marketicon.png'
-import notification from '../assets/notificationicon.png'
-import bcurve from '../assets/Rectangle-1.png'
-import bcurve2 from '../assets/Rectangle_2.png'
-import trophy from '../assets/Trophy.png'
-import creditcard from '../assets/CreditCard.png'
-import headphone from '../assets/Headphones.png'
-import pic1 from '../assets/background_5.jpg'
-import pic2 from '../assets/background_4.jpg'
-import pic3 from '../assets/background_3.jpg'
+import React, { useState } from 'react';
+import logo1 from '../assets/AGRI_SYNERGY.png';
+import '../css/homepage.css';
+import profile from '../assets/profileicon.png';
+import market from '../assets/marketicon.png';
+import notification from '../assets/notificationicon.png';
+import bcurve from '../assets/Rectangle-1.png';
+import bcurve2 from '../assets/Rectangle_2.png';
+import trophy from '../assets/Trophy.png';
+import creditcard from '../assets/CreditCard.png';
+import headphone from '../assets/Headphones.png';
+import pic1 from '../assets/background_5.jpg';
+import pic2 from '../assets/background_4.jpg';
+import pic3 from '../assets/background_3.jpg';
 import ProductCard from '../components/ProductCard';
-import plant from '../assets/plant.png'
-import bag from '../assets/bag.png'
-import corn from '../assets/corn.png'
-import Footer from '../components/footer'
+import plant from '../assets/plant.png';
+import bag from '../assets/bag.png';
+import corn from '../assets/corn.png';
+import Footer from '../components/footer';
 
 const testimonials = [
   {
-    image: 'src/assets/testimoni/profile1.png', // replace with actual image URL
+    image: 'src/assets/testimoni/profile1.png',
     text: "Platform ini memudahkan pengelolaan lahan dan penjualan jagung langsung ke pasar",
     name: "Yanto, Petani Jagung"
   },
   {
-    image: 'src/assets/testimoni/profile2.png', // replace with actual image URL
+    image: 'src/assets/testimoni/profile2.png',
     text: "Prediksi harga dan cuaca sangat membantu dalam perencanaan tanam",
     name: "Budi, Petani Jagung"
   },
   {
-    image: 'src/assets/testimoni/profile3.png', // replace with actual image URL
+    image: 'src/assets/testimoni/profile3.png',
     text: "Kami bisa terhubung dengan pembeli lebih mudah dan cepat",
     name: "Siti, Distributor Pertanian"
   }
@@ -38,7 +38,7 @@ const testimonials = [
 
 const products = [
   {
-    image: 'src/assets/products/produk-4.png', // replace with actual image paths
+    image: 'src/assets/products/produk-4.png',
     title: 'Tepung Jagung Organik',
     price: '150.000',
     stock: 25,
@@ -70,10 +70,15 @@ const products = [
 ];
 
 const HomePage = () => {
+  const [dropdownVisible, setDropdownVisible] = useState(false);
+
+  const toggleDropdown = () => {
+    setDropdownVisible(!dropdownVisible);
+  };
 
   return (
     <section className='scroll'>
-      <div className="main-container">
+      <div id="main-container">
         <div className="navi" id="navbar">
           <div className="logow">
             <img src={logo1} alt="Logo" />
@@ -84,16 +89,35 @@ const HomePage = () => {
               <li className="float-in"><a href="#" className="">HOME</a></li>
               <li className="float-in"><a href="#" className="">MARKET</a></li>
               <li className="float-in"><a href="#" className="">KONSULTASI</a></li>
-              <li className="float-in"><a href="#" className="">EXPLORE</a></li>
+              <li className="float-in">
+                <a onClick={toggleDropdown} className="explore-button">
+                  EXPLORE {dropdownVisible ? '▲' : '▼'}
+                </a>
+                {dropdownVisible && (
+                  <div className="unique-dropdown-menu">
+                    <a href="#">KALENDER</a>
+                    <a href="#">PETA LAHAN</a>
+                    <a href="#">FORUM KOMUNITAS</a>
+                  </div>
+                )}
+              </li>
             </ul>
             <div className="icon">
-              <img src={market} alt="Market Icon" />
-              <img src={notification} alt="Notification Icon" />
-              <img src={profile} alt="Profile Icon" />
+              <div className="icon-wrapper">
+                <img src={market} alt="Market Icon" />
+                <span className="badge">1</span>
+              </div>
+              <div className="icon-wrapper">
+                <img src={notification} alt="Notification Icon" />
+                <span className="badge">2</span>
+              </div>
+              <div className="icon-wrapper">
+                <img src={profile} alt="Profile Icon" />
+              </div>
             </div>
           </nav>
-
         </div>
+
         <div className='main-content'>
           <h1>Mempermudah Pengelolaan dan Pemasaran Jagung Anda</h1>
           <h2>Meningkatkan produktivitas pertanian dan memperluas akses pasar melalui solusi digital yang terintegrasi</h2>
@@ -230,6 +254,7 @@ const HomePage = () => {
           </div>
         </div>
       </div>
+
       <div className="testimonials-section" style={{ backgroundImage: 'url(src/assets/testimoni/bgtestimoni.jpg)' }}>
             <h2 className="testimonials-title">Testimonial</h2>
             <div className="testimonials-container">
@@ -242,13 +267,13 @@ const HomePage = () => {
               ))}
             </div>
           </div>
-        <Footer />
-              <div className="container">
-        <img src={bcurve} alt="" className='image-curve' />
-      </div>
-    </section>
 
+        <Footer />
+        <div className="container">
+          <img src={bcurve} alt="" className='image-curve' />
+        </div>
+    </section>
   )
 }
 
-export default HomePage
+export default HomePage;

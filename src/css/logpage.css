@@ -27,11 +27,11 @@
 
 .logo1 {
   width: 156px !important;
-  height: 121px;
-  margin-bottom: 12px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  height: 121px !important;
+  margin-bottom: 12px !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
 }
 
 .log-h2 {
