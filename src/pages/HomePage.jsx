@@ -17,6 +17,7 @@ import plant from '../assets/plant.png';
 import bag from '../assets/bag.png';
 import corn from '../assets/corn.png';
 import Footer from '../components/footer';
+import { useNavigate } from "react-router-dom"
 
 const testimonials = [
   {
@@ -70,6 +71,7 @@ const products = [
 ];
 
 const HomePage = () => {
+  const navigate = useNavigate();
   const [dropdownVisible, setDropdownVisible] = useState(false);
 
   const toggleDropdown = () => {
@@ -86,7 +88,7 @@ const HomePage = () => {
 
           <nav>
             <ul>
-              <li className="float-in"><a href="#" className="">HOME</a></li>
+              <li className="float-in"><a href="#" className="" onClick={()=> navigate('/home')}>HOME</a></li>
               <li className="float-in"><a href="#" className="">MARKET</a></li>
               <li className="float-in"><a href="#" className="">KONSULTASI</a></li>
               <li className="float-in">
@@ -95,7 +97,7 @@ const HomePage = () => {
                 </a>
                 {dropdownVisible && (
                   <div className="unique-dropdown-menu">
-                    <a href="#">KALENDER</a>
+                    <a href="#" onClick={()=> navigate('/calendar')}>KALENDER</a>
                     <a href="#">PETA LAHAN</a>
                     <a href="#">FORUM KOMUNITAS</a>
                   </div>

@@ -4,8 +4,10 @@ import logo from '../assets/AGRI_SYNERGY.png';
 import profile from '../assets/header/profileicon.png';
 import market from '../assets/header/marketicon.png';
 import notification from '../assets/header/notificationicon.png';
+import { useNavigate } from "react-router-dom"
 
 const Header = () => {
+  const navigate = useNavigate();
   const [dropdownVisible, setDropdownVisible] = useState(false);
 
   const toggleDropdown = () => {
@@ -20,7 +22,7 @@ const Header = () => {
 
       <nav>
         <ul>
-          <li className="float-in"><a href="#" className="">HOME</a></li>
+          <li className="float-in"><a href="#" className="" onClick={()=> navigate('/home')}>HOME</a></li>
           <li className="float-in"><a href="#" className="">MARKET</a></li>
           <li className="float-in"><a href="#" className="">KONSULTASI</a></li>
           <li className="float-in">
@@ -29,7 +31,7 @@ const Header = () => {
             </a>
             {dropdownVisible && (
               <div className="dropdown-menu">
-                <a href="#">KALENDER</a>
+                <a href="#" onClick={()=> navigate('/calendar')}>KALENDER</a>
                 <a href="#">PETA LAHAN</a>
                 <a href="#">FORUM KOMUNITAS</a>
               </div>

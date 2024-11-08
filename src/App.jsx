@@ -12,6 +12,10 @@ import Kategori from './pages/admin/Kategori'
 import Produk from './pages/admin/Produk'
 import DetailSaldo from './pages/admin/Detailsaldo'
 import Petalahan from './pages/admin/Petalahan'
+import CalenderAdd from './pages/CalenderAdd'
+import CalenderView from './pages/CalenderView'
+import Calender from './pages/Calender'
+import CalenderEdit from './pages/CalenderEdit'
 
 function App() {
   return (
@@ -29,6 +33,10 @@ function App() {
       <Route path='/produk' element={<Produk/>}/>
       <Route path='/detail-saldo' element={<DetailSaldo/>}/>
       <Route path='/peta-lahan' element={<Petalahan/>}/>
+      <Route path='/calendaradd' element={<CalenderAdd/>}/>
+      <Route path='/calendar' element={<Calender/>}/>
+      <Route path='/calendarview' element={<CalenderView/>}/>
+      <Route path='/calendaredit' element={<CalenderEdit/>}/>
     </Routes>
    </Router>
   )
