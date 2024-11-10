@@ -23,7 +23,7 @@ function CalenderView() {
     const confirmDelete = () => {
         // Perform delete action here
         setShowDeleteModal(false);
-        navigate('/calendar');  // Navigate after delete
+        navigate('/calendar');
     };
 
     const cancelDelete = () => {

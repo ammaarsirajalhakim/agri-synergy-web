@@ -176,18 +176,18 @@ const HomePage = () => {
             {/* Right Section */}
             <div className="aboutus-images">
               <img
-                src={pic1} // Ganti dengan link gambar pertama
+                src={pic1} 
                 alt="Field of corn"
                 className="aboutus-image-main"
               />
               <div className="aboutus-image-grid">
                 <img
-                  src={pic2} // Ganti dengan link gambar kedua
+                  src={pic2} 
                   alt="Farmer in corn field"
                   className="aboutus-image-secondary pic2"
                 />
                 <img
-                  src={pic3} // Ganti dengan link gambar ketiga
+                  src={pic3}
                   alt="Farmer using tablet"
                   className="aboutus-image-secondary"
                 />

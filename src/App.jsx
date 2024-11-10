@@ -16,6 +16,7 @@ import CalenderAdd from './pages/CalenderAdd'
 import CalenderView from './pages/CalenderView'
 import Calender from './pages/Calender'
 import CalenderEdit from './pages/CalenderEdit'
+import MainChat from './pages/MainChat'
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
       <Route path='/calendar' element={<Calender/>}/>
       <Route path='/calendarview' element={<CalenderView/>}/>
       <Route path='/calendaredit' element={<CalenderEdit/>}/>
+      <Route path='/mainchat' element={<MainChat/>}/>
     </Routes>
    </Router>
   )

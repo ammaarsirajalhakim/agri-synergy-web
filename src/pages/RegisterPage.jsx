@@ -16,7 +16,7 @@ const Register = () => {
     useEffect(() => {
         const interval = setInterval(() => {
             setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
-        }, 4000); // Ganti gambar setiap 1 detik
+        }, 4000);
 
         return () => clearInterval(interval);
     }, []);
@@ -36,7 +36,7 @@ const Register = () => {
             </div>
 
             <div className="form-container">
-                <img src={Icon} alt="Logo Agri Synergy" className="logo1" /> {/* Ganti dengan path logo kamu */}
+                <img src={Icon} alt="Logo Agri Synergy" className="logo1" />
                 <h2 className="log-h2">Bergabunglah dengan Komunitas Kami</h2>
                 <p className='keterangan'>Dapatkan Dukungan, Pelajari Lebih Dalam tentang Pertanian</p>
                 <button className="google-login"><img src={google_icon} alt="google_icon" /> Login with Google</button>
