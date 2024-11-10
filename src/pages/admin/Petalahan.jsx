@@ -129,7 +129,7 @@ const Petalahan = () => {
               </div>
               <div className="form-group2">
                 <label htmlFor="productStock">Titik Koordinat</label>
-                <input type="number" id="productStock" placeholder="Masukkan Titik Koordinat" />
+                <input type="text" id="productStock" placeholder="Masukkan Titik Koordinat" />
               </div>
               <div className="form-group2 full-width">
                 <label htmlFor="productImage">Gambar Lahan</label>
