@@ -27,7 +27,7 @@ const Sidebar = () => {
             case '/peta-lahan':
                 setActiveItem('PetaLahan');
                 break;
-            case '/dropshipper':
+            case '/drop-shipper':
                 setActiveItem('Dropshipper');
                 break;
             case '/logout':
@@ -81,7 +81,7 @@ const Sidebar = () => {
                     </li>
                     <li>
                         <Link
-                            to="/dropshipper"
+                            to="/drop-shipper"
                             className={activeItem === 'Dropshipper' ? 'active' : ''}
                         >
                             <img src={Dropshipper} alt="Dropshipper" /> Dropshipper

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ChatSidebar from '../components/ChatSidebar';
 import ExpertSidebar from '../components/ExpertSidebar';
-import '../css/chatstyless.css';
+import '../css/Chatstyless.css';
 import Header from '../components/Header';
 import Footer from '../components/footer';
 

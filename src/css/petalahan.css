@@ -26,26 +26,6 @@
     background-color: #2f73e1;
   }
   
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    border: 1px solid #dee2e6;
-    margin-bottom: 30px;
-  }
-  
-  th,
-  td {
-    padding: 15px;
-    text-align: center;
-  }
-  
-  th {
-    background-color: #f2f4f5;
-  }
-  
-  tbody tr {
-    border-bottom: 1px solid #dee2e6;
-  }
   
   .title4 {
     margin-bottom: 10px;
@@ -53,6 +33,14 @@
     font-weight: bold;
   }
   
+  .deskripsi-column {
+    width: 400px;
+  }
+
+  .titik-column {
+    width: 100px;
+  }
+    
   .update4,
   .delete4 {
     background: none;
@@ -129,7 +117,6 @@
     background-color: #e3dcdc;
   }
   
- 
 
   .modal-overlay2 {
     position: fixed;

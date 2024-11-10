@@ -1,7 +1,16 @@
 import { useState } from "react";
 import Sidebar from "../../components/Sidebar";
 import "../../css/petalahan.css";
-import Testing from "../../assets/background_5.jpg";
+
+
+const lahan = [
+  {
+    image : 'src/assets/background_5.jpg',
+    nama : 'Lahan 1',
+    titik : '-7.520045399062036, 112.4692722667032',
+    deskripsi : 'Lorem ipsum dolor sit amet consectetur. Eget dictum magna tellus'
+  },
+]
 
 const Petalahan = () => {
   const [activePage, setActivePage] = useState(1);
@@ -52,20 +61,17 @@ const Petalahan = () => {
                 <th>Action</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
+           <tbody>
+            {lahan.map((lahan, index) => (
+              <tr key={index}>
                 <td>
-                  <img
-                    src={Testing}
-                    alt="Gambar"
-                    style={{ width: "70px", height: "50px" }}
-                  />
+                  <img src={lahan.image} alt="lahan" width="70" height="50" />
                 </td>
-                <td>Kebogerang</td>
-                <td>-7.520045399062036, 112.4692722667032</td>
-                <td>Lorem ipsum dolor sit amet consectetur. Eget dictum magna tellus nisi......</td>
+                <td>{lahan.nama}</td>
+                <td className="titik-column">{lahan.titik}</td>
+                <td className="deskripsi-column">{lahan.deskripsi}</td>
                 <td>
-                  <button className="update4" onClick={() => openUpdateModal({ name: "", coordinates: "", description: "", image: "" })}>
+                <button className="update4" onClick={() => openUpdateModal({ name: "", coordinates: "", description: "", image: "" })}>
                     <span className="icon update-icon4" />
                   </button>
                   <button className="delete4">
@@ -73,7 +79,8 @@ const Petalahan = () => {
                   </button>
                 </td>
               </tr>
-            </tbody>
+            ))}
+           </tbody>
           </table>
         </div>
 
@@ -129,7 +136,7 @@ const Petalahan = () => {
               </div>
               <div className="form-group2">
                 <label htmlFor="productStock">Titik Koordinat</label>
-                <input type="number" id="productStock" placeholder="Masukkan Titik Koordinat" />
+                <input type="text" id="productStock" placeholder="Masukkan Titik Koordinat" />
               </div>
               <div className="form-group2 full-width">
                 <label htmlFor="productImage">Gambar Lahan</label>

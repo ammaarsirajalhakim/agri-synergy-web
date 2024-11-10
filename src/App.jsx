@@ -14,6 +14,7 @@ import DetailSaldo from './pages/admin/Detailsaldo'
 import Petalahan from './pages/admin/Petalahan'
 import CalenderAdd from './pages/CalenderAdd'
 import CalenderView from './pages/CalenderView'
+import DropShipper from './pages/admin/DropShipper'
 import Calender from './pages/Calender'
 import CalenderEdit from './pages/CalenderEdit'
 import MainChat from './pages/MainChat'
@@ -39,6 +40,7 @@ function App() {
       <Route path='/produk' element={<Produk/>}/>
       <Route path='/detail-saldo' element={<DetailSaldo/>}/>
       <Route path='/peta-lahan' element={<Petalahan/>}/>
+      <Route path='/drop-shipper' element={<DropShipper/>}/>
       <Route path='/calendaradd' element={<CalenderAdd/>}/>
       <Route path='/calendar' element={<Calender/>}/>
       <Route path='/calendarview' element={<CalenderView/>}/>
