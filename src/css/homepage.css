@@ -51,6 +51,8 @@
 .logow img {
   width: 90.11px;
   height: 70px;
+  z-index: 2; 
+  cursor: pointer;
 }
 
 .icon {
@@ -58,7 +60,11 @@
   display: flex;
   align-items: center;
 }
-
+.icon-wrapper {
+  position: relative;
+  display: inline-block;
+  z-index: 2;
+}
 .icon img {
   margin-inline-start: 15px;
   width: 24px;

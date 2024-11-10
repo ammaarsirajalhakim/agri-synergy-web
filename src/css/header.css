@@ -53,6 +53,7 @@
 .icon-wrapper {
   position: relative;
   display: inline-block;
+  z-index: 2;
 }
 
 .badge {
@@ -74,6 +75,8 @@
   margin-inline-start: 15px;
   width: 24px;
   height: 25px;
+  z-index: 2; 
+  cursor: pointer;
 }
 
 .explore-button {

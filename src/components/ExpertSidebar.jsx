@@ -8,7 +8,7 @@ const ExpertSidebar = ({ experts }) => {
   return (
     <div className="chat-container">
       <div className='login-button sidebar-chat'>
-        <button className="icon-out" onClick={() => navigate('/')}>Login</button>
+        <button className="icon-out" onClick={() => navigate('/login')}>Login</button>
       </div>
 
       <div className="chat-header sidebar-chat">

@@ -22,7 +22,7 @@ const Header = () => {
 
       <nav>
         <ul>
-          <li className="float-in"><a href="#" className="" onClick={()=> navigate('/home')}>HOME</a></li>
+          <li className="float-in"><a href="#" className="" onClick={()=> navigate('/')}>HOME</a></li>
           <li className="float-in"><a href="#" className="" onClick={()=> navigate('/market')}>MARKET</a></li>
           <li className="float-in"><a href="#" className="" onClick={()=> navigate('/konsultasi')}>KONSULTASI</a></li>
           <li className="float-in">
@@ -32,15 +32,15 @@ const Header = () => {
             {dropdownVisible && (
               <div className="dropdown-menu">
                 <a href="#" onClick={()=> navigate('/calendar')}>KALENDER</a>
-                <a href="#" onClick={()=> navigate('/peta-lahan')}>PETA LAHAN</a>
+                <a href="#" onClick={()=> navigate('/petalahan')}>PETA LAHAN</a>
                 <a href="#">FORUM KOMUNITAS</a>
               </div>
             )}
           </li>
         </ul>
         <div className="icon">
-          <div className="icon-wrapper">
-            <img src={market} alt="Market Icon" />
+          <div className="icon-wrapper" >
+            <img src={market} alt="Market Icon" onClick={()=> navigate('/market')}/>
             <span className="badge">1</span>
           </div>
           <div className="icon-wrapper">
@@ -48,7 +48,7 @@ const Header = () => {
             <span className="badge">2</span>
           </div>
           <div className="icon-wrapper">
-            <img src={profile} alt="Profile Icon" />
+            <img src={profile} alt="Profile Icon" onClick={()=> navigate('/login')}/>
           </div>
         </div>
       </nav>

@@ -46,7 +46,7 @@ const Footer = () => {
           <h4>Layanan</h4>
           <ul>
             <li><a href="#" onClick={()=> navigate('/calendar')}>Kalender</a></li>
-            <li><a href="#" onClick={()=> navigate('/peta-lahan')}>Peta Lahan</a></li>
+            <li><a href="#" onClick={()=> navigate('/petalahan')}>Peta Lahan</a></li>
             <li><a href="#">Forum Komunitas</a></li>
           </ul>
         </div>

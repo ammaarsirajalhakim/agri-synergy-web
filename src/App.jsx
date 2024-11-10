@@ -23,14 +23,15 @@ import ProductDetail from "./components/ProductDetail";
 import Checkout from './components/Checkout'
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import OrderSuccess from './components/OrderSuccess'
+import PetaLahan from './pages/PetaLahan'
 
 function App() {
   return (
    <Router>
     <Routes>
-      <Route path='/' element={<Login/>}/>
+      <Route path='/login' element={<Login/>}/>
       <Route path='/register' element={<Register/>}/>
-      <Route path='/home' element={<HomePage/>}/>
+      <Route path='/' element={<HomePage/>}/>
       <Route path='/forgot' element={<Forgot/>}/>
       <Route path='/header' element={<Header/>}/>
       <Route path='/dropshipper' element={<MainDropship/>}/>
@@ -50,6 +51,7 @@ function App() {
        <Route path="/detail/:id" element={<ProductDetail />} />
        <Route path="/checkout" element={<Checkout />} /> 
        <Route path="/ordersuccses" element={<OrderSuccess/>} /> 
+       <Route path="/petalahan" element={<PetaLahan/>} /> 
     </Routes>
    </Router>
   )
