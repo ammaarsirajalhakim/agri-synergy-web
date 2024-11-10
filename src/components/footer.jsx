@@ -6,8 +6,10 @@ import facebook from '../assets/facebook.png';
 import twitter from '../assets/twitter.png';
 import instagram from '../assets/instagram.png';
 import linkedin from '../assets/linkedin.png';
+import { useNavigate } from "react-router-dom"
 
 const Footer = () => {
+  const navigate = useNavigate();
   return (
     <footer className="footer">
       <div className="footer-content">
@@ -43,8 +45,8 @@ const Footer = () => {
         <div className="footer-section">
           <h4>Layanan</h4>
           <ul>
-            <li><a href="#">Kalender</a></li>
-            <li><a href="#">Peta Lahan</a></li>
+            <li><a href="#" onClick={()=> navigate('/calendar')}>Kalender</a></li>
+            <li><a href="#" onClick={()=> navigate('/peta-lahan')}>Peta Lahan</a></li>
             <li><a href="#">Forum Komunitas</a></li>
           </ul>
         </div>

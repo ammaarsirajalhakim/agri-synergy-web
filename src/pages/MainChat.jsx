@@ -6,6 +6,7 @@ import Header from '../components/Header';
 import Footer from '../components/footer';
 
 function MainChat() {
+  
   const [users] = useState([
     { id: 1, name: 'Siti Marlina', avatar: 'src/assets/profile/profile1.png', online: true },
     { id: 2, name: 'Ahmad Rizal', avatar: 'src/assets/profile/profile2.png', online: true },
@@ -56,6 +57,7 @@ function MainChat() {
       <Header />
       <div className="app">
         <ChatSidebar users={users} onLogout={() => alert('Logout')} />
+        <div className="rectangles-kalender"></div>
 
         <div className="chat-area">
           <div className="chat-box">
@@ -124,7 +126,8 @@ function MainChat() {
             </div>
           )}
         </div>
-
+        
+        <div className="rectangles-kalender"></div>
         <ExpertSidebar experts={experts} />
       </div>
       <Footer />

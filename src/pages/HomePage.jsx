@@ -89,8 +89,8 @@ const HomePage = () => {
           <nav>
             <ul>
               <li className="float-in"><a href="#" className="" onClick={()=> navigate('/home')}>HOME</a></li>
-              <li className="float-in"><a href="#" className="">MARKET</a></li>
-              <li className="float-in"><a href="#" className="">KONSULTASI</a></li>
+              <li className="float-in"><a href="#" className="" onClick={()=> navigate('/market')}>MARKET</a></li>
+              <li className="float-in"><a href="#" className="" onClick={()=> navigate('/konsultasi')}>KONSULTASI</a></li>
               <li className="float-in">
                 <a onClick={toggleDropdown} className="explore-button">
                   EXPLORE {dropdownVisible ? '▲' : '▼'}
@@ -98,7 +98,7 @@ const HomePage = () => {
                 {dropdownVisible && (
                   <div className="unique-dropdown-menu">
                     <a href="#" onClick={()=> navigate('/calendar')}>KALENDER</a>
-                    <a href="#">PETA LAHAN</a>
+                    <a href="#" onClick={()=> navigate('/peta-lahan')}>PETA LAHAN</a>
                     <a href="#">FORUM KOMUNITAS</a>
                   </div>
                 )}

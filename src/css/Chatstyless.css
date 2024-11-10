@@ -123,9 +123,6 @@
     margin-right: 27px;
 }
 
-.logout-button button:hover {
-    background-color: #2b3f36;
-}
 
 /* Chat Area */
 .chat-area {

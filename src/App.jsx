@@ -17,6 +17,11 @@ import CalenderView from './pages/CalenderView'
 import Calender from './pages/Calender'
 import CalenderEdit from './pages/CalenderEdit'
 import MainChat from './pages/MainChat'
+import ProductPage from './components/ProductPage'
+import ProductDetail from "./components/ProductDetail";
+import Checkout from './components/Checkout'
+import "@fortawesome/fontawesome-free/css/all.min.css";
+import OrderSuccess from './components/OrderSuccess'
 
 function App() {
   return (
@@ -38,7 +43,11 @@ function App() {
       <Route path='/calendar' element={<Calender/>}/>
       <Route path='/calendarview' element={<CalenderView/>}/>
       <Route path='/calendaredit' element={<CalenderEdit/>}/>
-      <Route path='/mainchat' element={<MainChat/>}/>
+      <Route path='/konsultasi' element={<MainChat/>}/>
+      <Route path="/market" element={<ProductPage />} />
+       <Route path="/detail/:id" element={<ProductDetail />} />
+       <Route path="/checkout" element={<Checkout />} /> 
+       <Route path="/ordersuccses" element={<OrderSuccess/>} /> 
     </Routes>
    </Router>
   )
