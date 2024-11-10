@@ -1,7 +1,16 @@
 import { useState } from "react";
 import Sidebar from "../../components/Sidebar";
-import Testing from "../../assets/background_5.jpg";
 import "../../css/produk.css";
+
+const produk = [
+  {
+    kataegori : 'Produk',
+    image : 'src/assets/products/produk-1.png',
+    nama : 'dajdjad',
+    stok : '10',
+    harga : '10000',
+  },
+]
 
 const Produk = () => {
   const [activePage, setActivePage] = useState(1);
@@ -56,37 +65,37 @@ const Produk = () => {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>Produk</td>
-                <td>
-                  <img
-                    src={Testing}
-                    alt="Gambar"
-                    style={{ width: "70px", height: "50px" }}
-                  />
-                </td>
-                <td>Produk 1</td>
-                <td>10</td>
-                <td>Rp. 100.000,00</td>
-                <td>
-                  <button
-                    className="update1"
-                    onClick={() =>
-                      openUpdateModal({
-                        name: "",
-                        stock: "",
-                        price: "",
-                        category: "",
-                      })
-                    }
-                  >
-                    <span className="icon update-icon1" />
-                  </button>
-                  <button className="delete1">
-                    <span className="icon delete-icon1" />
-                  </button>
-                </td>
-              </tr>
+              {produk.map((product, index) => (
+                <tr key={index}>
+                  <td>{product.kataegori}</td>
+                  <td>
+                    <img src={product.image} alt="Product"
+                    width="50"
+                    height="50" />
+                  </td>
+                  <td>{product.nama}</td>
+                  <td>{product.stok}</td>
+                  <td>{product.harga}</td>
+                  <td>
+                    <button
+                      className="update1"
+                      onClick={() =>
+                        openUpdateModal({
+                          name: "",
+                          stock: "",
+                          price: "",
+                          category: "",
+                        })
+                      }
+                    >
+                      <span className="icon update-icon1" />
+                    </button>
+                    <button className="delete1">
+                      <span className="icon delete-icon1" />
+                    </button>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>

@@ -26,27 +26,6 @@
   background-color: #2f73e1;
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  border: 1px solid #dee2e6;
-  margin-bottom: 30px;
-}
-
-th,
-td {
-  padding: 15px;
-  text-align: center;
-}
-
-th {
-  background-color: #f2f4f5;
-}
-
-tbody tr {
-  border-bottom: 1px solid #dee2e6;
-}
-
 .title1 {
   margin-bottom: 10px;
   font-size: 30px;
