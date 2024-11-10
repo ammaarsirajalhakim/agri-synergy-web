@@ -10,7 +10,7 @@ function PetaLahan() {
   return (
     <>
     <Header />
-    <div className="App">
+    <div className="main-peta-lahan">
       <MapComponent />
     </div>
     <Footer/>

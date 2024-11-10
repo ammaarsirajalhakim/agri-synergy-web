@@ -1,7 +1,9 @@
+.body{
+  overflow-x: hidden;
+}
 .leaflet-container {
-    width: 100vw; 
-    height: 460px;
-    overflow: hidden; 
+    width: 100%; 
+    height: 460px; 
   }
 
 /*  Search Bar */

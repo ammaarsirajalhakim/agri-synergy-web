@@ -516,10 +516,10 @@ margin-bottom: 20px;
 
 /* bgcurve */
 .container img {
-  position: absolute; /* Menumpuk semua gambar pada posisi yang sama */
-  top: 0;
-  left: 0;
-  width: 100%; /* Agar gambar tetap mengikuti ukuran layar */
-  height: auto;
-  object-fit: cover;
+  position: absolute !important; /* Menumpuk semua gambar pada posisi yang sama */
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important; /* Agar gambar tetap mengikuti ukuran layar */
+  height: auto !important;
+  object-fit: cover !important;
 }
