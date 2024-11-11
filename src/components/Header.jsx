@@ -33,7 +33,7 @@ const Header = () => {
               <div className="dropdown-menu">
                 <a href="#" onClick={()=> navigate('/calendar')}>KALENDER</a>
                 <a href="#" onClick={()=> navigate('/petalahan')}>PETA LAHAN</a>
-                <a href="#">FORUM KOMUNITAS</a>
+                <a href="#" onClick={()=> navigate('/community')}>FORUM KOMUNITAS</a>
               </div>
             )}
           </li>

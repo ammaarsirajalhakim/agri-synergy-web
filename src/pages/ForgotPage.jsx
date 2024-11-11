@@ -53,8 +53,8 @@ const Forgot = () => {
                 <input type="email" placeholder="Masukkan kata sandi baru" className="input-field" />
                 <p className='title_input_field'>Kata Sandi</p>
                 <input type="password" placeholder="Masukkan kata sandi" className="input-field" />
-                <button className="submit-button" onClick={() => navigate('/')}>Ganti Sandi</button>
-                <p className="back-login" onClick={() => navigate('/')}>Kembali ke halaman Login?</p>
+                <button className="submit-button" onClick={() => navigate('/login')}>Ganti Sandi</button>
+                <p className="back-login" onClick={() => navigate('/login')}>Kembali ke halaman Login?</p>
             </div>
         </div>
     )

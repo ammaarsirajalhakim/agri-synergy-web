@@ -37,7 +37,7 @@ const Login = () => {
                 <input type="email" placeholder="Masukkan alamat email" className="input-field" />
                 <p className='title_input_field'>Kata Sandi</p>
                 <input type="password" placeholder="Masukkan kata sandi" className="input-field" />
-                <button className="submit-button" onClick={() => navigate('/home')}>Masuk</button>
+                <button className="submit-button" onClick={() => navigate('/')}>Masuk</button>
                 <button className="signup-button" onClick={() => navigate('/register')}> Belum punya akun? Daftar disini </button>
                 <p className="forgot-password" onClick={() => navigate('/forgot')}>Lupa Sandi?</p>
             </div>

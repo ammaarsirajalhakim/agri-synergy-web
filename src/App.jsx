@@ -24,36 +24,42 @@ import Checkout from './components/Checkout'
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import OrderSuccess from './components/OrderSuccess'
 import PetaLahan from './pages/PetaLahan'
+import CommunityPage from './components/CommunityPage';
+import YourThreadsPage from './components/YourThreadsPage';
+import SavedPage from './components/SavedPage'
 
 function App() {
   return (
-   <Router>
-    <Routes>
-      <Route path='/login' element={<Login/>}/>
-      <Route path='/register' element={<Register/>}/>
-      <Route path='/' element={<HomePage/>}/>
-      <Route path='/forgot' element={<Forgot/>}/>
-      <Route path='/header' element={<Header/>}/>
-      <Route path='/dropshipper' element={<MainDropship/>}/>
-      <Route path='/sidebar' element={<SidebarProfile/>}/>
+    <Router>
+      <Routes>
+        <Route path='/login' element={<Login />} />
+        <Route path='/register' element={<Register />} />
+        <Route path='/' element={<HomePage />} />
+        <Route path='/forgot' element={<Forgot />} />
+        <Route path='/header' element={<Header />} />
+        <Route path='/dropshipper' element={<MainDropship />} />
+        <Route path='/sidebar' element={<SidebarProfile />} />
 
-      <Route path='/kategori' element={<Kategori/>}/>
-      <Route path='/produk' element={<Produk/>}/>
-      <Route path='/detail-saldo' element={<DetailSaldo/>}/>
-      <Route path='/peta-lahan' element={<Petalahan/>}/>
-      <Route path='/drop-shipper' element={<DropShipper/>}/>
-      <Route path='/calendaradd' element={<CalenderAdd/>}/>
-      <Route path='/calendar' element={<Calender/>}/>
-      <Route path='/calendarview' element={<CalenderView/>}/>
-      <Route path='/calendaredit' element={<CalenderEdit/>}/>
-      <Route path='/konsultasi' element={<MainChat/>}/>
-      <Route path="/market" element={<ProductPage />} />
-       <Route path="/detail/:id" element={<ProductDetail />} />
-       <Route path="/checkout" element={<Checkout />} /> 
-       <Route path="/ordersuccses" element={<OrderSuccess/>} /> 
-       <Route path="/petalahan" element={<PetaLahan/>} /> 
-    </Routes>
-   </Router>
+        <Route path='/kategori' element={<Kategori />} />
+        <Route path='/produk' element={<Produk />} />
+        <Route path='/detail-saldo' element={<DetailSaldo />} />
+        <Route path='/peta-lahan' element={<Petalahan />} />
+        <Route path='/drop-shipper' element={<DropShipper />} />
+        <Route path='/calendaradd' element={<CalenderAdd />} />
+        <Route path='/calendar' element={<Calender />} />
+        <Route path='/calendarview' element={<CalenderView />} />
+        <Route path='/calendaredit' element={<CalenderEdit />} />
+        <Route path='/konsultasi' element={<MainChat />} />
+        <Route path="/market" element={<ProductPage />} />
+        <Route path="/detail/:id" element={<ProductDetail />} />
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/ordersuccses" element={<OrderSuccess />} />
+        <Route path="/petalahan" element={<PetaLahan />} />
+        <Route path="/community" element={<CommunityPage />} />
+        <Route path="/your-threads" element={<YourThreadsPage />} />
+        <Route path="/saved" element={<SavedPage />} />
+      </Routes>
+    </Router>
   )
 }
 

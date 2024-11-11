@@ -80,7 +80,7 @@ const HomePage = () => {
 
   return (
     <section className='scroll'>
-      <div id="main-container">
+      <div id="main-containers">
         <div className="navi" id="navbar">
           <div className="logow">
             <img src={logo1} alt="Logo" />
@@ -99,7 +99,7 @@ const HomePage = () => {
                   <div className="unique-dropdown-menu">
                     <a href="#" onClick={()=> navigate('/calendar')}>KALENDER</a>
                     <a href="#" onClick={()=> navigate('/petalahan')}>PETA LAHAN</a>
-                    <a href="#">FORUM KOMUNITAS</a>
+                    <a href="#" onClick={()=> navigate('/community')}>FORUM KOMUNITAS</a>
                   </div>
                 )}
               </li>
@@ -120,7 +120,7 @@ const HomePage = () => {
           </nav>
         </div>
 
-        <div className='main-content'>
+        <div className='main-contents'>
           <h1>Mempermudah Pengelolaan dan Pemasaran Jagung Anda</h1>
           <h2>Meningkatkan produktivitas pertanian dan memperluas akses pasar melalui solusi digital yang terintegrasi</h2>
           <div className="imgcurve">
