@@ -110,7 +110,7 @@ const Kategori = () => {
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h5>Tambah Kategori</h5>
-              <button className="close-button" onClick={closeAddModal}>
+              <button className="close-button1" onClick={closeAddModal}>
                 ×
               </button>
             </div>
