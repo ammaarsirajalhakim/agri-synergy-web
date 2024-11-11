@@ -515,7 +515,7 @@ margin-bottom: 20px;
 /* end main content */
 
 /* bgcurve */
-.container img {
+.containers img {
   position: absolute !important; /* Menumpuk semua gambar pada posisi yang sama */
   top: 0 !important;
   left: 0 !important;

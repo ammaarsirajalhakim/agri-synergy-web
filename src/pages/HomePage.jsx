@@ -271,7 +271,7 @@ const HomePage = () => {
           </div>
 
         <Footer />
-        <div className="container">
+        <div className="containers">
           <img src={bcurve} alt="" className='image-curve' />
         </div>
     </section>
