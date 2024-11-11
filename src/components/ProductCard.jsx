@@ -2,6 +2,7 @@
 import React from 'react';
 import '../css/homepage.css'
 
+
 const ProductCard = ({ image, title, price, stock }) => {
   return (
     <div className="product-card">

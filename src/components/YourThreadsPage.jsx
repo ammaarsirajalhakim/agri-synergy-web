@@ -26,7 +26,7 @@ const YourThreadsPage = () => {
                     <button className="sidebar-button" onClick={() => navigate('/saved')}>
                         <i className="fas fa-bookmark"></i> Saved
                     </button>
-                    <button className="sidebar-button">
+                    <button className="sidebar-button" onClick={() => navigate('/login')}>
                         <i className="fas fa-sign-out-alt"></i> Logout
                     </button>
                 </div>
@@ -53,7 +53,7 @@ const YourThreadsPage = () => {
 
                 {/* Sidebar Kanan */}
                 <div className="sidebar-right">
-                    <button className="login-button">Login</button>
+                    <button className="login-button" onClick={() => navigate('/login')}>Login</button>
                     <div className="community-list">
                         <h3>Anggota Komunitas</h3>
                         <ul>

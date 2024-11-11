@@ -33,7 +33,7 @@ h2 {
   font-size: 16px !important;
   font-weight: bold !important;
   margin-bottom: 0.5rem !important;
-  text-align: center !important;
+  text-align: center;
 }
 
 .keterangan {

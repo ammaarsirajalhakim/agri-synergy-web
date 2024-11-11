@@ -57,16 +57,17 @@
 }
 
 .product-info-section h2 {
-  color: #333;
-  font-size: 32px;
-  margin: 0;
+  color: #333 !important;
+  font-size: 32px !important;
+  margin: 0 !important;
+  text-align: left;
 }
 
 .product-price {
-  color: #000; /* Warna hitam */
-  font-size: 24px; /* Ukuran font lebih besar */
-  font-weight: bold;
-  margin-bottom: 5px; /* Jarak bawah antara harga dan stok */
+  color: #000 !important; /* Warna hitam */
+  font-size: 24px !important; /* Ukuran font lebih besar */
+  font-weight: bold !important;
+  margin-bottom: 5px !important; /* Jarak bawah antara harga dan stok */
 }
 
 

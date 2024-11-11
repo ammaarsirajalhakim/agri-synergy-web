@@ -14,7 +14,7 @@ const SavedPage = () => {
             <div className="content-container">
                 {/* Sidebar Kiri */}
                 <div className="sidebar-left">
-                    <button className="sidebar-button" onClick={() => navigate('/')}>
+                    <button className="sidebar-button" onClick={() => navigate('/community')}>
                         <i className="fas fa-users"></i> Community
                     </button>
                     <button 
@@ -26,7 +26,7 @@ const SavedPage = () => {
                     <button className="sidebar-button active">
                         <i className="fas fa-bookmark"></i> Saved
                     </button>
-                    <button className="sidebar-button">
+                    <button className="sidebar-button" onClick={() => navigate('/login')}>
                         <i className="fas fa-sign-out-alt"></i> Logout
                     </button>
                 </div>
@@ -40,7 +40,7 @@ const SavedPage = () => {
 
                 {/* Sidebar Kanan */}
                 <div className="sidebar-right">
-                    <button className="login-button">Login</button>
+                    <button className="login-button" onClick={() => navigate('/login')}>Login</button>
                     <div className="community-list">
                         <h3>Anggota Komunitas</h3>
                         <ul>

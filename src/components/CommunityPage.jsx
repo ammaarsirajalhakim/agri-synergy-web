@@ -6,7 +6,7 @@ import '../css/CommunityPage.css';
 
 const CommunityPage = () => {
     const [image, setImage] = useState(null);
-    const navigate = useNavigate(); // Tambahkan hook useNavigate
+    const navigate = useNavigate(); 
 
     // Fungsi untuk menangani perubahan pada input gambar
     const handleImageChange = (event) => {

@@ -40,7 +40,7 @@ const Header = () => {
         </ul>
         <div className="icon">
           <div className="icon-wrapper" >
-            <img src={market} alt="Market Icon" onClick={()=> navigate('/market')}/>
+            <img src={market} alt="Market Icon" onClick={()=> navigate('/checkout')}/>
             <span className="badge">1</span>
           </div>
           <div className="icon-wrapper">

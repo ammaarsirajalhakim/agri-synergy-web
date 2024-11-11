@@ -106,7 +106,7 @@ const HomePage = () => {
             </ul>
             <div className="icon">
               <div className="icon-wrapper">
-                <img src={market} alt="Market Icon" onClick={()=> navigate('/market')}/>
+                <img src={market} alt="Market Icon" onClick={()=> navigate('/checkout')}/>
                 <span className="badge">1</span>
               </div>
               <div className="icon-wrapper">
@@ -166,10 +166,14 @@ const HomePage = () => {
                 mencapai hasil terbaik dan meningkatkan kesejahteraan mereka secara berkelanjutan.
               </p>
               <p className="aboutus-highlight">
-                Silahkan diganti - Dengan teknologi berbasis data, kami menyediakan solusi yang efisien
+                Dengan teknologi berbasis data, kami menyediakan solusi yang efisien
                 dan mudah digunakan untuk meningkatkan produktivitas serta memperluas akses pasar.
                 Visi kami adalah mendukung petani jagung mencapai hasil terbaik dan meningkatkan
                 kesejahteraan mereka secara berkelanjutan.
+              </p>
+              <p className="aboutus-highlight">
+                Ingin menjadi pengembang pertanian berbasis digital dengan kami? <br />
+                Silakan hubungi contact person: +62 858-4828-2072 (Alex Darmawan)
               </p>
             </div>
 
@@ -211,7 +215,7 @@ const HomePage = () => {
               ))}
             </div>
             <div className="see-more-container">
-              <button className="see-more">See More..</button>
+              <button className="see-more" onClick={()=> navigate('/market')}>See More..</button>
             </div>
           </div>
 

@@ -27,6 +27,7 @@ import PetaLahan from './pages/PetaLahan'
 import CommunityPage from './components/CommunityPage';
 import YourThreadsPage from './components/YourThreadsPage';
 import SavedPage from './components/SavedPage'
+import OrderHistoryPage from './components/OrderHistoryPage'
 
 function App() {
   return (
@@ -58,6 +59,7 @@ function App() {
         <Route path="/community" element={<CommunityPage />} />
         <Route path="/your-threads" element={<YourThreadsPage />} />
         <Route path="/saved" element={<SavedPage />} />
+        <Route path="/orderhistory" element={<OrderHistoryPage />} />
       </Routes>
     </Router>
   )

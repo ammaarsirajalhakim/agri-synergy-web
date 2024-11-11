@@ -12,8 +12,10 @@ import TepungJagungGlutenFree from "../assets/productpage/TepungJagungGluten-Fre
 import JagungSusuKeju from "../assets/productpage/JagungSusuKeju.png";
 import Header from "./Header";
 import Footer from "./footer";
+import { useNavigate } from "react-router-dom";
 
 const ProductDetail = () => {
+  const navigate = useNavigate();
   const { id } = useParams();
 
   // Data produk dengan ID
@@ -161,7 +163,7 @@ const ProductDetail = () => {
             <label htmlFor="quantity">Qty:</label>
             <input type="number" id="quantity" name="quantity" min="1" defaultValue="1" />
           </div>
-          <button className="add-to-cart-button"> <i className="fas fa-shopping-cart"></i> Add to cart</button>
+          <button className="add-to-cart-button" onClick={() => navigate('/checkout')}> <i className="fas fa-shopping-cart"></i> Add to cart</button>
         </div>
       </div>
       </div>
