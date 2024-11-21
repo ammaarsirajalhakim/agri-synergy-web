@@ -45,6 +45,15 @@
   height: 70px;
 }
 
+.hamburger {
+  display: none;
+  font-size: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+
 .icon {
   display: flex;
   align-items: center;
@@ -53,7 +62,6 @@
 .icon-wrapper {
   position: relative;
   display: inline-block;
-  z-index: 2;
 }
 
 .badge {
@@ -75,8 +83,11 @@
   margin-inline-start: 15px;
   width: 24px;
   height: 25px;
-  z-index: 2; 
-  cursor: pointer;
+}
+.icon-container {
+  display: flex;
+  gap: 16px;
+  transition: transform 0.3s ease;
 }
 
 .explore-button {
@@ -108,4 +119,111 @@
 
 .dropdown-menu a:hover {
   background-color: #ddd;
+}
+
+
+
+@media screen and (max-width: 480px) {
+  .nav {
+    position: relative;
+    top: 0;
+    display: flex;
+    padding: 20px 24px 12px 16px !important;
+    margin-left: 0;
+    width: 100%;
+    z-index: 1000;
+    align-items: center;
+  }
+
+  .nav ul {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding-right: 5px;
+  }
+
+  .logos {
+    display: flex;
+    align-items: center;
+    padding-right: 10px;
+    width: fit-content;
+    height: fit-content;
+  }
+
+  .logos img {
+    width: 35px;
+    height: auto;
+  }
+
+  .nav ul li a {
+    color: #13382C;
+    text-decoration: none;
+    font-size: 9px;
+    padding-inline-start: 9px;
+    letter-spacing: 2.2px;
+    word-wrap: break-word;
+    padding-bottom: 11px;
+  }
+
+  .explore-button {
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    font-size: 11px;
+  }
+
+  .badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: #ff0000;
+    color: white;
+    font-size: 8px;
+    font-weight: bold;
+    padding: 1px 3px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .icon img {
+    width: 12px;
+    height: auto;
+  }
+
+  .hamburger {
+    display: block;
+  }
+
+  .icon-container {
+    display: block;
+    position: absolute;
+    top: 50px;
+    right: 0;
+    background: white;
+    margin-inline: 10px;
+    padding: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    transform: translateY(-100%);
+  }
+
+  .icon-container.open {
+    transform: translateY(0);
+  }
+  .icon-container.closed {
+    display: none;
+  }
+
+  .dropdown-menu {
+    position: absolute;
+    background-color: #f1f1f1;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    padding: 8px 0;
+    margin-top: 20px;
+    margin-left: 0PX;
+    border-radius: 4px;
+    z-index: 10;
+  }
 }
