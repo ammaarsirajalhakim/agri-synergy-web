@@ -12,7 +12,7 @@ const getFormattedTimestamp = () => {
 };
 
 const RESPONSE = {
-    createSuccess: (message) => ({
+    deleteSuccess: (message) => ({
       success: true,
       code: 200,
       message: message,
@@ -21,7 +21,7 @@ const RESPONSE = {
       timestamp: getFormattedTimestamp(),
       errors: null,
     }),
-    createError: (code, message, errors) => ({
+    deleteError: (code, message, errors) => ({
       success: false,
       code: code,
       message: message,
@@ -51,7 +51,7 @@ const RESPONSE = {
         return res
           .status(404)
           .json(
-            RESPONSE.createError(404, "produk tidak ditemukan", {
+            RESPONSE.deleteError(404, "produk tidak ditemukan", {
               message: "ID produk tidak ada dalam database",
               code: "PRODUK_NOT_FOUND",
             })
@@ -60,10 +60,10 @@ const RESPONSE = {
   
       return res
         .status(200)
-        .json(RESPONSE.createSuccess("Data produk berhasil dihapus"));
+        .json(RESPONSE.deleteSuccess("Data produk berhasil dihapus"));
     } catch (err) {
       console.log(err);
-      const errorResponse = RESPONSE.createError(
+      const errorResponse = RESPONSE.deleteError(
         500,
         "Terjadi kesalahan pada server",
         { message: err.message, code: err.code || "INTERNAL_SERVER_ERROR" }
