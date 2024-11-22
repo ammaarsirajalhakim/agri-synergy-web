@@ -47,8 +47,8 @@ const RESPONSE = {
     },
   
     validateData: (req) => {
-      const { id_user, id_kategori, nama, harga, kuantitas, deskripsi, tanggal_diposting } = req.body;
-      const requiredFields = { id_user, id_kategori, nama, harga, kuantitas, deskripsi, tanggal_diposting };
+      const { id_user, kategori, nama, harga, kuantitas, deskripsi, tanggal_diposting } = req.body;
+      const requiredFields = { id_user, kategori, nama, harga, kuantitas, deskripsi, tanggal_diposting };
   
       const missingFieldsResult = validateFields.checkRequired(requiredFields);
       if (missingFieldsResult) {
@@ -64,7 +64,7 @@ const RESPONSE = {
         isValid: true,
         data: {
           id_user,
-          id_kategori,
+          kategori,
           nama,
           harga,
           kuantitas,
