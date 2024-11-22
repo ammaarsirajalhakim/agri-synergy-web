@@ -1,5 +1,18 @@
+const getFormattedTimestamp = () => {
+  return new Date().toLocaleString("en-US", {
+    timeZone: "Asia/Jakarta",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  });
+};
+
 module.exports = async (req, res) => {
-  const createSuccessResponse = (rows) => ({
+  const getSuccessResponse = (rows) => ({
     success: rows.length > 0,
     code: 200,
     message:
@@ -13,35 +26,17 @@ module.exports = async (req, res) => {
       current_page: 1,
       total_pages: 1,
     },
-    timestamp: new Date().toLocaleString("en-US", {
-      timeZone: "Asia/Jakarta",
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: false,
-    }),
+    timestamp: getFormattedTimestamp(),
     errors: null,
   });
 
-  const createErrorResponse = (err) => ({
+  const getErrorResponse = (err) => ({
     success: false,
     code: 500,
     message: "Terjadi kesalahan pada server",
     data: null,
     pagination: null,
-    timestamp: new Date().toLocaleString("en-US", {
-      timeZone: "Asia/Jakarta",
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: false,
-    }),
+    timestamp: getFormattedTimestamp(),
     errors: {
       message: err.message,
       code: err.code || "INTERNAL_SERVER_ERROR",
@@ -50,12 +45,12 @@ module.exports = async (req, res) => {
 
   try {
     const [rows] = await req.db.promise().query("SELECT * FROM user");
-    const responseData = createSuccessResponse(rows);
+    const responseData = getSuccessResponse(rows);
 
     return res.status(responseData.code).json(responseData);
   } catch (err) {
     console.error(err);
-    const errorResponse = createErrorResponse(err);
+    const errorResponse = getErrorResponse(err);
 
     return res.status(500).json(errorResponse);
   }

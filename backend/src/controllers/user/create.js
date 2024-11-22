@@ -1,6 +1,19 @@
 const bcrypt = require("bcrypt");
 const {validasiEmail, validasiKatasandi, validasiHandphone} = require("../../utils/validation");
 
+const getFormattedTimestamp = () => {
+  return new Date().toLocaleString("en-US", {
+    timeZone: "Asia/Jakarta",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  });
+};
+
 const RESPONSE = {
   createSuccess: (data, message) => ({
     success: true,
@@ -13,7 +26,7 @@ const RESPONSE = {
       current_page: 1,
       total_pages: 1,
     },
-    timestamp: new Date().toISOString(),
+    timestamp: getFormattedTimestamp(),
     errors: null,
   }),
 
@@ -23,7 +36,7 @@ const RESPONSE = {
     message,
     data: null,
     pagination: null,
-    timestamp: new Date().toISOString(),
+    timestamp: getFormattedTimestamp(),
     errors,
   }),
 };

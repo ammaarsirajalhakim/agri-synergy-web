@@ -21,6 +21,7 @@ const RESPONSE = {
     timestamp: getFormattedTimestamp(),
     errors: null,
   }),
+
   deleteError: (code, message, errors) => ({
     success: false,
     code: code,
@@ -33,34 +34,32 @@ const RESPONSE = {
 };
 
 const deleteService = {
-  async deleteUser(db, userId) {
+  async deleteKalender(db, kalenderId) {
     const [rows] = await db
       .promise()
-      .query("DELETE FROM user WHERE id_user = ?", [userId]);
+      .query("DELETE FROM kalender WHERE id_kalender = ?", [kalenderId]);
     return rows.affectedRows > 0;
   },
 };
 
 module.exports = async (req, res) => {
   try {
-    const isDeleted = await deleteService.deleteUser(
+    const isDeleted = await deleteService.deleteKalender(
       req.db,
-      req.params.id_user
+      req.params.id_kalender
     );
     if (!isDeleted) {
-      return res
-        .status(404)
-        .json(
-          RESPONSE.deleteError(404, "User tidak ditemukan", {
-            message: "ID user tidak ada dalam database",
-            code: "USER_NOT_FOUND",
-          })
-        );
+      return res.status(404).json(
+        RESPONSE.deleteError(404, "Kalender tidak ditemukan", {
+          message: "ID kalender tidak ada dalam database",
+          code: "KALENDER_NOT_FOUND",
+        })
+      );
     }
 
     return res
       .status(200)
-      .json(RESPONSE.deleteSuccess("Data user berhasil dihapus"));
+      .json(RESPONSE.deleteSuccess("Data kalender berhasil dihapus"));
   } catch (err) {
     console.log(err);
     const errorResponse = RESPONSE.deleteError(

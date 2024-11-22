@@ -1,40 +1,39 @@
 const bcrypt = require("bcrypt");
-const {validasiEmail, validasiKatasandi, validasiHandphone} = require("../../utils/validation");
+const {
+  validasiEmail,
+  validasiKatasandi,
+  validasiHandphone,
+} = require("../../utils/validation");
+
+const getFormattedTimestamp = () => {
+  return new Date().toLocaleString("en-US", {
+    timeZone: "Asia/Jakarta",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  });
+};
 
 const RESPONSE = {
-  createSuccess: (message) => ({
+  updateSuccess: (message) => ({
     success: true,
     code: 200,
     message,
     data: null,
-    timestamp: new Date().toLocaleString("en-US", {
-      timeZone: "Asia/Jakarta",
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: false,
-    }),
+    timestamp: getFormattedTimestamp(),
     errors: null,
   }),
 
-  createError: (code, message, errors = null) => ({
+  updateError: (code, message, errors = null) => ({
     success: false,
     code,
     message,
     data: null,
-    timestamp: new Date().toLocaleString("en-US", {
-      timeZone: "Asia/Jakarta",
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: false,
-    }),
+    timestamp: getFormattedTimestamp(),
     errors,
   }),
 };
@@ -63,7 +62,7 @@ const validateFields = {
       if (validation.condition) {
         return {
           isValid: false,
-          error: RESPONSE.createError(400, validation.errorMessage),
+          error: RESPONSE.updateError(400, validation.errorMessage),
         };
       }
     }
@@ -75,7 +74,7 @@ const validateFields = {
     if (currentUser.length === 0) {
       return {
         isValid: false,
-        error: RESPONSE.createError(404, "User tidak ditemukan"),
+        error: RESPONSE.updateError(404, "User tidak ditemukan"),
       };
     }
 
@@ -86,7 +85,7 @@ const validateFields = {
       if (emailExists.length > 0) {
         return {
           isValid: false,
-          error: RESPONSE.createError(400, "Email sudah digunakan"),
+          error: RESPONSE.updateError(400, "Email sudah digunakan"),
         };
       }
     }
@@ -98,7 +97,7 @@ const validateFields = {
       if (phoneExists.length > 0) {
         return {
           isValid: false,
-          error: RESPONSE.createError(400, "Nomor handphone sudah digunakan"),
+          error: RESPONSE.updateError(400, "Nomor handphone sudah digunakan"),
         };
       }
     }
@@ -132,15 +131,15 @@ module.exports = async (req, res) => {
     if (rows.affectedRows > 0) {
       return res
         .status(200)
-        .json(RESPONSE.createSuccess("Data user berhasil diupdate"));
-    } else {
-      return res
-        .status(400)
-        .json(RESPONSE.createError(400, "Tidak ada data yang diperbarui"));
+        .json(RESPONSE.updateSuccess("Data user berhasil diupdate"));
     }
+    return res
+      .status(400)
+      .json(RESPONSE.updateError(400, "User tidak ditemukan"));
+      
   } catch (err) {
     console.log(err);
-    const errorResponse = RESPONSE.createError(
+    const errorResponse = RESPONSE.updateError(
       500,
       "Terjadi kesalahan pada server",
       { message: err.message, code: err.code || "INTERNAL_SERVER_ERROR" }
