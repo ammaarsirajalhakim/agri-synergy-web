@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const injectDb = require('./middlewares/injectDb');
-
+const bodyParser = require('body-parser');
 const userRoutes = require('./routes/userRoutes');
 const produkRoutes = require('./routes/produkRoutes');
 const kalenderRoutes = require('./routes/kalenderRoutes');
@@ -10,7 +10,7 @@ const app = express();
 
 
 app.use(cors());
-app.use(express.json());
+app.use(bodyParser.json());
 app.use(injectDb);
 
 app.use('/api', userRoutes);
