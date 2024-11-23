@@ -1,22 +1,71 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import Sidebar from "../../components/Sidebar";
 import "../../css/produk.css";
 
 const produk = [
   {
-    kataegori : 'Produk',
-    image : 'src/assets/products/produk-1.png',
-    nama : 'dajdjad',
-    stok : '10',
-    harga : '10000',
+    kataegori: 'Produk',
+    image: 'src/assets/products/produk-1.png',
+    nama: 'dajdjad',
+    stok: '10',
+    harga: '10000',
   },
-]
+];
 
 const Produk = () => {
   const [activePage, setActivePage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(null);
+  const navigate = useNavigate();
+
+  const checkAuthentication = async () => {
+    const token = localStorage.getItem("jwtToken");
+    if (!token) {
+      navigate("/");
+      return;
+    }
+
+    try {
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      
+     
+      const response = await axios.get(
+        "", 
+        // belum ada api produk jngan di otak atik bagian ini berbahaya :) kalo hnya tampilan tidak papa
+        {
+          validateStatus: function (status) {
+            return status < 500; 
+          }
+        }
+      );
+
+      if (response.status === 401 || response.status === 403) {
+        localStorage.removeItem("jwtToken"); 
+        navigate("/");
+        return;
+      }
+
+      if (response.data?.token) {
+        localStorage.setItem("jwtToken", response.data.token);
+      }
+
+    } catch (error) {
+
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        localStorage.removeItem("jwtToken");
+        navigate("/");
+      }
+      console.error("Error validating token:", error);
+    }
+  };
+
+  useEffect(() => {
+    checkAuthentication();
+  }, []);
+
 
   const handlePageChange = (page) => {
     if (page >= 1 && page <= 3) {

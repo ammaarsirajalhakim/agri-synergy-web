@@ -36,7 +36,7 @@ const Login = () => {
         katasandi,
       });
 
-      localStorage.setItem("token", response.data.data.token);
+      localStorage.setItem("jwtToken", response.data.data.token);
       navigate("/");
     } catch (err) {
       if (err.response) {
