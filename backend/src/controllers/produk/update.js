@@ -38,6 +38,8 @@ const UPDATABLE_FIELDS = [
   "harga",
   "stok",
   "deskripsi",
+  "tanggal_diposting",
+  "foto_produk",
 ];
 
 const validateFields = {
