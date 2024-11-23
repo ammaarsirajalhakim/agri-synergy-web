@@ -44,10 +44,11 @@ module.exports = async (req, res) => {
   });
 
   try {
-    const [rows] = await req.db.promise().query(`
-      SELECT *, DATE_FORMAT(tanggal_diposting, '%Y-%m-%d') as tanggal_diposting 
-      FROM produk
-    `);
+    const [rows] = await req.db
+      .promise()
+      .query(
+        "SELECT *, DATE_FORMAT(tanggal_diposting, '%Y-%m-%d') as tanggal_diposting FROM produk"
+      );
     const responseData = getSuccessResponse(rows);
     return res.status(responseData.code).json(responseData);
   } catch (err) {

@@ -11,6 +11,7 @@ const sawahRoutes = require('./routes/sawahRoutes');
 const sawahdetailRoutes = require('./routes/sawahdetailRoutes');
 const keranjangRoutes = require('./routes/keranjangRoutes');
 const pemesananRoutes = require('./routes/pemesananRoutes');
+const pengirimanRoutes = require('./routes/pengirimanRoutes');
 
 
 const loginRoutes = require('./routes/loginRoutes');
@@ -33,6 +34,7 @@ app.use('/api', sawahRoutes);
 app.use('/api', sawahdetailRoutes);
 app.use('/api', keranjangRoutes);
 app.use('/api', pemesananRoutes);
+app.use('/api', pengirimanRoutes);
 
 
 app.get('/', (req, res) => {

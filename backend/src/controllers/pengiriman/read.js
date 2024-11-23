@@ -17,8 +17,8 @@ module.exports = async (req, res) => {
     code: 200,
     message:
       rows.length > 0
-        ? "Data detail sawah berhasil diambil"
-        : "Data detail sawah tidak tersedia",
+        ? "Data pengiriman berhasil diambil"
+        : "Data pengiriman tidak tersedia",
     data: rows,
     pagination: {
       total: rows.length,
@@ -44,9 +44,13 @@ module.exports = async (req, res) => {
   });
 
   try {
-    const [rows] = await req.db.promise().query("SELECT * FROM detail_sawah");
+    const [rows] = await req.db
+      .promise()
+      .query(
+        "SELECT *, DATE_FORMAT(tgl_pengiriman, '%Y-%m-%d') AS tgl_pengiriman, DATE_FORMAT(tgl_penerima, '%Y-%m-%d') AS tgl_penerima FROM pengiriman"
+      );
     const responseData = getSuccessResponse(rows);
-    return res.status(response.code).json(responseData);
+    return res.status(responseData.code).json(responseData);
   } catch (err) {
     console.log(err);
     const responseData = getErrorResponse(err);

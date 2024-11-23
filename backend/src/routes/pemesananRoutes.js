@@ -10,7 +10,7 @@ const deletePemesanan = require("../controllers/pemesanan/delete");
 router.get("/pemesanan", passport.authenticate('jwt', { session: false }), readPemesanan);
 router.post("/pemesanan", passport.authenticate('jwt', { session: false }), createPemesanan);
 router.put("/pemesanan/:id_memesan", passport.authenticate('jwt', { session: false }), updatePemesanan);
-router.delete("/pemesanan/:id_memesanan", passport.authenticate('jwt', { session: false }), deletePemesanan);
+router.delete("/pemesanan/:id_memesan", passport.authenticate('jwt', { session: false }), deletePemesanan);
 
 
 module.exports = router;
