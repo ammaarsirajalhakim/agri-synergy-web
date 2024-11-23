@@ -47,26 +47,8 @@ const validateFields = {
   },
 
   validateData: (req) => {
-    const {
-      id_user,
-      kategori,
-      nama,
-      harga,
-      kuantitas,
-      deskripsi,
-      tanggal_diposting,
-      foto_produk,
-    } = req.body;
-    const requiredFields = {
-      id_user,
-      kategori,
-      nama,
-      harga,
-      kuantitas,
-      deskripsi,
-      tanggal_diposting,
-      foto_produk,
-    };
+    const { id_user, lokasi, tipe, luas } = req.body;
+    const requiredFields = { id_user, lokasi, tipe, luas };
 
     const missingFieldsResult = validateFields.checkRequired(requiredFields);
     if (missingFieldsResult) {
@@ -95,16 +77,16 @@ module.exports = async (req, res) => {
 
     const [rows] = await req.db
       .promise()
-      .query("INSERT INTO produk SET ?", validation.data);
+      .query("INSERT INTO sawah SET ?", validation.data);
 
     if (rows.affectedRows > 0) {
       return res
         .status(200)
-        .json(RESPONSE.createSuccess(rows, "Data produk berhasil ditambahkan"));
+        .json(RESPONSE.createSuccess(rows, "Data sawah berhasil ditambahkan"));
     } else {
       return res
         .status(400)
-        .json(RESPONSE.createError(400, "Data produk gagal ditambahkan"));
+        .json(RESPONSE.createError(400, "Data sawah gagal ditambahkan"));
     }
   } catch (err) {
     console.error(err);

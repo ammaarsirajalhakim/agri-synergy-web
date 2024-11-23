@@ -90,11 +90,6 @@ module.exports = async (req, res) => {
           .json(RESPONSE.createSuccess([rows], "Data kalender berhasil ditambahkan"));
     } catch (err) {
         console.error(err);
-        const errorResponse = RESPONSE.createError(
-          500,
-          "Terjadi kesalahan pada server",
-          { message: err.message, code: err.code || "INTERNAL_SERVER_ERROR" }
-        );
-        return res.status(errorResponse.code).json(errorResponse);
+        return res.status(500).json(RESPONSE.createError(500, "Terjadi kesalahan pada server"));
     }
 }

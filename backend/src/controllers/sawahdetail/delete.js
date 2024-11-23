@@ -15,52 +15,52 @@ const RESPONSE = {
   deleteSuccess: (message) => ({
     success: true,
     code: 200,
-    message: message,
+    message,
     data: null,
-    pagination: null,
     timestamp: getFormattedTimestamp(),
     errors: null,
   }),
-  deleteError: (code, message, errors) => ({
+
+  deleteError: (code, message, errors = null) => ({
     success: false,
-    code: code,
-    message: message,
+    code,
+    message,
     data: null,
-    pagination: null,
     timestamp: getFormattedTimestamp(),
-    errors: errors,
+    errors,
   }),
 };
 
 const deleteService = {
-  async deleteProduk(db, produkId) {
+  async deleteLokasi(db, LokasiId) {
     const [rows] = await db
       .promise()
-      .query("DELETE FROM produk WHERE id_produk = ?", [produkId]);
+      .query("DELETE FROM detail_sawah WHERE id_lokasi = ?", [LokasiId]);
     return rows.affectedRows > 0;
   },
 };
 
 module.exports = async (req, res) => {
   try {
-    const isDeleted = await deleteService.deleteProduk(
+    const isDeleted = await deleteService.deleteLokasi(
       req.db,
-      req.params.id_produk
+      req.params.id_lokasi
     );
+
     if (!isDeleted) {
       return res.status(404).json(
-        RESPONSE.deleteError(404, "produk tidak ditemukan", {
-          message: "ID produk tidak ada dalam database",
-          code: "PRODUK_NOT_FOUND",
+        RESPONSE.deleteError(404, "lokasi tidak ditemukan", {
+          message: "ID lokasi tidak ada dalam database",
+          code: "LOKASI_NOT_FOUND",
         })
       );
     }
 
     return res
       .status(200)
-      .json(RESPONSE.deleteSuccess("Data produk berhasil dihapus"));
+      .json(RESPONSE.deleteSuccess("Lokasi berhasil dihapus"));
   } catch (err) {
-    console.log(err);
+    console.error(err);
     return res
       .status(500)
       .json(RESPONSE.deleteError(500, "Terjadi kesalahan pada server"));

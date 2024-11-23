@@ -31,7 +31,7 @@ const RESPONSE = {
   }),
 };
 
-const UPDATABLE_FIELDS = ["id_user", "jenis", "judul", "tanggal", "deskripsi"];
+const UPDATABLE_FIELDS = ["id_user", "lokasi", "tipe", "luas"];
 
 const validateFields = {
   validateUpdateData: async (req) => {
@@ -50,13 +50,10 @@ const validateFields = {
   },
 };
 
-const updateKalender = async (db, kalenderId, updateData) => {
+const updateSawah = async (db, sawahId, updateData) => {
   const [rows] = await db
     .promise()
-    .query("UPDATE kalender SET ? WHERE id_kalender = ?", [
-      updateData,
-      kalenderId,
-    ]);
+    .query("UPDATE sawah SET ? WHERE id_sawah = ?", [updateData, sawahId]);
 
   return rows.affectedRows;
 };
@@ -69,21 +66,21 @@ module.exports = async (req, res) => {
       return res.status(validation.error.code).json(validation.error);
     }
 
-    const affectedRows = await updateKalender(
+    const affectedRows = await updateSawah(
       req.db,
-      req.params.id_kalender,
+      req.params.id_sawah,
       validation.data
     );
 
     if (affectedRows > 0) {
       return res
         .status(200)
-        .json(RESPONSE.updateSuccess("Data kalender berhasil diupdate"));
-    } else {
-      return res
-        .status(404)
-        .json(RESPONSE.updateError(404, "Kalender tidak ditemukan"));
+        .json(RESPONSE.updateSuccess("Update sawah berhasil"));
     }
+
+    return res
+      .status(400)
+      .json(RESPONSE.updateError(400, "Sawah tidak ditemukan"));
   } catch (err) {
     console.log(err);
     return res

@@ -48,14 +48,12 @@ module.exports = async (req, res) => {
       req.params.id_user
     );
     if (!isDeleted) {
-      return res
-        .status(404)
-        .json(
-          RESPONSE.deleteError(404, "User tidak ditemukan", {
-            message: "ID user tidak ada dalam database",
-            code: "USER_NOT_FOUND",
-          })
-        );
+      return res.status(404).json(
+        RESPONSE.deleteError(404, "User tidak ditemukan", {
+          message: "ID user tidak ada dalam database",
+          code: "USER_NOT_FOUND",
+        })
+      );
     }
 
     return res
@@ -63,11 +61,8 @@ module.exports = async (req, res) => {
       .json(RESPONSE.deleteSuccess("Data user berhasil dihapus"));
   } catch (err) {
     console.log(err);
-    const errorResponse = RESPONSE.deleteError(
-      500,
-      "Terjadi kesalahan pada server",
-      { message: err.message, code: err.code || "INTERNAL_SERVER_ERROR" }
-    );
-    return res.status(500).json(errorResponse);
+    return res
+      .status(500)
+      .json(RESPONSE.deleteError(500, "Terjadi kesalahan pada server"));
   }
 };

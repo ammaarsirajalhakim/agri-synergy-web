@@ -90,18 +90,10 @@ module.exports = async (req, res) => {
     return res
       .status(404)
       .json(RESPONSE.updateError(404, "Produk tidak ditemukan"));
-      
   } catch (err) {
     console.error(err);
-
-    const errorResponse = RESPONSE.updateError(
-      500,
-      "Terjadi kesalahan pada server",
-      {
-        message: err.message,
-        code: err.code || "INTERNAL_SERVER_ERROR",
-      }
-    );
-    return res.status(500).json(errorResponse);
+    return res
+      .status(500)
+      .json(RESPONSE.updateError(500, "Terjadi kesalahan pada server"));
   }
 };

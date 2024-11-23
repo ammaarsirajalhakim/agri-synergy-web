@@ -31,7 +31,15 @@ const RESPONSE = {
   }),
 };
 
-const UPDATABLE_FIELDS = ["id_user", "jenis", "judul", "tanggal", "deskripsi"];
+const UPDATABLE_FIELDS = [
+  "id_sawah",
+  "jenis_tanah",
+  "hasil_panen",
+  "produksi",
+  "deskripsi",
+  "latitude",
+  "longitude",
+];
 
 const validateFields = {
   validateUpdateData: async (req) => {
@@ -50,13 +58,10 @@ const validateFields = {
   },
 };
 
-const updateKalender = async (db, kalenderId, updateData) => {
+const updateLokasi = async (db, lokasiId, updateData) => {
   const [rows] = await db
     .promise()
-    .query("UPDATE kalender SET ? WHERE id_kalender = ?", [
-      updateData,
-      kalenderId,
-    ]);
+    .query("UPDATE detail_sawah SET ? WHERE id_lokasi = ?", [updateData, lokasiId]);
 
   return rows.affectedRows;
 };
@@ -69,23 +74,23 @@ module.exports = async (req, res) => {
       return res.status(validation.error.code).json(validation.error);
     }
 
-    const affectedRows = await updateKalender(
+    const affectedRows = await updateLokasi(
       req.db,
-      req.params.id_kalender,
+      req.params.id_lokasi,
       validation.data
     );
 
     if (affectedRows > 0) {
       return res
         .status(200)
-        .json(RESPONSE.updateSuccess("Data kalender berhasil diupdate"));
+        .json(RESPONSE.updateSuccess("Update lokasi berhasil"));
     } else {
       return res
         .status(404)
-        .json(RESPONSE.updateError(404, "Kalender tidak ditemukan"));
+        .json(RESPONSE.updateError(404, "Lokasi tidak ditemukan"));
     }
   } catch (err) {
-    console.log(err);
+    console.error(err);
     return res
       .status(500)
       .json(RESPONSE.updateError(500, "Terjadi kesalahan pada server"));

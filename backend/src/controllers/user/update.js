@@ -136,14 +136,10 @@ module.exports = async (req, res) => {
     return res
       .status(400)
       .json(RESPONSE.updateError(400, "User tidak ditemukan"));
-      
   } catch (err) {
     console.log(err);
-    const errorResponse = RESPONSE.updateError(
-      500,
-      "Terjadi kesalahan pada server",
-      { message: err.message, code: err.code || "INTERNAL_SERVER_ERROR" }
-    );
-    return res.status(errorResponse.code).json(errorResponse);
+    return res
+      .status(500)
+      .json(RESPONSE.updateError(500, "Terjadi kesalahan pada server"));
   }
 };

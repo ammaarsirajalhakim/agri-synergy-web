@@ -1,5 +1,9 @@
 const bcrypt = require("bcrypt");
-const {validasiEmail, validasiKatasandi, validasiHandphone} = require("../../utils/validation");
+const {
+  validasiEmail,
+  validasiKatasandi,
+  validasiHandphone,
+} = require("../../utils/validation");
 
 const getFormattedTimestamp = () => {
   return new Date().toLocaleString("en-US", {
@@ -44,15 +48,14 @@ const RESPONSE = {
 const validateFields = {
   checkRequired: (data) => {
     const missingFields = Object.entries(data)
-      .filter(([key, value]) => key !== 'foto' && !value) // Tidak memeriksa field foto
+      .filter(([key, value]) => key !== "foto" && !value) // Tidak memeriksa field foto
       .map(([key]) => key);
     return missingFields.length > 0 ? missingFields : null;
   },
-  
 
   validateData: async (req) => {
-    const { nama, no_hp, alamat, email, katasandi, foto} = req.body;
-    const requiredFields = { nama, no_hp, alamat, email, katasandi, foto};
+    const { nama, no_hp, alamat, email, katasandi, foto } = req.body;
+    const requiredFields = { nama, no_hp, alamat, email, katasandi, foto };
 
     const missingFieldsResult = validateFields.checkRequired(requiredFields);
     if (missingFieldsResult) {
@@ -133,11 +136,8 @@ module.exports = async (req, res) => {
       .json(RESPONSE.createSuccess(rows, "Data user berhasil ditambahkan"));
   } catch (err) {
     console.error(err);
-    const errorResponse = RESPONSE.createError(
-      500,
-      "Terjadi kesalahan pada server",
-      { message: err.message, code: err.code || "INTERNAL_SERVER_ERROR" }
-    );
-    return res.status(errorResponse.code).json(errorResponse);
+    return res
+      .status(500)
+      .json(RESPONSE.createError(500, "Terjadi kesalahan pada server"));
   }
 };
