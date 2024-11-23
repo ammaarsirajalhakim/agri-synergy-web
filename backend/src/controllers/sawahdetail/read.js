@@ -45,11 +45,11 @@ module.exports = async (req, res) => {
 
   try {
     const [rows] = await req.db.promise().query("SELECT * FROM detail_sawah");
-    const response = getSuccessResponse(rows);
-    return res.status(response.code).json(response);
+    const responseData = getSuccessResponse(rows);
+    return res.status(response.code).json(responseData);
   } catch (err) {
     console.log(err);
-    const response = getErrorResponse(err);
-    return res.status(response.code).json(response);
+    const responseData = getErrorResponse(err);
+    return res.status(responseData.code).json(responseData);
   }
 };

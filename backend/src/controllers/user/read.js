@@ -46,12 +46,10 @@ module.exports = async (req, res) => {
   try {
     const [rows] = await req.db.promise().query("SELECT * FROM user");
     const responseData = getSuccessResponse(rows);
-
     return res.status(responseData.code).json(responseData);
   } catch (err) {
     console.error(err);
-    const errorResponse = getErrorResponse(err);
-
-    return res.status(500).json(errorResponse);
+    const responseData = getErrorResponse(err);
+    return res.status(responseData.code).json(responseData);
   }
 };

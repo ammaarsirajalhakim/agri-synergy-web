@@ -48,13 +48,13 @@ const RESPONSE = {
 const validateFields = {
   checkRequired: (data) => {
     const missingFields = Object.entries(data)
-      .filter(([key, value]) => key !== "foto" && !value) // Tidak memeriksa field foto
+      .filter(([key, value]) => key !== "foto" && !value) 
       .map(([key]) => key);
     return missingFields.length > 0 ? missingFields : null;
   },
 
   validateData: async (req) => {
-    const { nama, no_hp, alamat, email, katasandi, foto } = req.body;
+    const { nama, no_hp, alamat, email, katasandi, foto, role } = req.body;
     const requiredFields = { nama, no_hp, alamat, email, katasandi, foto };
 
     const missingFieldsResult = validateFields.checkRequired(requiredFields);
@@ -66,6 +66,8 @@ const validateFields = {
         }),
       };
     }
+
+    const userRole = role || 'pembeli';
 
     const validations = [
       {
@@ -114,7 +116,7 @@ const validateFields = {
 
     return {
       isValid: true,
-      data: { ...requiredFields, katasandi: await bcrypt.hash(katasandi, 10) },
+      data: { ...requiredFields, role: userRole, katasandi: await bcrypt.hash(katasandi, 10) },
     };
   },
 };

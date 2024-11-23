@@ -45,8 +45,11 @@ module.exports = async (req, res) => {
 
   try {
     const [rows] = await req.db.promise().query("SELECT * FROM kalender");
-    return res.status(200).json(getSuccessResponse(rows));
+    const responseData = getSuccessResponse(rows);
+    return res.status(responseData.code).json(responseData);
   } catch (err) {
-    return res.status(500).json(getErrorResponse(err));
+    console.error(err);
+    const responseData = getErrorResponse(err);
+    return res.status(responseData.code).json(responseData);
   }
 };

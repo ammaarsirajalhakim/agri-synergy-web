@@ -62,13 +62,7 @@ const validateFields = {
 
         return {
           isValid: true,
-          data: {
-            id_user,
-            jenis,
-            judul,
-            tanggal,
-            deskripsi,
-          },
+          data: requiredFields,
         };
     },
 };

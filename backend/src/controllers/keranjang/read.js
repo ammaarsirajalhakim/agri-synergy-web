@@ -17,8 +17,8 @@ module.exports = async (req, res) => {
     code: 200,
     message:
       rows.length > 0
-        ? "Data produk berhasil diambil"
-        : "Data produk tidak tersedia",
+        ? "Data keranjang berhasil diambil"
+        : "Data keranjang tidak tersedia",
     data: rows,
     pagination: {
       total: rows.length,
@@ -44,14 +44,11 @@ module.exports = async (req, res) => {
   });
 
   try {
-    const [rows] = await req.db.promise().query(`
-      SELECT *, DATE_FORMAT(tanggal_diposting, '%Y-%m-%d') as tanggal_diposting 
-      FROM produk
-    `);
+    const [rows] = await req.db.promise().query("SELECT * FROM keranjang");
     const responseData = getSuccessResponse(rows);
     return res.status(responseData.code).json(responseData);
   } catch (err) {
-    console.error(err);
+    console.log(err);
     const responseData = getErrorResponse(err);
     return res.status(responseData.code).json(responseData);
   }

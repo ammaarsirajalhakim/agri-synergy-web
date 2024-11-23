@@ -12,44 +12,44 @@ const getFormattedTimestamp = () => {
 };
 
 module.exports = async (req, res) => {
-    const getSuccessResponse = (rows) => ({
-      success: rows.length > 0,
-      code: 200,
-      message:
-        rows.length > 0
-          ? "Data sawah berhasil diambil"
-          : "Data sawah tidak tersedia",
-      data: rows,
-      pagination: {
-        total: rows.length,
-        per_page: rows.length,
-        current_page: 1,
-        total_pages: 1,
-      },
-      timestamp: getFormattedTimestamp(),
-      errors: null,
-    });
+  const getSuccessResponse = (rows) => ({
+    success: rows.length > 0,
+    code: 200,
+    message:
+      rows.length > 0
+        ? "Data sawah berhasil diambil"
+        : "Data sawah tidak tersedia",
+    data: rows,
+    pagination: {
+      total: rows.length,
+      per_page: rows.length,
+      current_page: 1,
+      total_pages: 1,
+    },
+    timestamp: getFormattedTimestamp(),
+    errors: null,
+  });
 
-    const getErrorResponse = (err) => ({
-      success: false,
-      code: 500,
-      message: "Terjadi kesalahan pada server",
-      data: null,
-      pagination: null,
-      timestamp: getFormattedTimestamp(),
-      errors: {
-        message: err.message,
-        code: err.code || "INTERNAL_SERVER_ERROR",
-      },
-    });
+  const getErrorResponse = (err) => ({
+    success: false,
+    code: 500,
+    message: "Terjadi kesalahan pada server",
+    data: null,
+    pagination: null,
+    timestamp: getFormattedTimestamp(),
+    errors: {
+      message: err.message,
+      code: err.code || "INTERNAL_SERVER_ERROR",
+    },
+  });
 
-    try {
-        const [rows] = await req.db.promise().query("SELECT * FROM sawah");
-        const response = getSuccessResponse(rows);
-        return res.status(200).json(response);
-    }catch (err) {
-        console.log(err);
-        const response = getErrorResponse(err);
-        return res.status(500).json(response);
-    }
-}
+  try {
+    const [rows] = await req.db.promise().query("SELECT * FROM sawah");
+    const responseData = getSuccessResponse(rows);
+    return res.status(responseData.code).json(responseData);
+  } catch (err) {
+    console.log(err);
+    const responseData = getErrorResponse(err);
+    return res.status(responseData.code).json(responseData);
+  }
+};

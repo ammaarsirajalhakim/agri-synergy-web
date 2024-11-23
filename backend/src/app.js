@@ -9,6 +9,8 @@ const produkRoutes = require('./routes/produkRoutes');
 const kalenderRoutes = require('./routes/kalenderRoutes');
 const sawahRoutes = require('./routes/sawahRoutes');
 const sawahdetailRoutes = require('./routes/sawahdetailRoutes');
+const keranjangRoutes = require('./routes/keranjangRoutes');
+const pemesananRoutes = require('./routes/pemesananRoutes');
 
 
 const loginRoutes = require('./routes/loginRoutes');
@@ -29,6 +31,8 @@ app.use('/api', produkRoutes);
 app.use('/api', kalenderRoutes);
 app.use('/api', sawahRoutes);
 app.use('/api', sawahdetailRoutes);
+app.use('/api', keranjangRoutes);
+app.use('/api', pemesananRoutes);
 
 
 app.get('/', (req, res) => {
