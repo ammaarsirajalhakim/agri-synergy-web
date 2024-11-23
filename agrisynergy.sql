@@ -95,7 +95,7 @@ CREATE TABLE `kalender` (
   PRIMARY KEY (`id_kalender`),
   KEY `fk_kalender_user_id` (`id_user`),
   CONSTRAINT `fk_kalender_user_id` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -267,12 +267,13 @@ DROP TABLE IF EXISTS `produk`;
 CREATE TABLE `produk` (
   `id_produk` int NOT NULL AUTO_INCREMENT,
   `id_user` int NOT NULL,
+  `kategori` enum('hasil panen','peralatan','pertanian') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `nama` varchar(255) NOT NULL,
   `harga` decimal(10,2) NOT NULL,
   `kuantitas` int NOT NULL,
   `deskripsi` text NOT NULL,
   `tanggal_diposting` date NOT NULL,
-  `kategori` enum('hasil panen','peralatan','pertanian') DEFAULT NULL,
+  `foto_produk` varchar(255) NOT NULL,
   PRIMARY KEY (`id_produk`),
   KEY `id_user` (`id_user`),
   CONSTRAINT `produk_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`)
@@ -394,6 +395,7 @@ CREATE TABLE `user` (
   `email` varchar(255) NOT NULL,
   `katasandi` varchar(255) NOT NULL,
   `role` enum('petani','pembeli','ahli','admin','tengkulak') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT 'pembeli',
+  `foto` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id_user`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -420,4 +422,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-11-22 17:05:27
+-- Dump completed on 2024-11-23 16:49:07

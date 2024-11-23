@@ -44,14 +44,15 @@ const RESPONSE = {
 const validateFields = {
   checkRequired: (data) => {
     const missingFields = Object.entries(data)
-      .filter(([, value]) => !value)
+      .filter(([key, value]) => key !== 'foto' && !value) // Tidak memeriksa field foto
       .map(([key]) => key);
     return missingFields.length > 0 ? missingFields : null;
   },
+  
 
   validateData: async (req) => {
-    const { nama, no_hp, alamat, email, katasandi } = req.body;
-    const requiredFields = { nama, no_hp, alamat, email, katasandi };
+    const { nama, no_hp, alamat, email, katasandi, foto} = req.body;
+    const requiredFields = { nama, no_hp, alamat, email, katasandi, foto};
 
     const missingFieldsResult = validateFields.checkRequired(requiredFields);
     if (missingFieldsResult) {
