@@ -1,45 +1,46 @@
-const express = require('express');
-const cors = require('cors');
-const injectDb = require('./middlewares/injectDb');
-const bodyParser = require('body-parser');
-const passport = require('passport');
+const express = require("express");
+const cors = require("cors");
+const injectDb = require("./middlewares/injectDb");
+const bodyParser = require("body-parser");
+const passport = require("passport");
 
-const userRoutes = require('./routes/userRoutes');
-const produkRoutes = require('./routes/produkRoutes');
-const kalenderRoutes = require('./routes/kalenderRoutes');
-const sawahRoutes = require('./routes/sawahRoutes');
-const sawahdetailRoutes = require('./routes/sawahdetailRoutes');
-const keranjangRoutes = require('./routes/keranjangRoutes');
-const pemesananRoutes = require('./routes/pemesananRoutes');
-const pengirimanRoutes = require('./routes/pengirimanRoutes');
+const userRoutes = require("./routes/userRoutes");
+const produkRoutes = require("./routes/produkRoutes");
+const kalenderRoutes = require("./routes/kalenderRoutes");
+const sawahRoutes = require("./routes/sawahRoutes");
+const sawahdetailRoutes = require("./routes/sawahdetailRoutes");
+const keranjangRoutes = require("./routes/keranjangRoutes");
+const pemesananRoutes = require("./routes/pemesananRoutes");
+const pengirimanRoutes = require("./routes/pengirimanRoutes");
+const riwayatTransaksiRoutes = require("./routes/riwayat_transaksiRoutes");
 
-
-const loginRoutes = require('./routes/loginRoutes');
+const loginRoutes = require("./routes/loginRoutes");
 
 const app = express();
 
 app.use(passport.initialize());
-require('./middlewares/passport')
+require("./middlewares/passport");
 
 app.use(cors());
 app.use(bodyParser.json());
 app.use(injectDb);
 
-app.use('/api/auth', loginRoutes);
+const apiRoutes = express.Router();
+apiRoutes.use("/auth", loginRoutes);
+apiRoutes.use(userRoutes);
+apiRoutes.use(produkRoutes);
+apiRoutes.use(kalenderRoutes);
+apiRoutes.use(sawahRoutes);
+apiRoutes.use(sawahdetailRoutes);
+apiRoutes.use(keranjangRoutes);
+apiRoutes.use(pemesananRoutes);
+apiRoutes.use(pengirimanRoutes);
+apiRoutes.use(riwayatTransaksiRoutes);
 
-app.use('/api', userRoutes);
-app.use('/api', produkRoutes);
-app.use('/api', kalenderRoutes);
-app.use('/api', sawahRoutes);
-app.use('/api', sawahdetailRoutes);
-app.use('/api', keranjangRoutes);
-app.use('/api', pemesananRoutes);
-app.use('/api', pengirimanRoutes);
+app.use("/api", apiRoutes);
 
-
-app.get('/', (req, res) => {
-    res.send('Hello, World!');
+app.get("/", (req, res) => {
+  res.send("Hello, World!");
 });
 
-module.exports = app; 
-
+module.exports = app;
