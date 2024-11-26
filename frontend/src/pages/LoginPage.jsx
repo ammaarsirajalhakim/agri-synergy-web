@@ -37,6 +37,7 @@ const Login = () => {
       });
 
       localStorage.setItem("jwtToken", response.data.data.token);
+      localStorage.setItem('id_user', response.data.id_user);
       navigate("/");
     } catch (err) {
       if (err.response) {
