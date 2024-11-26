@@ -7,9 +7,9 @@ const readKalender = require("../controllers/kalender/read");
 const updateKalender = require("../controllers/kalender/update");
 const deleteKalender = require("../controllers/kalender/delete");
 
-router.get("/kalender", passport.authenticate('jwt', { session: false }), readKalender);
-router.post("/kalender", passport.authenticate('jwt', { session: false }), createKalender);
-router.put("/kalender/:id_kalender", passport.authenticate('jwt', { session: false }), updateKalender);
-router.delete("/kalender/:id_kalender", passport.authenticate('jwt', { session: false }), deleteKalender);
+router.get("/kalender", readKalender);
+router.post("/kalender", createKalender);
+router.put("/kalender/:id_kalender", updateKalender);
+router.delete("/kalender/:id_kalender", deleteKalender);
 
 module.exports = router;
