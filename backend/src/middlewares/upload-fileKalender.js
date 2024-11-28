@@ -82,7 +82,7 @@ const imageUploader = multer({
 });
 
 const uploadMiddleware = (req, res, next) => {
-  const upload = imageUploader.single("image");
+  const upload = imageUploader.single("gambar");
 
   upload(req, res, (err) => {
     if (err) {

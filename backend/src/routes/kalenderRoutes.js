@@ -10,7 +10,7 @@ const deleteKalender = require("../controllers/kalender/delete");
 
 router.use("/fileKalender", validateStaticFile, staticFileMiddleware);
 
-router.use('/fileKalenderr/*', (req, res) => {
+router.use('/fileKalender/*', (req, res) => {
   res.status(404).json({
     success: false,
     code: 404,

@@ -4,21 +4,12 @@ import axios from "axios";
 import Sidebar from "../../components/Sidebar";
 import "../../css/produk.css";
 
-const produk = [
-  {
-    kataegori: 'Produk',
-    image: 'src/assets/products/produk-1.png',
-    nama: 'dajdjad',
-    stok: '10',
-    harga: '10000',
-  },
-];
-
 const Produk = () => {
   const [activePage, setActivePage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(null);
+  const [products, setProducts] = useState([]);
   const navigate = useNavigate();
 
   const checkAuthentication = async () => {
@@ -29,21 +20,20 @@ const Produk = () => {
     }
 
     try {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      
-     
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
       const response = await axios.get(
-        "", 
-        // belum ada api produk jngan di otak atik bagian ini berbahaya :) kalo hnya tampilan tidak papa
+        "http://localhost:3000/api/produk",
+
         {
           validateStatus: function (status) {
-            return status < 500; 
-          }
+            return status < 500;
+          },
         }
       );
 
       if (response.status === 401 || response.status === 403) {
-        localStorage.removeItem("jwtToken"); 
+        localStorage.removeItem("jwtToken");
         navigate("/");
         return;
       }
@@ -52,8 +42,10 @@ const Produk = () => {
         localStorage.setItem("jwtToken", response.data.token);
       }
 
+      if (response.data?.data) {
+        setProducts(response.data.data);
+      }
     } catch (error) {
-
       if (error.response?.status === 401 || error.response?.status === 403) {
         localStorage.removeItem("jwtToken");
         navigate("/");
@@ -62,10 +54,56 @@ const Produk = () => {
     }
   };
 
+  const handleAddProduct = async () => {
+    const formData = new FormData();
+    const productName = document.getElementById("productName").value;
+    const productStock = document.getElementById("productStock").value;
+    const productPrice = document.getElementById("productPrice").value;
+    const productImage = document.getElementById("productImage").files[0];
+    const productCategory = document.getElementById("productKategori").value;
+    const ProductDeskripsi = document.getElementById("productDeskripsi").value;
+    const currentDate = new Date();
+
+    const day = String(currentDate.getDate()).padStart(2, '0'); 
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0'); 
+    const year = currentDate.getFullYear();
+    
+    const formattedDate = `${year}-${month}-${day}`;
+    const userId = localStorage.getItem("id_user");
+
+    formData.append("id_user", userId);  
+    formData.append("kategori", productCategory);
+    formData.append("nama", productName);
+    formData.append("harga", productPrice);
+    formData.append("kuantitas", productStock);
+    formData.append("deskripsi", ProductDeskripsi);
+    formData.append("foto_produk", productImage);
+     formData.append("tanggal_diposting", formattedDate);
+  
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/produk", 
+        formData, 
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${localStorage.getItem("jwtToken")}`, 
+          },
+        }
+      );
+      if (response.status === 200) {
+        closeModal();
+        setProducts((prev) => [...prev, response.data]);
+      }
+    } catch (error) {
+      console.error("Error adding product:", error);
+    }
+  };
+  
+  
   useEffect(() => {
     checkAuthentication();
   }, []);
-
 
   const handlePageChange = (page) => {
     if (page >= 1 && page <= 3) {
@@ -114,37 +152,47 @@ const Produk = () => {
               </tr>
             </thead>
             <tbody>
-              {produk.map((product, index) => (
-                <tr key={index}>
-                  <td>{product.kataegori}</td>
-                  <td>
-                    <img src={product.image} alt="Product"
-                    width="50"
-                    height="50" />
-                  </td>
-                  <td>{product.nama}</td>
-                  <td>{product.stok}</td>
-                  <td>{product.harga}</td>
-                  <td>
-                    <button
-                      className="update1"
-                      onClick={() =>
-                        openUpdateModal({
-                          name: "",
-                          stock: "",
-                          price: "",
-                          category: "",
-                        })
-                      }
-                    >
-                      <span className="icon update-icon1" />
-                    </button>
-                    <button className="delete1">
-                      <span className="icon delete-icon1" />
-                    </button>
-                  </td>
+              {products.length > 0 ? (
+                products.map((product) => (
+                  <tr key={product.id_produk}>
+                    <td>{product.kategori}</td>
+                    <td>
+                      <img
+                        src={`http://localhost:3000/api/file/${product.foto_produk}`}
+                        alt="Produk"
+                        width="60"
+                        height="60"
+                      />
+                    </td>
+                    <td>{product.nama}</td>
+                    <td>{product.kuantitas}</td>
+                    <td>{`Rp ${Number(product.harga).toLocaleString()}`}</td>
+                    <td>
+                      <button
+                        className="update1"
+                        onClick={() =>
+                          openUpdateModal({
+                            nama: product.nama,
+                            kuantitas: product.kuantitas,
+                            harga: product.harga,
+                            kategori: product.kategori,
+                            deskripsi: product.deskripsi,
+                          })
+                        }
+                      >
+                        <span className="icon update-icon1" />
+                      </button>
+                      <button className="delete1">
+                        <span className="icon delete-icon1" />
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="6">Tidak ada data produk.</td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>
@@ -228,11 +276,18 @@ const Produk = () => {
                 <label htmlFor="productKategori">Kategori</label>
                 <select id="productKategori" placeholder="Pilih Kategori">
                   <option value="">Pilih Kategori</option>
-                  <option value="elektronik">Elektronik</option>
-                  <option value="fashion">Fashion</option>
-                  <option value="makanan">Makanan</option>
-                  <option value="perabot">Perabot</option>
+                  <option value="hasil_panen">Hasil Panen</option>
+                  <option value="peralatan">Peralatan</option>
+                  <option value="pertanian">Pertanian</option>
                 </select>
+              </div>
+              
+              <div className="form-group1 full-width">
+                <label htmlFor="productDeskripsi">Deskripsi</label>
+                <textarea
+                  id="productDeskripsi"
+                  placeholder="Masukkan deskripsi"
+                />
               </div>
             </div>
 
@@ -240,7 +295,7 @@ const Produk = () => {
               <button className="cancel-button1" onClick={closeModal}>
                 Kembali
               </button>
-              <button className="save-button1">Simpan</button>
+              <button className="save-button1" onClick={handleAddProduct}>Simpan</button>
             </div>
           </div>
         </div>
