@@ -36,8 +36,9 @@ const Login = () => {
         katasandi,
       });
 
+      console.log('Login Response:', response.data);
       localStorage.setItem("jwtToken", response.data.data.token);
-      localStorage.setItem('id_user', response.data.id_user);
+      localStorage.setItem("id_user", response.data.data.user.id_user.toString());
       navigate("/");
     } catch (err) {
       if (err.response) {

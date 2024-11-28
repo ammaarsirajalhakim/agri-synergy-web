@@ -18,7 +18,6 @@ function CalendarAdd() {
         judul: '',
         deskripsi: '',
         tanggal: '',
-        gambar: null,
         id_user: '', 
     });
     const [error, setError] = useState('');
@@ -92,19 +91,38 @@ function CalendarAdd() {
         setError('');
         setLoading(true);
 
+        console.log('Sending form data:', {
+            jenis: formData.jenis,
+            judul: formData.judul,
+            deskripsi: formData.deskripsi,
+            tanggal: formData.tanggal,
+            id_user: localStorage.getItem('id_user')
+        });
+
         try {
+            const idUser = localStorage.getItem('id_user');
             const formDataToSend = new FormData();
+
+            // console.log('Form Data:', {
+            //     id_user: idUser,
+            //     jenis: formData.jenis,
+            //     judul: formData.judul,
+            //     deskripsi: formData.deskripsi,
+            //     tanggal: formData.tanggal
+            // });
+
             formDataToSend.append('jenis', formData.jenis);
             formDataToSend.append('judul', formData.judul);
             formDataToSend.append('deskripsi', formData.deskripsi);
             formDataToSend.append('tanggal', formData.tanggal);
-            formDataToSend.append('id_user', formData.id_user); 
-            if (formData.gambar) {
-                formDataToSend.append('gambar', formData.gambar);
-            }
+            formDataToSend.append('id_user', idUser); 
+            
+            // if (formData.gambar) {
+            //     formDataToSend.append('gambar', formData.gambar);
+            // }
 
             const response = await axios.post(
-                'http://localhost:3000/api/kalender',
+                'http://localhost:3001/api/kalender',
                 formDataToSend,
                 {
                     headers: {
