@@ -2,17 +2,25 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 const express = require("express");
+const {ERROR_MESSAGES} = require("../utils/imageValidation")
+
+const getFormattedTimestamp = () => {
+  return new Date().toLocaleString("en-US", {
+    timeZone: "Asia/Jakarta",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  });
+};
 
 const FILE_TYPES = {
   ALLOWED_MIMETYPES: ["image/png", "image/jpeg", "image/jpg"],
   MAX_SIZE: 2 * 1024 * 1024,
   UPLOAD_PATH: path.join(__dirname, "../../files/produk"),
-};
-
-const ERROR_MESSAGES = {
-  INVALID_FORMAT: "Format file tidak sesuai",
-  FILE_TOO_LARGE: "Ukuran file maksimal 2MB!",
-  FILE_NOT_FOUND: "File tidak ditemukan!",
 };
 
 const RESPONSE = {
@@ -27,16 +35,7 @@ const RESPONSE = {
       current_page: 1,
       total_pages: 1,
     },
-    timestamp: new Date().toLocaleString("en-US", {
-      timeZone: "Asia/Jakarta",
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: false,
-    }),
+    timestamp: getFormattedTimestamp(),
     errors: null,
   }),
 
@@ -46,9 +45,7 @@ const RESPONSE = {
     message,
     data: null,
     pagination: null,
-    timestamp: new Date().toLocaleString("en-US", {
-      timeZone: "Asia/Jakarta",
-    }),
+    timestamp: getFormattedTimestamp(),
     errors,
   }),
 };
@@ -128,7 +125,7 @@ const staticFileMiddleware = (req, res, next) => {
   express.static(FILE_TYPES.UPLOAD_PATH)(req, res, (err) => {
     if (err) {
       return res.status(500).json(
-        RESPONSE.createError(500, "Error accessing file")
+        RESPONSE.createError(500, "Error mengambil file")
       );
     }
     next();
@@ -139,7 +136,4 @@ module.exports = {
   uploadMiddleware,
   staticFileMiddleware,
   validateStaticFile,
-  FILE_TYPES,
-  ERROR_MESSAGES,
-  RESPONSE,
 };

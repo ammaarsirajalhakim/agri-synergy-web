@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const passport = require("passport");
-const { uploadMiddleware, staticFileMiddleware, validateStaticFile } = require("../middlewares/upload-file");
+const { uploadMiddleware, staticFileMiddleware, validateStaticFile } = require("../middlewares/upload-fileProduk");
 
 const readProduk = require("../controllers/produk/read");
 const createProduk = require("../controllers/produk/create");
@@ -23,10 +23,15 @@ router.use('/file/*', (req, res) => {
   });
 });
 
-router.get("/produk", passport.authenticate('jwt', { session: false }), readProduk);
-router.post("/produk", passport.authenticate('jwt', { session: false }), uploadMiddleware, createProduk);
-router.put("/produk/:id_produk", passport.authenticate('jwt', { session: false }), uploadMiddleware, updateProduk);
-router.delete("/produk/:id_produk", passport.authenticate('jwt', { session: false }), deleteProduk);
+// router.get("/produk", passport.authenticate('jwt', { session: false }), readProduk);
+// router.post("/produk", passport.authenticate('jwt', { session: false }), uploadMiddleware, createProduk);
+// router.put("/produk/:id_produk", passport.authenticate('jwt', { session: false }), uploadMiddleware, updateProduk);
+// router.delete("/produk/:id_produk", passport.authenticate('jwt', { session: false }), deleteProduk);
+
+router.get("/produk", readProduk);
+router.post("/produk", uploadMiddleware, createProduk);
+router.put("/produk/:id_produk", uploadMiddleware, updateProduk);
+router.delete("/produk/:id_produk", deleteProduk);
 
 
 module.exports = router;
