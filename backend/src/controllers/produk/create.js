@@ -49,7 +49,7 @@ const validateFields = {
   validateData: (req) => {
     const {
       id_user,
-      kategori,
+      id_kategori,
       nama,
       harga,
       kuantitas,
@@ -59,7 +59,7 @@ const validateFields = {
     } = req.body;
     const requiredFields = {
       id_user,
-      kategori,
+      id_kategori,
       nama,
       harga,
       kuantitas,

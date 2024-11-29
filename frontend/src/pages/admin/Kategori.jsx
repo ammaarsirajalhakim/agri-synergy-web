@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Sidebar from "../../components/Sidebar";
+import axios from "axios";
 import "../../css/kategori.css";
 
 const Kategori = () => {
@@ -7,6 +8,72 @@ const Kategori = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [categoryToEdit, setCategoryToEdit] = useState(null);
+  const [kategori, setKategori] = useState([]);
+
+  const checkAuthentication = async () => {
+    const token = localStorage.getItem("jwtToken");
+    if (!token) {
+      navigate("/");
+      return;
+    }
+
+    try {
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+      const response = await axios.get(
+        "http://localhost:3000/api/kategori",
+
+        {
+          validateStatus: function (status) {
+            return status < 500;
+          },
+        }
+      );
+
+      if (response.status === 401 || response.status === 403) {
+        localStorage.removeItem("jwtToken");
+        navigate("/");
+        return;
+      }
+
+      if (response.data?.token) {
+        localStorage.setItem("jwtToken", response.data.token);
+      }
+
+      if (response.data?.data) {
+        setKategori(response.data.data);
+      }
+    } catch (error) {
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        localStorage.removeItem("jwtToken");
+        navigate("/");
+        return;
+      }
+      console.log("Error Vakidating token:", error);
+    }
+  };
+
+  const handleAddCategory = async () => {
+    const NamaCategory = document.getElementById("kategoriName").value;
+
+    try {
+      const response = await axios.post("http://localhost:3000/api/kategori", {
+        nama: NamaCategory,
+      });
+
+      if (response.status === 200) {
+        window.location.reload();
+      } else {
+        console.log("Error adding category:", response);
+      }
+    } catch (error) {
+      console.log("Error adding category:", error);
+    }
+  };
+
+  useEffect(() => {
+    checkAuthentication();
+  }, []);
 
   const handlePageChange = (page) => {
     if (page >= 1 && page <= 3) {
@@ -51,20 +118,28 @@ const Kategori = () => {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>dadada</td>
-                <td>
-                  <button
-                    className="update"
-                    onClick={() => openUpdateModal({ name: "" })}
-                  >
-                    <span className="icon update-icon" />
-                  </button>
-                  <button className="delete">
-                    <span className="icon delete-icon" />
-                  </button>
-                </td>
-              </tr>
+              {kategori.length > 0 ? (
+                kategori.map((kategori) => (
+                  <tr key={kategori.id_kategori}>
+                    <td>{kategori.nama}</td>
+                    <td>
+                      <button
+                        className="update"
+                        onClick={() => openUpdateModal({ name: "" })}
+                      >
+                        <span className="icon update-icon" />
+                      </button>
+                      <button className="delete">
+                        <span className="icon delete-icon" />
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="2">Tidak ada data produk.</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
@@ -128,7 +203,7 @@ const Kategori = () => {
               <button className="cancel-button" onClick={closeAddModal}>
                 Kembali
               </button>
-              <button className="save-button">Simpan</button>
+              <button className="save-button" onClick={handleAddCategory}>Simpan</button>
             </div>
           </div>
         </div>

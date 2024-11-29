@@ -6,6 +6,7 @@ import "../../css/produk.css";
 
 const Produk = () => {
   const [activePage, setActivePage] = useState(1);
+  const [kategori, setKategori] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(null);
@@ -23,7 +24,7 @@ const Produk = () => {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
       const response = await axios.get(
-        "http://localhost:3000/api/produk",
+        "http://localhost:3000/api/produk-detail",
 
         {
           validateStatus: function (status) {
@@ -64,30 +65,30 @@ const Produk = () => {
     const ProductDeskripsi = document.getElementById("productDeskripsi").value;
     const currentDate = new Date();
 
-    const day = String(currentDate.getDate()).padStart(2, '0'); 
-    const month = String(currentDate.getMonth() + 1).padStart(2, '0'); 
+    const day = String(currentDate.getDate()).padStart(2, "0");
+    const month = String(currentDate.getMonth() + 1).padStart(2, "0");
     const year = currentDate.getFullYear();
-    
+
     const formattedDate = `${year}-${month}-${day}`;
     const userId = localStorage.getItem("id_user");
 
-    formData.append("id_user", userId);  
-    formData.append("kategori", productCategory);
+    formData.append("id_user", userId);
+    formData.append("id_kategori", productCategory);
     formData.append("nama", productName);
     formData.append("harga", productPrice);
     formData.append("kuantitas", productStock);
     formData.append("deskripsi", ProductDeskripsi);
     formData.append("foto_produk", productImage);
-     formData.append("tanggal_diposting", formattedDate);
-  
+    formData.append("tanggal_diposting", formattedDate);
+
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/produk", 
-        formData, 
+        "http://localhost:3000/api/produk",
+        formData,
         {
           headers: {
             "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${localStorage.getItem("jwtToken")}`, 
+            Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
           },
         }
       );
@@ -99,10 +100,26 @@ const Produk = () => {
       console.error("Error adding product:", error);
     }
   };
-  
-  
+
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get("http://localhost:3000/api/kategori", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+        },
+      });
+
+      if (response.data?.data) {
+        setKategori(response.data.data);
+      }
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
+
   useEffect(() => {
     checkAuthentication();
+    fetchCategories();
   }, []);
 
   const handlePageChange = (page) => {
@@ -155,7 +172,7 @@ const Produk = () => {
               {products.length > 0 ? (
                 products.map((product) => (
                   <tr key={product.id_produk}>
-                    <td>{product.kategori}</td>
+                    <td>{product.nama_kategori}</td>
                     <td>
                       <img
                         src={`http://localhost:3000/api/file/${product.foto_produk}`}
@@ -275,13 +292,18 @@ const Produk = () => {
               <div className="form-group1 full-width">
                 <label htmlFor="productKategori">Kategori</label>
                 <select id="productKategori" placeholder="Pilih Kategori">
-                  <option value="">Pilih Kategori</option>
-                  <option value="hasil_panen">Hasil Panen</option>
-                  <option value="peralatan">Peralatan</option>
-                  <option value="pertanian">Pertanian</option>
+                  <option  disabled>Pilih Kategori</option>
+                  {kategori.map((category) => (
+                    <option
+                      key={category.id_kategori}
+                      value={category.id_kategori}
+                    >
+                      {category.nama}
+                    </option>
+                  ))}
                 </select>
               </div>
-              
+
               <div className="form-group1 full-width">
                 <label htmlFor="productDeskripsi">Deskripsi</label>
                 <textarea
@@ -295,7 +317,9 @@ const Produk = () => {
               <button className="cancel-button1" onClick={closeModal}>
                 Kembali
               </button>
-              <button className="save-button1" onClick={handleAddProduct}>Simpan</button>
+              <button className="save-button1" onClick={handleAddProduct}>
+                Simpan
+              </button>
             </div>
           </div>
         </div>

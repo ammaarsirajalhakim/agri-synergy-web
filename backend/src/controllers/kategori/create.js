@@ -47,15 +47,8 @@ const validateFields = {
   },
 
   validateData: (req) => {
-    const { id_user, jenis, judul, tanggal, deskripsi, gambar } = req.body;
-    const requiredFields = {
-      id_user,
-      jenis,
-      judul,
-      tanggal,
-      deskripsi,
-      gambar,
-    };
+    const { nama } = req.body;
+    const requiredFields = { nama };
 
     const missingFieldsResult = validateFields.checkRequired(requiredFields);
     if (missingFieldsResult) {
@@ -84,18 +77,18 @@ module.exports = async (req, res) => {
 
     const [rows] = await req.db
       .promise()
-      .query("INSERT INTO kalender SET ?", validation.data);
+      .query("INSERT INTO kategori SET ?", validation.data);
 
     if (rows.affectedRows > 0) {
       return res
         .status(200)
         .json(
-          RESPONSE.createSuccess([rows], "Data kalender berhasil ditambahkan")
+          RESPONSE.createSuccess(rows, "Data kategori berhasil ditambahkan")
         );
     } else {
       return res
-        .status(400)
-        .json(RESPONSE.createError(400, "Data kalender gagal ditambahkan"));
+        .status(500)
+        .json(RESPONSE.createError(500, "Data kategori gagal ditambahkan"));
     }
   } catch (err) {
     console.error(err);
