@@ -69,7 +69,7 @@ function CalenderEdit() {
             <Header />
             <div className="custom-calendar-container">
                 <div className="calendar-add-form__container">
-                    <form onSubmit={handleSubmit} className="calendar-add-form__form">
+                    <div onSubmit={handleSubmit} className="calendar-add-form__form">
                         <div className="calendar-add-form__group">
                             <label>Gambar</label>
                             {formData.img && <img src={formData.img} alt="img field" className="calendar-add-form__img-preview" />}
@@ -116,11 +116,11 @@ function CalenderEdit() {
                             <button type="button" onClick={handleCancel} className="calendar-add-form__cancel-button" >
                                 Batal
                             </button>
-                            <button type="submit" className="calendar-add-form__submit-button" onClick={() => navigate('/calendarview')}>
+                            <button type="button" className="calendar-add-form__submit-button" onClick={() => navigate('/calendarview')}>
                                 Edit
                             </button>
                         </div>
-                    </form>
+                    </div>
                 </div>
                 <div className="rectangles-kalender"></div>
                 <div className="custom-calendar-wrapper">
@@ -138,4 +138,4 @@ function CalenderEdit() {
 }
 
 export default CalenderEdit;
-``
+

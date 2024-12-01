@@ -1,85 +1,154 @@
-import React, { useState } from 'react';
-import Header from '../components/Header';
-import Footer from '../components/footer';
-import Calendar from 'react-calendar';
-import 'react-calendar/dist/Calendar.css';
-import '../css/CalendarStyles.css';
-import KalenderImg from '../assets/kalender_img.png';
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import Header from "../components/Header";
+import Footer from "../components/footer";
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
+import "../css/CalendarStyles.css";
+import { useNavigate, useParams } from "react-router-dom";
 
 function CalenderView() {
-    const navigate = useNavigate();
-    const [date, setDate] = useState(new Date());
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [date, setDate] = useState(new Date());
+  const [detail, setDetail] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-    const handleDateChange = (selectedDate) => {
-        setDate(selectedDate);
+  useEffect(() => {
+    const fetchDetail = async () => {
+      const token = localStorage.getItem("jwtToken");
+      if (!token) {
+        navigate("/");
+        return;
+      }
+
+      try {
+        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+        const response = await axios.get("http://localhost:3000/api/kalender", {
+          validateStatus: function (status) {
+            return status < 500;
+          },
+        });
+
+        if (response.status === 401 || response.status === 403) {
+          localStorage.removeItem("jwtToken");
+          navigate("/");
+        }
+
+        if (response.data?.token) {
+          localStorage.setItem("jwtToken", response.data.token);
+        }
+
+        if (response.data?.data) {
+          const selectedCalendar = response.data.data.find(
+            (item) => item.id_kalender === parseInt(id)
+          );
+          setDetail(selectedCalendar);
+        }
+      } catch (error) {
+        if (error.response?.status === 401 || error.response?.status === 403) {
+          localStorage.removeItem("jwtToken");
+          navigate("/");
+          return;
+        }
+        console.log("Error validating token:", error);
+      }
     };
 
-    const handleDeleteClick = () => {
-        setShowDeleteModal(true);
-    };
+    fetchDetail();
+  }, [id, navigate]);
 
-    const confirmDelete = () => {
-        // Perform delete action here
-        setShowDeleteModal(false);
-        navigate('/calendar');
-    };
+  const handleDateChange = (selectedDate) => {
+    setDate(selectedDate);
+  };
 
-    const cancelDelete = () => {
-        setShowDeleteModal(false);
-    };
+  const handleDeleteClick = () => {
+    setShowDeleteModal(true);
+  };
 
-    return (
-        <>
-        <Header />
-        <div className="custom-calendar-container">
-            <div className="custom-content-card">
-                <h3>Judul here</h3>
-                <img 
-                    src={KalenderImg}
-                    alt="Placeholder"
-                    className="custom-content-image"
-                />
-                <p>27 Oktober 2024</p>
-                <p>
-                    Lorem ipsum dolor sit amet consectetur. Rhoncus neque proin nullam netus natoque. Odio accumsan sed hendrerit dignissim interdum. Placerat adipiscing venenatis et lobortis sit nunc risus. Felis turpis nulla enim eget. A suscipit viverra enim ipsum pellentesque interdum et a. Sagittis at neque est in adipiscing. Vulputate habitant sodales hendrerit congue ullamcorper egestas scelerisque ac pharetra. Dui malesuada tellus posuere orci lectus. Orci lorem id sagittis cras nisi diam.
-                </p>
-                <div className="custom-button-group">
-                    <button className="custom-edit-button" onClick={() => navigate('/calendaredit')}>Edit</button>
-                    <button onClick={handleDeleteClick} className="custom-delete-button">Hapus</button>
-                </div>
+  const confirmDelete = () => {
+    setShowDeleteModal(false);
+    navigate("/calendar");
+  };
+
+  const cancelDelete = () => {
+    setShowDeleteModal(false);
+  };
+
+  const formatDate = (dateString) => {
+    const options = { year: "numeric", month: "long", day: "2-digit" };
+    const date = new Date(dateString);
+    return date.toLocaleDateString("id-ID", options);
+  };
+
+  return (
+    <>
+      <Header />
+      <div className="custom-calendar-container">
+        {detail ? (
+          <div className="custom-content-card">
+            <h3>{detail?.judul}</h3>
+            <img
+              src={`http://localhost:3000/api/fileKalender/${detail?.gambar}`}
+              alt="Placeholder"
+              className="custom-content-image"
+            />
+            <p>{formatDate(detail?.tanggal)}</p>
+            <p>{detail?.deskripsi}</p>
+            <div className="custom-button-group">
+              <button
+                className="custom-edit-button"
+                onClick={() => navigate(`/calendaredit/${detail?.id_kalender}`)}
+              >
+                Edit
+              </button>
+              <button
+                onClick={handleDeleteClick}
+                className="custom-delete-button"
+              >
+                Hapus
+              </button>
             </div>
-            <div className="rectangles-kalender"></div>
-            <div className="custom-calendar-wrapper">
-                <Calendar 
-                    onChange={handleDateChange} 
-                    value={date} 
-                    next2Label={null} 
-                    prev2Label={null}
-                />
-            </div>
-        </div>
-        
-        {/* Delete Confirmation Modal */}
-        {showDeleteModal && (
-            <div className="modal-overlay">
-                <div className="modal">
-                    <div className="modal-icon">
-                        {/* Tambahkan tanda seru di sini */}
-                        <span className="exclamation-icon">!</span>
-                    </div>
-                    <h2>Are you sure?</h2>
-                    <p>You won't be able to revert this!</p>
-                    <button onClick={confirmDelete} className="modal-confirm-button">Yes, delete it!</button>
-                    <button onClick={cancelDelete} className="modal-cancel-button">Cancel</button>
-                </div>
-            </div>
+          </div>
+        ) : (
+          <div className="card-red">
+            <p>Detail kalender yang Anda cari tidak tersedia.</p>
+          </div>
         )}
-        
-        <Footer />
-        </>
-    );
+        <div className="rectangles-kalender"></div>
+        <div className="custom-calendar-wrapper">
+          <Calendar
+            onChange={handleDateChange}
+            value={date}
+            next2Label={null}
+            prev2Label={null}
+          />
+        </div>
+      </div>
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <div className="modal-icon">
+              {/* Tambahkan tanda seru di sini */}
+              <span className="exclamation-icon">!</span>
+            </div>
+            <h2>Are you sure?</h2>
+            <p>You won't be able to revert this!</p>
+            <button onClick={confirmDelete} className="modal-confirm-button">
+              Yes, delete it!
+            </button>
+            <button onClick={cancelDelete} className="modal-cancel-button">
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+
+      <Footer />
+    </>
+  );
 }
 
 export default CalenderView;

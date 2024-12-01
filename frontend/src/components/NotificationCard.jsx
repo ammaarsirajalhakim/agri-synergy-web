@@ -3,13 +3,13 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../css/CalendarStyles.css';
 
-function NotificationCard({ title, message, image }) {
+function NotificationCard({id ,title, message, image }) {
   const navigate = useNavigate();
 
   return (
     <div 
       className="calendar-notif-card" 
-      onClick={() => navigate('/calendarview')}
+      onClick={() => navigate(`/calendarview/${id}`)}
       style={{ cursor: 'pointer' }}
     >
       <div className="calendar-notif-icon">🔔</div>

@@ -306,3 +306,18 @@
     border: #f44336 solid 1px;
     border-radius: 50%;
 }
+
+.card-red {
+    background-color: #ffcccc; 
+    border: 1px solid #ff0000; 
+    border-radius: 8px; 
+    padding: 16px; 
+    color: #a70000; 
+    font-family: Arial, sans-serif; 
+    font-size: 16px; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+    max-width: 500px;
+    margin: 20px auto; 
+    text-align: center; 
+    font-weight: bold;
+}
