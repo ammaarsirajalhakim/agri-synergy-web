@@ -25,8 +25,6 @@ DROP TABLE IF EXISTS `detail_sawah`;
 CREATE TABLE `detail_sawah` (
   `id_lokasi` int NOT NULL AUTO_INCREMENT,
   `id_sawah` int NOT NULL,
-  `nama` varchar(255) NOT NULL,
-  `luas` decimal(10,2) NOT NULL,
   `jenis_tanah` varchar(255) NOT NULL,
   `hasil_panen` varchar(255) NOT NULL,
   `produksi` varchar(255) NOT NULL,
@@ -36,7 +34,7 @@ CREATE TABLE `detail_sawah` (
   PRIMARY KEY (`id_lokasi`),
   KEY `id_sawah` (`id_sawah`),
   CONSTRAINT `detail_sawah_ibfk_1` FOREIGN KEY (`id_sawah`) REFERENCES `sawah` (`id_sawah`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -66,7 +64,7 @@ CREATE TABLE `dropship` (
   KEY `id_produk` (`id_produk`),
   CONSTRAINT `dropship_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`),
   CONSTRAINT `dropship_ibfk_2` FOREIGN KEY (`id_produk`) REFERENCES `produk` (`id_produk`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -92,10 +90,11 @@ CREATE TABLE `kalender` (
   `judul` varchar(255) NOT NULL,
   `tanggal` date NOT NULL,
   `deskripsi` text NOT NULL,
+  `gambar` varchar(255) NOT NULL,
   PRIMARY KEY (`id_kalender`),
   KEY `fk_kalender_user_id` (`id_user`),
   CONSTRAINT `fk_kalender_user_id` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -104,7 +103,32 @@ CREATE TABLE `kalender` (
 
 LOCK TABLES `kalender` WRITE;
 /*!40000 ALTER TABLE `kalender` DISABLE KEYS */;
+INSERT INTO `kalender` VALUES (1,1,'Event','dadada','2024-11-06','Lorem ipsum dolor sit amet consectetur adipiscing elit scelerisque, erat nunc fringilla et fusce placerat eros ultrices litora, diam ante a sed euismod tincidunt condimentum.','1732794630115.jpg');
 /*!40000 ALTER TABLE `kalender` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `kategori`
+--
+
+DROP TABLE IF EXISTS `kategori`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `kategori` (
+  `id_kategori` int NOT NULL AUTO_INCREMENT,
+  `nama` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  PRIMARY KEY (`id_kategori`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `kategori`
+--
+
+LOCK TABLES `kategori` WRITE;
+/*!40000 ALTER TABLE `kategori` DISABLE KEYS */;
+INSERT INTO `kategori` VALUES (1,'pertanian'),(2,'peralatan'),(3,'hasil panen');
+/*!40000 ALTER TABLE `kategori` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -125,7 +149,7 @@ CREATE TABLE `keranjang` (
   KEY `id_produk` (`id_produk`),
   CONSTRAINT `keranjang_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`),
   CONSTRAINT `keranjang_ibfk_2` FOREIGN KEY (`id_produk`) REFERENCES `produk` (`id_produk`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -134,6 +158,7 @@ CREATE TABLE `keranjang` (
 
 LOCK TABLES `keranjang` WRITE;
 /*!40000 ALTER TABLE `keranjang` DISABLE KEYS */;
+INSERT INTO `keranjang` VALUES (1,1,1,15,2.50);
 /*!40000 ALTER TABLE `keranjang` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -154,7 +179,7 @@ CREATE TABLE `komunitas` (
   PRIMARY KEY (`id_komunitas`),
   KEY `id_user` (`id_user`),
   CONSTRAINT `komunitas_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -184,7 +209,7 @@ CREATE TABLE `konsultasi` (
   PRIMARY KEY (`id_konsultasi`),
   KEY `id_user` (`id_user`),
   CONSTRAINT `konsultasi_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -216,7 +241,7 @@ CREATE TABLE `memesan` (
   KEY `id_produk` (`id_produk`),
   CONSTRAINT `memesan_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`),
   CONSTRAINT `memesan_ibfk_2` FOREIGN KEY (`id_produk`) REFERENCES `produk` (`id_produk`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -225,6 +250,7 @@ CREATE TABLE `memesan` (
 
 LOCK TABLES `memesan` WRITE;
 /*!40000 ALTER TABLE `memesan` DISABLE KEYS */;
+INSERT INTO `memesan` VALUES (1,1,1,2.50,20,'2024-07-24','pending');
 /*!40000 ALTER TABLE `memesan` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -240,12 +266,12 @@ CREATE TABLE `pengiriman` (
   `id_memesan` int NOT NULL,
   `status` enum('pending','berhasil','batal') DEFAULT 'pending',
   `tgl_pengiriman` date NOT NULL,
-  `tgl_penerima` date NOT NULL,
+  `tgl_penerima` date DEFAULT NULL,
   `harga` decimal(10,2) NOT NULL,
   PRIMARY KEY (`id_pengiriman`),
   KEY `id_memesan` (`id_memesan`),
   CONSTRAINT `pengiriman_ibfk_1` FOREIGN KEY (`id_memesan`) REFERENCES `memesan` (`id_memesan`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -254,6 +280,7 @@ CREATE TABLE `pengiriman` (
 
 LOCK TABLES `pengiriman` WRITE;
 /*!40000 ALTER TABLE `pengiriman` DISABLE KEYS */;
+INSERT INTO `pengiriman` VALUES (1,1,'pending','2024-02-22',NULL,60.00);
 /*!40000 ALTER TABLE `pengiriman` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -267,7 +294,7 @@ DROP TABLE IF EXISTS `produk`;
 CREATE TABLE `produk` (
   `id_produk` int NOT NULL AUTO_INCREMENT,
   `id_user` int NOT NULL,
-  `kategori` enum('hasil panen','peralatan','pertanian') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `id_kategori` int NOT NULL,
   `nama` varchar(255) NOT NULL,
   `harga` decimal(10,2) NOT NULL,
   `kuantitas` int NOT NULL,
@@ -276,8 +303,10 @@ CREATE TABLE `produk` (
   `foto_produk` varchar(255) NOT NULL,
   PRIMARY KEY (`id_produk`),
   KEY `id_user` (`id_user`),
+  KEY `fk_kategori_id` (`id_kategori`),
+  CONSTRAINT `fk_kategori_id` FOREIGN KEY (`id_kategori`) REFERENCES `kategori` (`id_kategori`) ON DELETE CASCADE ON UPDATE RESTRICT,
   CONSTRAINT `produk_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -286,6 +315,7 @@ CREATE TABLE `produk` (
 
 LOCK TABLES `produk` WRITE;
 /*!40000 ALTER TABLE `produk` DISABLE KEYS */;
+INSERT INTO `produk` VALUES (1,1,1,'jagung',200000.00,2,'fafafdawdeawda','2024-12-08','1732882508237.png');
 /*!40000 ALTER TABLE `produk` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -308,7 +338,7 @@ CREATE TABLE `review` (
   KEY `id_produk` (`id_produk`),
   CONSTRAINT `review_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`),
   CONSTRAINT `review_ibfk_2` FOREIGN KEY (`id_produk`) REFERENCES `produk` (`id_produk`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -340,7 +370,7 @@ CREATE TABLE `riwayat_transaksi` (
   CONSTRAINT `riwayat_transaksi_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`),
   CONSTRAINT `riwayat_transaksi_ibfk_2` FOREIGN KEY (`id_memesan`) REFERENCES `memesan` (`id_memesan`),
   CONSTRAINT `riwayat_transaksi_ibfk_3` FOREIGN KEY (`id_pengiriman`) REFERENCES `pengiriman` (`id_pengiriman`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -362,13 +392,13 @@ DROP TABLE IF EXISTS `sawah`;
 CREATE TABLE `sawah` (
   `id_sawah` int NOT NULL AUTO_INCREMENT,
   `id_user` int NOT NULL,
-  `lokasi` point NOT NULL,
+  `lokasi` varchar(255) NOT NULL,
   `tipe` varchar(255) NOT NULL,
-  `total_harga` decimal(10,2) NOT NULL,
+  `luas` decimal(10,2) NOT NULL,
   PRIMARY KEY (`id_sawah`),
   KEY `id_user` (`id_user`),
   CONSTRAINT `sawah_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -394,10 +424,10 @@ CREATE TABLE `user` (
   `alamat` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `katasandi` varchar(255) NOT NULL,
-  `role` enum('petani','pembeli','ahli','admin','tengkulak') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'pembeli',
+  `role` enum('petani','pembeli','ahli','admin','tengkulak') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT 'pembeli',
   `foto` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id_user`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -406,6 +436,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
+INSERT INTO `user` VALUES (1,'admin','08123451729','jkdjafhaf','admin@gmail.com','$2b$10$wu4jlUnct1d1.0ccYUrsleN4yM6VGWSiVe9j05KGauEgbUI3O6VYq','admin','');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -422,4 +453,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-11-23 16:49:07
+-- Dump completed on 2024-12-02  4:39:48
