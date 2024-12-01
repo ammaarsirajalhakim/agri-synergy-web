@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import logo1 from '../assets/AGRI_SYNERGY.png';
 import '../css/homepage.css';
 import profile from '../assets/profileicon.png';
@@ -74,14 +74,29 @@ const HomePage = () => {
   const navigate = useNavigate();
   const [dropdownVisible, setDropdownVisible] = useState(false);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const navbar = document.querySelector(".navi");
+      if (navbar) {
+        if (window.scrollY > 0) {
+          navbar.classList.add("scrolled");
+        } else {
+          navbar.classList.remove("scrolled");
+        }
+      }
+    };
+  
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   const toggleDropdown = () => {
     setDropdownVisible(!dropdownVisible);
   };
 
   return (
     <section className='scroll'>
-      <div id="main-containers">
-        <div className="navi" id="navbar">
+      <div className="navi" id="navbar">
           <div className="logow">
             <img src={logo1} alt="Logo" />
           </div>
@@ -119,6 +134,7 @@ const HomePage = () => {
             </div>
           </nav>
         </div>
+      <div id="main-containers">
 
         <div className='main-contents'>
           <h1>Mempermudah Pengelolaan dan Pemasaran Jagung Anda</h1>

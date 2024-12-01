@@ -1,5 +1,5 @@
 #main-containers {
-  padding: 0px 6rem 0px 6rem !important;
+  padding: 0px 6rem 0px 6rem ;
   align-items: center !important;
   position: relative !important;
   z-index: 1000 !important;
@@ -8,13 +8,17 @@
 
 /* navigasi */
 .navi {
-  position: relative;
+  position: sticky;
   top: 0;
   display: flex;
-  padding: 48px 0rem 20px;
+  padding: 48px 6rem 20px;
   width: 100%;
-  z-index: 1000;
+  z-index: 1001;
   align-items: center;
+}
+
+.navi.scrolled {
+  background-color: #13382C;
 }
 
 .navi nav {
