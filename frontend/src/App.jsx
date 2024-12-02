@@ -1,6 +1,8 @@
 // import { useState } from 'react'
 import Login from './pages/LoginPage'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Register from './pages/RegisterPage'
 import HomePage from './pages/HomePage'
 import Header from './components/Header'
@@ -31,6 +33,8 @@ import OrderHistoryPage from './components/OrderHistoryPage'
 
 function App() {
   return (
+    <>
+    <ToastContainer/>
     <Router>
       <Routes>
         <Route path='/login' element={<Login />} />
@@ -62,6 +66,7 @@ function App() {
         <Route path="/orderhistory" element={<OrderHistoryPage />} />
       </Routes>
     </Router>
+    </>
   )
 }
 

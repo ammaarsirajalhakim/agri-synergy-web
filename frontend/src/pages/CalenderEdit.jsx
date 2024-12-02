@@ -13,7 +13,7 @@ import { useNavigate, useParams } from "react-router-dom";
 function CalenderEdit() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [date, setDate] = useState(new Date());
+//   const [date, setDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [formData, setFormData] = useState({
     jenis: "",
@@ -62,7 +62,7 @@ function CalenderEdit() {
               deskripsi: selectedCalendar.deskripsi,
               img: `http://localhost:3000/api/fileKalender/${selectedCalendar.gambar}`,
             });
-            setDate(calendarDate);
+            // setDate(calendarDate);
             setSelectedDate(calendarDate); 
           }
         }
@@ -80,7 +80,7 @@ function CalenderEdit() {
   }, [id, navigate]);
 
   const handleCalendarDateChange = (selectedDate) => {
-    setDate(selectedDate);
+    // setDate(selectedDate);
     setSelectedDate(selectedDate); 
   };
 
@@ -94,7 +94,7 @@ function CalenderEdit() {
 
   const handleDatePickerChange = (date) => {
     setSelectedDate(date);
-    setDate(date); 
+    // setDate(date); 
   };
 
   const handleImageChange = (e) => {
@@ -197,7 +197,7 @@ function CalenderEdit() {
                 Batal
               </button>
               <button
-                type="submit"
+                type="button"
                 className="calendar-add-form__submit-button"
                 onClick={() => navigate("/calendarview")}
               >
@@ -210,7 +210,7 @@ function CalenderEdit() {
         <div className="custom-calendar-wrapper">
           <Calendar
             onChange={handleCalendarDateChange}
-            value={date}
+            value={selectedDate}
             next2Label={null}
             prev2Label={null}
           />

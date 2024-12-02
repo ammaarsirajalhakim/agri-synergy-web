@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { toast } from "react-toastify";
 import Header from "../components/Header";
 import Footer from "../components/footer";
 import Calendar from "react-calendar";
@@ -21,13 +22,15 @@ function CalendarAdd() {
     id_user: "",
     gambar: null,
   });
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const idUser = localStorage.getItem("id_user");
     if (!idUser) {
-      alert("Anda harus login terlebih dahulu");
+      toast.error("Anda harus login terlebih dahulu", { 
+        position: "top-right", 
+        autoClose: 1500 
+      });
       navigate("/login");
     } else {
       setFormData((prevState) => ({
@@ -48,8 +51,6 @@ function CalendarAdd() {
       ...prevState,
       [name]: value,
     }));
-
-    setError("");
   };
 
   const handleDatePickerChange = (tanggal) => {
@@ -76,7 +77,10 @@ function CalendarAdd() {
       isNaN(new Date(formData.tanggal).getTime()) ||
       !formData.gambar
     ) {
-      setError("Semua field harus diisi dengan benar");
+      toast.error("Semua field harus diisi dengan benar", { 
+        position: "top-right", 
+        autoClose: 1500 
+      });
       return false;
     }
     return true;
@@ -89,7 +93,6 @@ function CalendarAdd() {
       return;
     }
 
-    setError("");
     setLoading(true);
 
     const localDate = new Date(formData.tanggal);
@@ -97,15 +100,6 @@ function CalendarAdd() {
       localDate.getFullYear() + "-" +
       ("0" + (localDate.getMonth() + 1)).slice(-2) + "-" +
       ("0" + localDate.getDate()).slice(-2);
-
-    console.log("Sending form data:", {
-      jenis: formData.jenis,
-      judul: formData.judul,
-      deskripsi: formData.deskripsi,
-      tanggal: formData.tanggal,
-      id_user: localStorage.getItem("id_user"),
-      gambar: formData.gambar,
-    });
 
     try {
       const idUser = localStorage.getItem("id_user");
@@ -131,15 +125,24 @@ function CalendarAdd() {
       );
 
       if (response.data.success) {
-        alert("Input Berhasil!");
-        navigate("/calendar");
+        toast.success(response.data.message, { 
+          position: "top-right", 
+          autoClose: 1500 
+        });
+        setTimeout(() => navigate("/calendar"), 1500);
       } else {
-        setError(response.data.message || "Terjadi kesalahan saat Input");
+        toast.error(response.data.message || "Terjadi kesalahan saat Input", { 
+          position: "top-right", 
+          autoClose: 1500 
+        });
       }
     } catch (err) {
       const errorMessage =
         err.response?.data?.message || "Terjadi kesalahan pada server";
-      setError(errorMessage);
+      toast.error(errorMessage, { 
+        position: "top-right", 
+        autoClose: 1500 
+      });
       console.error("Error:", err);
     } finally {
       setLoading(false);
@@ -209,8 +212,6 @@ function CalendarAdd() {
                 className="calendar-add-form__textarea"
               ></textarea>
             </div>
-
-            {error && <p className="calendar-add-form__error">{error}</p>}
 
             <div className="calendar-add-form__buttons">
               <button
