@@ -87,8 +87,8 @@ module.exports = async (req, res) => {
     }
 
     return res
-      .status(404)
-      .json(RESPONSE.updateError(404, "Transaksi tidak ditemukan"));
+      .status(400)
+      .json(RESPONSE.updateError(400, "Transaksi tidak ditemukan"));
   } catch (err) {
     console.error(err);
     return res

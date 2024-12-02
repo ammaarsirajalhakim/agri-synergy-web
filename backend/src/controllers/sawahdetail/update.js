@@ -86,8 +86,8 @@ module.exports = async (req, res) => {
         .json(RESPONSE.updateSuccess("Update lokasi berhasil"));
     } else {
       return res
-        .status(404)
-        .json(RESPONSE.updateError(404, "Lokasi tidak ditemukan"));
+        .status(400)
+        .json(RESPONSE.updateError(400, "Lokasi tidak ditemukan"));
     }
   } catch (err) {
     console.error(err);

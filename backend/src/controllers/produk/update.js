@@ -88,8 +88,8 @@ module.exports = async (req, res) => {
     }
 
     return res
-      .status(404)
-      .json(RESPONSE.updateError(404, "Produk tidak ditemukan"));
+      .status(400)
+      .json(RESPONSE.updateError(400, "Produk tidak ditemukan"));
   } catch (err) {
     console.error(err);
     return res

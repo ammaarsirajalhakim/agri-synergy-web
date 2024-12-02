@@ -48,7 +48,7 @@ module.exports = async (req, res) => {
             .query("SELECT * FROM user WHERE email = ?", [email]);
 
         if (rows.length === 0) {
-            const errorResponse = RESPONSE.getError(404, "Email tidak ditemukan");
+            const errorResponse = RESPONSE.getError(400, "Email tidak ditemukan");
             return res.status(errorResponse.code).json(errorResponse);
         }
 

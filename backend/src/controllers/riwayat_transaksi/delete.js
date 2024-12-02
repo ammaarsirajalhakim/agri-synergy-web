@@ -50,8 +50,8 @@ module.exports = async (req, res) => {
       req.params.id_rt
     );
     if (!isDeleted) {
-      return res.status(404).json(
-        RESPONSE.deleteError(404, "Riwayat transaksi tidak ditemukan", {
+      return res.status(400).json(
+        RESPONSE.deleteError(400, "Riwayat transaksi tidak ditemukan", {
           message: "ID riwayattransaksi tidak ada dalam database",
           code: "RIWAYATTRANSAKSI_NOT_FOUND",
         })

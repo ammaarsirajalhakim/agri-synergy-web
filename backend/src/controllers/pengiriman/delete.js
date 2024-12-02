@@ -48,8 +48,8 @@ module.exports = async (req, res) => {
       req.params.id_pengiriman
     );
     if (!isDeleted) {
-      return res.status(404).json(
-        RESPONSE.deleteError(404, "pengiriman tidak ditemukan", {
+      return res.status(400).json(
+        RESPONSE.deleteError(400, "pengiriman tidak ditemukan", {
           message: "ID pengiriman tidak ada dalam database",
           code: "PENGIRIMAN_NOT_FOUND",
         })

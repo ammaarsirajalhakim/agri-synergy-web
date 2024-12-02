@@ -81,8 +81,8 @@ module.exports = async (req, res) => {
         .json(RESPONSE.updateSuccess("Pengiriman behasil"));
     } else {
       return res
-        .status(404)
-        .json(RESPONSE.updateError(404, "Pengiriman tidak ditemukan"));
+        .status(400)
+        .json(RESPONSE.updateError(400, "Pengiriman tidak ditemukan"));
     }
   } catch (err) {
     console.error(err);

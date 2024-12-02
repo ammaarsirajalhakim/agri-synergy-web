@@ -48,8 +48,8 @@ module.exports = async (req, res) => {
     );
 
     if (!isDeleted) {
-      return res.status(404).json(
-        RESPONSE.deleteError(404, "lokasi tidak ditemukan", {
+      return res.status(400).json(
+        RESPONSE.deleteError(400, "lokasi tidak ditemukan", {
           message: "ID lokasi tidak ada dalam database",
           code: "LOKASI_NOT_FOUND",
         })

@@ -11,9 +11,9 @@ const deleteKalender = require("../controllers/kalender/delete");
 router.use("/fileKalender", validateStaticFile, staticFileMiddleware);
 
 router.use('/fileKalender/*', (req, res) => {
-  res.status(404).json({
+  res.status(400).json({
     success: false,
-    code: 404,
+    code: 400,
     message: "File tidak ditemukan",
     data: null,
     timestamp: new Date().toLocaleString("en-US", {

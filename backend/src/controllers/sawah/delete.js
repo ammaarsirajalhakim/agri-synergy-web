@@ -47,8 +47,8 @@ module.exports = async (req, res) => {
       req.params.id_sawah
     );
     if (!isDeleted) {
-      return res.status(404).json(
-        RESPONSE.deleteError(404, "sawah tidak ditemukan", {
+      return res.status(400).json(
+        RESPONSE.deleteError(400, "sawah tidak ditemukan", {
           message: "ID sawah tidak ada dalam database",
           code: "SAWAH_NOT_FOUND",
         })

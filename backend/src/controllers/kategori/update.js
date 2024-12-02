@@ -81,8 +81,8 @@ module.exports = async (req, res) => {
         .json(RESPONSE.updateSuccess("Data kategori berhasil diupdate"));
     } else {
       return res
-        .status(404)
-        .json(RESPONSE.updateError(404, "kategori tidak ditemukan"));
+        .status(400)
+        .json(RESPONSE.updateError(400, "kategori tidak ditemukan"));
     }
   } catch (err) {
     console.log(err);

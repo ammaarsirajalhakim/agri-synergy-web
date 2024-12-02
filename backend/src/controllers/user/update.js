@@ -74,7 +74,7 @@ const validateFields = {
     if (currentUser.length === 0) {
       return {
         isValid: false,
-        error: RESPONSE.updateError(404, "User tidak ditemukan"),
+        error: RESPONSE.updateError(400, "User tidak ditemukan"),
       };
     }
 

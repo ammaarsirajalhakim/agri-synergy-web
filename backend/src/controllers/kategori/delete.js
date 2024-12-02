@@ -49,8 +49,8 @@ module.exports = async (req, res) => {
       req.params.id_kategori
     );
     if (!isDeleted) {
-      return res.status(404).json(
-        RESPONSE.deleteError(404, "kategori tidak ditemukan", {
+      return res.status(400).json(
+        RESPONSE.deleteError(400, "kategori tidak ditemukan", {
           message: "ID kategori tidak ada dalam database",
           code: "KATEGORI_NOT_FOUND",
         })

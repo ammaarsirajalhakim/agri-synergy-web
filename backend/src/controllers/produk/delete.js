@@ -48,8 +48,8 @@ module.exports = async (req, res) => {
       req.params.id_produk
     );
     if (!isDeleted) {
-      return res.status(404).json(
-        RESPONSE.deleteError(404, "produk tidak ditemukan", {
+      return res.status(400).json(
+        RESPONSE.deleteError(400, "produk tidak ditemukan", {
           message: "ID produk tidak ada dalam database",
           code: "PRODUK_NOT_FOUND",
         })

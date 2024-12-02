@@ -48,8 +48,8 @@ module.exports = async (req, res) => {
       req.params.id_keranjang
     );
     if (!isDeleted) {
-      return res.status(404).json(
-        RESPONSE.deleteError(404, "keranjang tidak ditemukan", {
+      return res.status(400).json(
+        RESPONSE.deleteError(400, "keranjang tidak ditemukan", {
           message: "ID keranjang tidak ada dalam database",
           code: "KERANJANG_NOT_FOUND",
         })

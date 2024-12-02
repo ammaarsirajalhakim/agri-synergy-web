@@ -11,9 +11,9 @@ const deleteProduk = require("../controllers/produk/delete");
 router.use("/file", validateStaticFile, staticFileMiddleware);
 
 router.use('/file/*', (req, res) => {
-  res.status(404).json({
+  res.status(400).json({
     success: false,
-    code: 404,
+    code: 400,
     message: "File tidak ditemukan",
     data: null,
     timestamp: new Date().toLocaleString("en-US", {

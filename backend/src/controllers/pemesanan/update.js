@@ -90,8 +90,8 @@ module.exports = async (req, res) => {
         .json(RESPONSE.updateSuccess("Pemesanan updated successfully"));
     } else {
       return res
-        .status(404)
-        .json(RESPONSE.updateError(404, "Pemesanan not found"));
+        .status(400)
+        .json(RESPONSE.updateError(400, "Pemesanan not found"));
     }
   } catch (err) {
     console.error(err);

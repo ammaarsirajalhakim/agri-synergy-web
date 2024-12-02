@@ -49,8 +49,8 @@ module.exports = async (req, res) => {
       req.params.id_kalender
     );
     if (!isDeleted) {
-      return res.status(404).json(
-        RESPONSE.deleteError(404, "Kalender tidak ditemukan", {
+      return res.status(400).json(
+        RESPONSE.deleteError(400, "Kalender tidak ditemukan", {
           message: "ID kalender tidak ada dalam database",
           code: "KALENDER_NOT_FOUND",
         })
