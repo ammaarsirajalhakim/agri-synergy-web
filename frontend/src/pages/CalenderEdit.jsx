@@ -63,7 +63,7 @@ function CalenderEdit() {
               img: `http://localhost:3000/api/fileKalender/${selectedCalendar.gambar}`,
             });
             setDate(calendarDate);
-            setSelectedDate(calendarDate); // Synchronize both date states
+            setSelectedDate(calendarDate); 
           }
         }
       } catch (error) {
