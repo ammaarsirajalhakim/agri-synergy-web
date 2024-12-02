@@ -8,7 +8,7 @@ import "../css/CalendarStyles.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useNavigate, useParams } from "react-router-dom";
-import nimg3 from "../assets/notificationimg/nimg3.png";
+
 
 function CalenderEdit() {
   const { id } = useParams();
@@ -20,6 +20,7 @@ function CalenderEdit() {
     judul: "",
     deskripsi: "",
     img: "",
+    tanggal: ""
   });
 
   useEffect(() => {
@@ -29,7 +30,7 @@ function CalenderEdit() {
         navigate("/");
         return;
       }
-  
+
       try {
         axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
         const response = await axios.get("http://localhost:3000/api/kalender", {
@@ -37,30 +38,32 @@ function CalenderEdit() {
             return status < 500;
           },
         });
-  
+
         if (response.status === 401 || response.status === 403) {
           localStorage.removeItem("jwtToken");
           navigate("/");
         }
-  
+
         if (response.data?.token) {
           localStorage.setItem("jwtToken", response.data.token);
         }
-  
+
         if (response.data?.data) {
           const selectedCalendar = response.data.data.find(
             (item) => item.id_kalender === parseInt(id)
           );
-  
+
           if (selectedCalendar) {
+            const calendarDate = new Date(selectedCalendar.tanggal);
             setFormData({
               id: selectedCalendar.id_kalender,
               jenis: selectedCalendar.jenis,
               judul: selectedCalendar.judul,
               deskripsi: selectedCalendar.deskripsi,
-              img: `http://localhost:3000/api/fileKalender/${selectedCalendar.gambar}`
+              img: `http://localhost:3000/api/fileKalender/${selectedCalendar.gambar}`,
             });
-            setDate(new Date(selectedCalendar.tanggal));
+            setDate(calendarDate);
+            setSelectedDate(calendarDate); // Synchronize both date states
           }
         }
       } catch (error) {
@@ -72,12 +75,13 @@ function CalenderEdit() {
         console.log("Error validating token:", error);
       }
     };
-  
+
     fetchCalendarData();
   }, [id, navigate]);
 
   const handleCalendarDateChange = (selectedDate) => {
     setDate(selectedDate);
+    setSelectedDate(selectedDate); 
   };
 
   const handleChange = (e) => {
@@ -90,6 +94,7 @@ function CalenderEdit() {
 
   const handleDatePickerChange = (date) => {
     setSelectedDate(date);
+    setDate(date); 
   };
 
   const handleImageChange = (e) => {
@@ -110,13 +115,7 @@ function CalenderEdit() {
   };
 
   const handleCancel = () => {
-    setFormData({
-      jenis: "",
-      judul: "",
-      deskripsi: "",
-      img: null,
-    });
-    setSelectedDate(null);
+    navigate("/calendar");
   };
 
   return (
@@ -151,9 +150,9 @@ function CalenderEdit() {
                   onChange={handleChange}
                   className="calendar-add-form__select"
                 >
-                  <option value="">Select</option>
-                  <option value="Pengingat">Pengingat</option>
-                  <option value="Peringatan">Peringatan</option>
+                  <option disabled>Select</option>
+                  <option value="pengingat">Pengingat</option>
+                  <option value="peringatan">Peringatan</option>
                 </select>
               </div>
               <div className="calendar-add-form__group">

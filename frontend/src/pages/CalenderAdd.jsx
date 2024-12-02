@@ -173,8 +173,8 @@ function CalendarAdd() {
                   className="calendar-add-form__select"
                 >
                   <option value="">Pilih Jenis</option>
-                  <option value="Event">Pengingat</option>
-                  <option value="Task">Peringatan</option>
+                  <option value="pengingat">Pengingat</option>
+                  <option value="peringatan">Peringatan</option>
                 </select>
               </div>
               <div className="calendar-add-form__group">
