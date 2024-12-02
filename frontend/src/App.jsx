@@ -49,7 +49,7 @@ function App() {
         <Route path='/calendaradd' element={<CalenderAdd />} />
         <Route path='/calendar' element={<Calender />} />
         <Route path='/calendarview/:id' element={<CalenderView />} />
-        <Route path='/calendaredit' element={<CalenderEdit />} />
+        <Route path='/calendaredit/:id' element={<CalenderEdit />} />
         <Route path='/konsultasi' element={<MainChat />} />
         <Route path="/market" element={<ProductPage />} />
         <Route path="/detail/:id" element={<ProductDetail />} />
