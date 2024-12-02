@@ -13,13 +13,11 @@ const images = [backgroundImage2, backgroundImage4, backgroundImage3];
 const Register = () => {
   const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [formData, setFormData] = useState({
-    nama: "",
-    no_hp: "",
-    alamat: "", 
-    email: "",
-    katasandi: "",
-  });
+  const [nama, setNama] = useState("");
+  const [noHp, setNoHp] = useState("");
+  const [alamat, setAlamat] = useState("");
+  const [email, setEmail] = useState("");
+  const [katasandi, setKatasandi] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -31,35 +29,25 @@ const Register = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-
-    setError("");
-  };
-
   const validateForm = () => {
-    if (!formData.nama || !formData.no_hp || !formData.email || !formData.katasandi || !formData.alamat) {
+    if (!nama || !noHp || !email || !katasandi || !alamat) {
       setError("Semua field harus diisi");
       return false;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
+    if (!emailRegex.test(email)) {
       setError("Format email tidak valid");
       return false;
     }
 
     const phoneRegex = /^[0-9]{10,13}$/;
-    if (!phoneRegex.test(formData.no_hp)) {
+    if (!phoneRegex.test(noHp)) {
       setError("Nomor handphone harus 10-13 digit");
       return false;
     }
 
-    if (formData.katasandi.length < 8) {
+    if (katasandi.length < 8) {
       setError("Kata sandi minimal 8 karakter");
       return false;
     }
@@ -76,10 +64,13 @@ const Register = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post(
-        "http://localhost:3000/api/users",
-        formData
-      );
+      const response = await axios.post("http://localhost:3000/api/users", {
+        nama: nama,
+        no_hp: noHp,
+        alamat: alamat,
+        email: email,
+        katasandi : katasandi,
+      });
 
       if (response.data.success) {
         alert("Registrasi berhasil!");
@@ -135,51 +126,46 @@ const Register = () => {
         <p className="title_input_field">Nama Lengkap</p>
         <input
           type="text"
-          name="nama"
           placeholder="Masukkan nama lengkap"
           className="input-field"
-          value={formData.nama}
-          onChange={handleInputChange}
+          value={nama}
+          onChange={(e) => setNama(e.target.value)}
         />
 
         <p className="title_input_field">Nomor Hp</p>
         <input
           type="text"
-          name="no_hp"
           placeholder="Masukkan nomor handphone"
           className="input-field"
-          value={formData.no_hp}
-          onChange={handleInputChange}
+          value={noHp}
+          onChange={(e) => setNoHp(e.target.value)}
         />
 
         <p className="title_input_field">Alamat</p>
         <input
           type="text"
-          name="alamat"
           placeholder="Masukkan alamat lengkap"
           className="input-field"
-          value={formData.alamat}
-          onChange={handleInputChange}
+          value={alamat}
+          onChange={(e) => setAlamat(e.target.value)}
         />
 
         <p className="title_input_field">Alamat Email</p>
         <input
           type="email"
-          name="email"
           placeholder="Masukkan alamat email"
           className="input-field"
-          value={formData.email}
-          onChange={handleInputChange}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
 
         <p className="title_input_field">Kata Sandi</p>
         <input
           type="password"
-          name="katasandi"
           placeholder="Masukkan kata sandi"
           className="input-field"
-          value={formData.katasandi}
-          onChange={handleInputChange}
+          value={katasandi}
+          onChange={(e) => setKatasandi(e.target.value)}
         />
 
         <button 

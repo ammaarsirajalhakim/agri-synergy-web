@@ -97,9 +97,8 @@ const uploadMiddleware = (req, res, next) => {
     }
 
     if (!req.file) {
-      return res
-        .status(400)
-        .json(RESPONSE.createError(400, ERROR_MESSAGES.FILE_NOT_FOUND));
+      req.body.gambar = null; 
+      return next();
     }
 
     req.body.gambar = req.file.filename;

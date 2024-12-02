@@ -8,25 +8,25 @@ import "../css/CalendarStyles.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useNavigate, useParams } from "react-router-dom";
-
+import { toast } from "react-toastify";
 
 function CalenderEdit() {
   const { id } = useParams();
   const navigate = useNavigate();
-//   const [date, setDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [formData, setFormData] = useState({
     jenis: "",
     judul: "",
     deskripsi: "",
     img: "",
-    tanggal: ""
+    tanggal: "",
   });
 
   useEffect(() => {
     const fetchCalendarData = async () => {
+      const idUser = localStorage.getItem("id_user");
       const token = localStorage.getItem("jwtToken");
-      if (!token) {
+      if (!token || !idUser) {
         navigate("/");
         return;
       }
@@ -61,18 +61,19 @@ function CalenderEdit() {
               judul: selectedCalendar.judul,
               deskripsi: selectedCalendar.deskripsi,
               img: `http://localhost:3000/api/fileKalender/${selectedCalendar.gambar}`,
+              tanggal: calendarDate,
             });
-            // setDate(calendarDate);
-            setSelectedDate(calendarDate); 
+            setSelectedDate(calendarDate);
           }
         }
-      } catch (error) {
-        if (error.response?.status === 401 || error.response?.status === 403) {
-          localStorage.removeItem("jwtToken");
-          navigate("/");
-          return;
-        }
-        console.log("Error validating token:", error);
+      } catch (err) {
+        const errorMessage =
+          err.response?.data?.message || "Terjadi kesalahan pada server";
+        toast.error(errorMessage, {
+          position: "top-right",
+          autoClose: 1500,
+        });
+        console.log("Error:", err);
       }
     };
 
@@ -80,8 +81,7 @@ function CalenderEdit() {
   }, [id, navigate]);
 
   const handleCalendarDateChange = (selectedDate) => {
-    // setDate(selectedDate);
-    setSelectedDate(selectedDate); 
+    setSelectedDate(selectedDate);
   };
 
   const handleChange = (e) => {
@@ -94,24 +94,95 @@ function CalenderEdit() {
 
   const handleDatePickerChange = (date) => {
     setSelectedDate(date);
-    // setDate(date); 
   };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const imgURL = URL.createObjectURL(file);
       setFormData({
         ...formData,
-        img: imgURL,
+        gambar: file,
+        img: URL.createObjectURL(file),
       });
     }
   };
 
-  const handleSubmit = (e) => {
+  const validateForm = () => {
+    console.log("Form Data:", formData);
+  console.log("Gambar:", formData.gambar);
+    if (
+      !formData.jenis ||
+      !formData.judul ||
+      !formData.deskripsi ||
+      !formData.tanggal ||
+      isNaN(new Date(formData.tanggal).getTime()) 
+    ) {
+      toast.error("Semua field harus diisi dengan benar", {
+        position: "top-right",
+        autoClose: 1500,
+      });
+      return false;
+    }
+    return true;
+  };
+
+  const handleUpdate = async (e) => {
     e.preventDefault();
-    console.log("Form data:", formData);
-    console.log("Selected date:", selectedDate);
+
+    if (!validateForm()) {
+      return;
+    }
+
+    const formattedDate =
+      selectedDate.getFullYear() +
+      "-" +
+      ("0" + (selectedDate.getMonth() + 1)).slice(-2) +
+      "-" +
+      ("0" + selectedDate.getDate()).slice(-2);
+
+    try {
+      const idUser = localStorage.getItem("id_user");
+      const formDataToSend = new FormData();
+
+      formDataToSend.append("jenis", formData.jenis);
+      formDataToSend.append("judul", formData.judul);
+      formDataToSend.append("deskripsi", formData.deskripsi);
+      formDataToSend.append("tanggal", formattedDate);
+      formDataToSend.append("id_user", idUser);
+      if (formData.gambar) {
+        formDataToSend.append("gambar", formData.gambar, formData.gambar.name);
+      }
+
+      const token = localStorage.getItem("jwtToken");
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      const response = await axios.put(
+        `http://localhost:3000/api/kalender/${id}`,
+        formDataToSend
+      );
+      if (response.data.success) {
+        toast.success(response.data.message, {
+          position: "top-right",
+          autoClose: 1500,
+        });
+        setTimeout(() => navigate("/calendar"), 1500);
+
+      } else {
+        toast.error(
+          response.data.message || "Terjadi kesalahan saat mendaftar",
+          {
+            position: "top-right",
+            autoClose: 1500,
+          }
+        );
+      }
+    } catch (err) {
+      const errorMessage = err.response?.data?.message || "Terjadi kesalahan";
+      toast.error(errorMessage, {
+        position: "top-right",
+        autoClose: 1500,
+      });
+      console.error("Registration error:", err);
+    }
   };
 
   const handleCancel = () => {
@@ -123,7 +194,7 @@ function CalenderEdit() {
       <Header />
       <div className="custom-calendar-container">
         <div className="calendar-add-form__container">
-          <form onSubmit={handleSubmit} className="calendar-add-form__form">
+          <div className="calendar-add-form__form">
             <div className="calendar-add-form__group">
               <label>Gambar</label>
               {formData.img && (
@@ -136,6 +207,7 @@ function CalenderEdit() {
               <input
                 type="file"
                 name="gambar"
+                accept="image/*"
                 onChange={handleImageChange}
                 className="calendar-add-form__file-input"
               />
@@ -199,12 +271,12 @@ function CalenderEdit() {
               <button
                 type="button"
                 className="calendar-add-form__submit-button"
-                onClick={() => navigate("/calendarview")}
+                onClick={handleUpdate}
               >
                 Edit
               </button>
             </div>
-          </form>
+          </div>
         </div>
         <div className="rectangles-kalender"></div>
         <div className="custom-calendar-wrapper">

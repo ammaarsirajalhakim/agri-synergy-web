@@ -27,9 +27,9 @@ function CalendarAdd() {
   useEffect(() => {
     const idUser = localStorage.getItem("id_user");
     if (!idUser) {
-      toast.error("Anda harus login terlebih dahulu", { 
-        position: "top-right", 
-        autoClose: 1500 
+      toast.error("Anda harus login terlebih dahulu", {
+        position: "top-right",
+        autoClose: 1500,
       });
       navigate("/login");
     } else {
@@ -74,12 +74,11 @@ function CalendarAdd() {
       !formData.judul ||
       !formData.deskripsi ||
       !formData.tanggal ||
-      isNaN(new Date(formData.tanggal).getTime()) ||
-      !formData.gambar
+      isNaN(new Date(formData.tanggal).getTime()) 
     ) {
-      toast.error("Semua field harus diisi dengan benar", { 
-        position: "top-right", 
-        autoClose: 1500 
+      toast.error("Semua field harus diisi dengan benar", {
+        position: "top-right",
+        autoClose: 1500,
       });
       return false;
     }
@@ -97,8 +96,10 @@ function CalendarAdd() {
 
     const localDate = new Date(formData.tanggal);
     const formattedDate =
-      localDate.getFullYear() + "-" +
-      ("0" + (localDate.getMonth() + 1)).slice(-2) + "-" +
+      localDate.getFullYear() +
+      "-" +
+      ("0" + (localDate.getMonth() + 1)).slice(-2) +
+      "-" +
       ("0" + localDate.getDate()).slice(-2);
 
     try {
@@ -125,23 +126,23 @@ function CalendarAdd() {
       );
 
       if (response.data.success) {
-        toast.success(response.data.message, { 
-          position: "top-right", 
-          autoClose: 1500 
+        toast.success(response.data.message, {
+          position: "top-right",
+          autoClose: 1500,
         });
         setTimeout(() => navigate("/calendar"), 1500);
       } else {
-        toast.error(response.data.message || "Terjadi kesalahan saat Input", { 
-          position: "top-right", 
-          autoClose: 1500 
+        toast.error(response.data.message || "Terjadi kesalahan saat Input", {
+          position: "top-right",
+          autoClose: 1500,
         });
       }
     } catch (err) {
       const errorMessage =
         err.response?.data?.message || "Terjadi kesalahan pada server";
-      toast.error(errorMessage, { 
-        position: "top-right", 
-        autoClose: 1500 
+      toast.error(errorMessage, {
+        position: "top-right",
+        autoClose: 1500,
       });
       console.error("Error:", err);
     } finally {

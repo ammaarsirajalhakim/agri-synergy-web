@@ -27,21 +27,30 @@ const RESPONSE = {
     message,
     data: null,
     timestamp: getFormattedTimestamp(),
-    errors,
+    errors,                                                 
   }),
-};
+};                                                                                                                                                        
 
-const UPDATABLE_FIELDS = ["id_user", "jenis", "judul", "tanggal", "deskripsi"];
+const UPDATABLE_FIELDS = ["id_user", "jenis", "judul", "tanggal", "deskripsi", "gambar"];
 
 const validateFields = {
   validateUpdateData: async (req) => {
     const data = {};
-
     UPDATABLE_FIELDS.forEach((field) => {
       if (req.body[field]) {
         data[field] = req.body[field];
       }
     });
+
+    if (!data.gambar) {
+      const [rows] = await req.db
+        .promise()
+        .query("SELECT gambar FROM kalender WHERE id_kalender = ?", [req.params.id_kalender]);
+
+      if (rows.length > 0) {
+        data.gambar = rows[0].gambar; 
+      }
+    }
 
     return {
       isValid: true,
@@ -49,6 +58,7 @@ const validateFields = {
     };
   },
 };
+
 
 const updateKalender = async (db, kalenderId, updateData) => {
   const [rows] = await db
