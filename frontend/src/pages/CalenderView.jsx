@@ -66,9 +66,24 @@ function CalenderView() {
     setShowDeleteModal(true);
   };
 
-  const confirmDelete = () => {
-    setShowDeleteModal(false);
-    navigate("/calendar");
+  const confirmDelete = async () => {
+    try {
+      const token = localStorage.getItem("jwtToken");
+      if (!token) {
+        navigate("/");
+        return;
+      }
+
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      const response = await axios.delete(`http://localhost:3000/api/kalender/${id}`);
+
+      if (response.status === 200) {
+        setShowDeleteModal(false);
+        navigate("/calendar");
+      }
+    } catch (error) {
+      console.log("Error deleting calendar event:", error);
+    }
   };
 
   const cancelDelete = () => {
