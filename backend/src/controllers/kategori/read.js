@@ -12,19 +12,22 @@ const getFormattedTimestamp = () => {
 };
 
 module.exports = async (req, res) => {
-  const getSuccessResponse = (rows) => ({
+  const page = parseInt(req.query.page) || 1;
+  const limit = 10;
+  const offset = (page - 1) * limit;
+
+  const getSuccessResponse = (rows, total) => ({
     success: rows.length > 0,
     code: 200,
-    message:
-      rows.length > 0
-        ? "Data kategori berhasil diambil"
-        : "Data kategori tidak tersedia",
+    message: rows.length > 0 
+      ? "Data kategori berhasil diambil" 
+      : "Data kategori tidak tersedia",
     data: rows,
     pagination: {
-      total: rows.length,
-      per_page: rows.length,
-      current_page: 1,
-      total_pages: 1,
+      total: total,
+      per_page: limit,
+      current_page: page,
+      total_pages: Math.ceil(total / limit),
     },
     timestamp: getFormattedTimestamp(),
     errors: null,
@@ -44,8 +47,15 @@ module.exports = async (req, res) => {
   });
 
   try {
-    const [rows] = await req.db.promise().query("SELECT * FROM kategori");
-    const responseData = getSuccessResponse(rows);
+    const [countResult] = await req.db.promise().query("SELECT COUNT(*) as total FROM kategori");
+    const total = countResult[0].total;
+
+    const [rows] = await req.db.promise().query(
+      "SELECT * FROM kategori LIMIT ? OFFSET ?", 
+      [limit, offset]
+    );
+
+    const responseData = getSuccessResponse(rows, total);
     return res.status(responseData.code).json(responseData);
   } catch (err) {
     console.error(err);
