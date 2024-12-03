@@ -80,7 +80,7 @@ const Kategori = () => {
           window.location.reload();
         }, 1500);
       } else {
-        toast.error("Kategori gagal ditambahkan!" + response.message, {
+        toast.error("Kategori gagal ditambahkan!" || response.message, {
           position: "top-right",
           autoClose: 1500,
         });

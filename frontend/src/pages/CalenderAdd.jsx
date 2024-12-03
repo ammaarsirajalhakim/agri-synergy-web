@@ -88,9 +88,9 @@ function CalendarAdd() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // if (!validateForm()) {
-    //   return;
-    // }
+    if (!validateForm()) {
+      return;
+    }
 
     setLoading(true);
 

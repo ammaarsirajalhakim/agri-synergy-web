@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Sidebar from "../../components/Sidebar";
+import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 import "../../css/produk.css";
 
 const Produk = () => {
@@ -10,7 +12,7 @@ const Produk = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(null);
-  const [products, setProducts] = useState([]);
+  const [product, setProduct] = useState([]);
   const navigate = useNavigate();
 
   const checkAuthentication = async () => {
@@ -44,7 +46,7 @@ const Produk = () => {
       }
 
       if (response.data?.data) {
-        setProducts(response.data.data);
+        setProduct(response.data.data);
       }
     } catch (error) {
       if (error.response?.status === 401 || error.response?.status === 403) {
@@ -72,6 +74,21 @@ const Produk = () => {
     const formattedDate = `${year}-${month}-${day}`;
     const userId = localStorage.getItem("id_user");
 
+    if (
+      !productName ||
+      !productStock ||
+      !productPrice ||
+      !productImage ||
+      !productCategory ||
+      !ProductDeskripsi
+    ) {
+      toast.error("Field tidak boleh kosong!", {
+        position: "top-right",
+        autoClose: 1500,
+      });
+      return;
+    }
+
     formData.append("id_user", userId);
     formData.append("id_kategori", productCategory);
     formData.append("nama", productName);
@@ -93,13 +110,150 @@ const Produk = () => {
         }
       );
       if (response.status === 200) {
-        closeModal();
-        setProducts((prev) => [...prev, response.data]);
+        toast.success("Produk berhasil ditambahkan!", {
+          position: "top-right",
+          autoClose: 1500,
+        });
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
+      } else {
+        toast.error("Produk gagal ditambahkan!" || response.message, {
+          position: "top-right",
+          autoClose: 1500,
+        });
       }
-    } catch (error) {
-      console.error("Error adding product:", error);
+    } catch (err) {
+      const errorMessage =
+        err.response?.data?.message || "Terjadi kesalahan pada server";
+      toast.error(errorMessage, {
+        position: "top-right",
+        autoClose: 1500,
+      });
+      console.error("Error:", err);
     }
   };
+
+  const handleUpdateProduct = async () => {
+    const formData = new FormData();
+    const productName = document.getElementById("updateProductName").value;
+    const productStock = document.getElementById("updateProductStock").value;
+    const productPrice = document.getElementById("updateProductPrice").value;
+    const productImage = document.getElementById("updateProductImage").files[0];
+    const productCategory = document.getElementById(
+      "updateProductKategori"
+    ).value;
+    const ProductDeskripsi = document.getElementById(
+      "updateProductDeskripsi"
+    ).value;
+    const currentDate = new Date();
+
+    const day = String(currentDate.getDate()).padStart(2, "0");
+    const month = String(currentDate.getMonth() + 1).padStart(2, "0");
+    const year = currentDate.getFullYear();
+
+    const formattedDate = `${year}-${month}-${day}`;
+    const userId = localStorage.getItem("id_user");
+
+    if (
+      !productName ||
+      !productStock ||
+      !productPrice ||
+      !productCategory ||
+      !ProductDeskripsi
+    ) {
+      toast.error("Field tidak boleh kosong!", {
+        position: "top-right",
+        autoClose: 1500,
+      });
+      return;
+    }
+
+    formData.append("id_user", userId);
+    formData.append("id_kategori", productCategory);
+    formData.append("nama", productName);
+    formData.append("harga", productPrice);
+    formData.append("kuantitas", productStock);
+    formData.append("deskripsi", ProductDeskripsi);
+    formData.append("foto_produk", productImage);
+    formData.append("tanggal_diposting", formattedDate);
+
+    try {
+      const response = await axios.put(
+        `http://localhost:3000/api/produk/${currentProduct.id_produk}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        toast.success("Produk berhasil diupdate!", {
+          position: "top-right",
+          autoClose: 1500,
+        });
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
+      } else {
+        toast.error("Produk gagal diupdate!" || response.message, {
+          position: "top-right",
+          autoClose: 1500,
+        });
+      }
+    } catch (err) {
+      const errorMessage =
+        err.response?.data?.message || "Terjadi kesalahan pada server";
+      toast.error(errorMessage, {
+        position: "top-right",
+        autoClose: 1500,
+      });
+      console.error("Error:", err);
+    }
+  };
+
+
+  const handleDeleteProduct = async (id) => {
+    const result = await Swal.fire({
+      title: "Konfirmasi",
+      text: "Apakah Anda yakin ingin menghapus produk ini?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Ya, hapus!",
+      cancelButtonText: "Batal",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        const response = await axios.delete(
+          `http://localhost:3000/api/produk/${id}`
+        );
+
+        if (response.status === 200) {
+          Swal.fire("Berhasil!", "Produk berhasil dihapus.", "success");
+          setTimeout(() => {
+            window.location.reload();
+          }, 1500);
+        } else {
+          Swal.fire(
+            "Gagal!",
+            `Produk gagal dihapus: ${response.message}`,
+            "error"
+          );
+        }
+      } catch (err) {
+        const errorMessage =
+          err.response?.data?.message || "Terjadi kesalahan pada server";
+        Swal.fire("Gagal!", errorMessage, "error");
+        console.error("Error:", err);
+      }
+    }
+  };
+
 
   const fetchCategories = async () => {
     try {
@@ -169,8 +323,8 @@ const Produk = () => {
               </tr>
             </thead>
             <tbody>
-              {products.length > 0 ? (
-                products.map((product) => (
+              {product.length > 0 ? (
+                product.map((product) => (
                   <tr key={product.id_produk}>
                     <td>{product.nama_kategori}</td>
                     <td>
@@ -188,18 +342,12 @@ const Produk = () => {
                       <button
                         className="update1"
                         onClick={() =>
-                          openUpdateModal({
-                            nama: product.nama,
-                            kuantitas: product.kuantitas,
-                            harga: product.harga,
-                            kategori: product.kategori,
-                            deskripsi: product.deskripsi,
-                          })
+                          openUpdateModal(product)
                         }
                       >
                         <span className="icon update-icon1" />
                       </button>
-                      <button className="delete1">
+                      <button className="delete1" onClick={() => handleDeleteProduct(product.id_produk)}>
                         <span className="icon delete-icon1" />
                       </button>
                     </td>
@@ -292,7 +440,7 @@ const Produk = () => {
               <div className="form-group1 full-width">
                 <label htmlFor="productKategori">Kategori</label>
                 <select id="productKategori" placeholder="Pilih Kategori">
-                  <option  disabled>Pilih Kategori</option>
+                  <option disabled>Pilih Kategori</option>
                   {kategori.map((category) => (
                     <option
                       key={category.id_kategori}
@@ -341,11 +489,11 @@ const Produk = () => {
                 <input
                   type="text"
                   id="updateProductName"
-                  value={currentProduct.name}
+                  value={currentProduct.nama}
                   onChange={(e) =>
                     setCurrentProduct({
                       ...currentProduct,
-                      name: e.target.value,
+                      nama: e.target.value,
                     })
                   }
                 />
@@ -355,11 +503,11 @@ const Produk = () => {
                 <input
                   type="number"
                   id="updateProductStock"
-                  value={currentProduct.stock}
+                  value={currentProduct.kuantitas}
                   onChange={(e) =>
                     setCurrentProduct({
                       ...currentProduct,
-                      stock: e.target.value,
+                      kuantitas: e.target.value,
                     })
                   }
                 />
@@ -369,11 +517,11 @@ const Produk = () => {
                 <input
                   type="text"
                   id="updateProductPrice"
-                  value={currentProduct.price}
+                  value={currentProduct.harga}
                   onChange={(e) =>
                     setCurrentProduct({
                       ...currentProduct,
-                      price: e.target.value,
+                      harga: e.target.value,
                     })
                   }
                 />
@@ -382,24 +530,49 @@ const Produk = () => {
                 <label htmlFor="updateProductImage">Gambar Produk</label>
                 <input type="file" id="updateProductImage" accept="image/*" />
               </div>
-              <div className="form-group1 full-width">
+              <div className="form-group1">
                 <label htmlFor="updateProductKategori">Kategori</label>
                 <select
                   id="updateProductKategori"
-                  value={currentProduct.category}
+                  value={currentProduct.id_kategori}
                   onChange={(e) =>
                     setCurrentProduct({
                       ...currentProduct,
-                      category: e.target.value,
+                      id_kategori: e.target.value,
                     })
                   }
                 >
-                  <option value="">Pilih Kategori</option>
-                  <option value="elektronik">Elektronik</option>
-                  <option value="fashion">Fashion</option>
-                  <option value="makanan">Makanan</option>
-                  <option value="perabot">Perabot</option>
+                  {kategori.map((category) => (
+                    <option
+                      key={category.id_kategori}
+                      value={category.id_kategori}
+                      selected={category.nama === currentProduct.nama_kategori}
+                    >
+                      {category.nama}
+                    </option>
+                  ))}
                 </select>
+              </div>
+              <div className="form-group1">
+                <img
+                  src={`http://localhost:3000/api/file/${currentProduct.foto_produk}`}
+                  alt="Current Product"
+                  width={100}
+                  height={100}
+                />
+              </div>
+              <div className="form-group1 full-width">
+                <label htmlFor="updateProductDeskripsi">Deskripsi</label>
+                <textarea
+                  id="updateProductDeskripsi"
+                  value={currentProduct.deskripsi}
+                  onChange={(e) =>
+                    setCurrentProduct({
+                      ...currentProduct,
+                      deskripsi: e.target.value,
+                    })
+                  }
+                />
               </div>
             </div>
 
@@ -407,7 +580,12 @@ const Produk = () => {
               <button className="cancel-button1" onClick={closeUpdateModal}>
                 Kembali
               </button>
-              <button className="save-button1Update">Update</button>
+              <button
+                className="save-button1Update"
+                onClick={handleUpdateProduct}
+              >
+                Update
+              </button>
             </div>
           </div>
         </div>
