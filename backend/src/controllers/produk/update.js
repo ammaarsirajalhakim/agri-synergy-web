@@ -45,12 +45,54 @@ const UPDATABLE_FIELDS = [
 const validateFields = {
   validateUpdateData: async (req) => {
     const data = {};
+    const emptyFields = [];
 
-    UPDATABLE_FIELDS.forEach((field) => {
-      if (req.body[field]) {
-        data[field] = req.body[field];
+    for (const field of UPDATABLE_FIELDS) {
+      if (field === "foto_produk") continue;
+
+      if (req.body[field] !== undefined && req.body[field] !== null) {
+        if (
+          typeof req.body[field] === "string" &&
+          req.body[field].trim() === ""
+        ) {
+          emptyFields.push(field);
+        } else {
+          data[field] = req.body[field];
+        }
       }
-    });
+    }
+
+    if (emptyFields.length > 0) {
+      return {
+        isValid: false,
+        error: {
+          code: 400,
+          message: `Field ${emptyFields.join(", ")} kosong!`,
+        },
+      };
+    }
+
+    if (!req.body.foto_produk) {
+      const [rows] = await req.db
+        .promise()
+        .query("SELECT foto_produk FROM produk WHERE id_produk = ?", [
+          req.params.id_produk,
+        ]);
+
+      if (rows.length > 0) {
+        data.foto_produk = rows[0].foto_produk;
+      } else {
+        return {
+          isValid: false,
+          error: {
+            code: 400,
+            message: "Gambar tidak ditemukan!",
+          },
+        };
+      }
+    } else {
+      data.foto_produk = req.body.foto_produk;
+    }
 
     return {
       isValid: true,
