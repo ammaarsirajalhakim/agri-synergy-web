@@ -19,9 +19,10 @@ module.exports = async (req, res) => {
   const getSuccessResponse = (rows, total) => ({
     success: rows.length > 0,
     code: 200,
-    message: rows.length > 0 
-      ? "Data kategori berhasil diambil" 
-      : "Data kategori tidak tersedia",
+    message:
+      rows.length > 0
+        ? "Data kategori berhasil diambil"
+        : "Data kategori tidak tersedia",
     data: rows,
     pagination: {
       total: total,
@@ -47,13 +48,14 @@ module.exports = async (req, res) => {
   });
 
   try {
-    const [countResult] = await req.db.promise().query("SELECT COUNT(*) as total FROM kategori");
+    const [countResult] = await req.db
+      .promise()
+      .query("SELECT COUNT(*) as total FROM kategori");
     const total = countResult[0].total;
 
-    const [rows] = await req.db.promise().query(
-      "SELECT * FROM kategori LIMIT ? OFFSET ?", 
-      [limit, offset]
-    );
+    const [rows] = await req.db
+      .promise()
+      .query("SELECT * FROM kategori LIMIT ? OFFSET ?", [limit, offset]);
 
     const responseData = getSuccessResponse(rows, total);
     return res.status(responseData.code).json(responseData);
