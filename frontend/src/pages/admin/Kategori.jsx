@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import Sidebar from "../../components/Sidebar";
 import axios from "axios";
+import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 import "../../css/kategori.css";
 
 const Kategori = () => {
@@ -56,18 +58,124 @@ const Kategori = () => {
   const handleAddCategory = async () => {
     const NamaCategory = document.getElementById("kategoriName").value;
 
+    if (!NamaCategory) {
+      toast.error("Kategori tidak boleh kosong!", {
+        position: "top-right",
+        autoClose: 1500,
+      });
+      return;
+    }
+
     try {
       const response = await axios.post("http://localhost:3000/api/kategori", {
         nama: NamaCategory,
       });
 
       if (response.status === 200) {
-        window.location.reload();
+        toast.success("Kategori berhasil ditambahkan!", {
+          position: "top-right",
+          autoClose: 1500,
+        });
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
       } else {
-        console.log("Error adding category:", response);
+        toast.error("Kategori gagal ditambahkan!" + response.message, {
+          position: "top-right",
+          autoClose: 1500,
+        });
       }
-    } catch (error) {
-      console.log("Error adding category:", error);
+    } catch (err) {
+      const errorMessage =
+        err.response?.data?.message || "Terjadi kesalahan pada server";
+      toast.error(errorMessage, {
+        position: "top-right",
+        autoClose: 1500,
+      });
+      console.error("Error:", err);
+    }
+  };
+
+  const handleUpdateCategory = async () => {
+    const NamaCategory = document.getElementById("kategoriName").value;
+
+    if (!NamaCategory || !categoryToEdit) {
+      toast.error("Kategori tidak boleh kosong!", {
+        position: "top-right",
+        autoClose: 1500,
+      });
+      return;
+    }
+
+    try {
+      const response = await axios.put(
+        `http://localhost:3000/api/kategori/${categoryToEdit.id_kategori}`,
+        {
+          nama: NamaCategory,
+        }
+      );
+
+      if (response.status === 200) {
+        toast.success("Kategori berhasil diubah!", {
+          position: "top-right",
+          autoClose: 1500,
+        });
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
+      } else {
+        toast.error("Kategori gagal diubah!" + response.message, {
+          position: "top-right",
+          autoClose: 1500,
+        });
+      }
+    } catch (err) {
+      const errorMessage =
+        err.response?.data?.message || "Terjadi kesalahan pada server";
+      toast.error(errorMessage, {
+        position: "top-right",
+        autoClose: 1500,
+      });
+      console.error("Error:", err);
+    }
+  };
+
+  const handleDeleteCategory = async (id) => {
+    const result = await Swal.fire({
+      title: "Konfirmasi",
+      text: "Apakah Anda yakin ingin menghapus kategori ini?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Ya, hapus!",
+      cancelButtonText: "Batal",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        const response = await axios.delete(
+          `http://localhost:3000/api/kategori/${id}`
+        );
+
+        if (response.status === 200) {
+          Swal.fire("Berhasil!", "Kategori berhasil dihapus.", "success");
+          setTimeout(() => {
+            window.location.reload();
+          }, 1500);
+        } else {
+          Swal.fire(
+            "Gagal!",
+            `Kategori gagal dihapus: ${response.message}`,
+            "error"
+          );
+        }
+      } catch (err) {
+        const errorMessage =
+          err.response?.data?.message || "Terjadi kesalahan pada server";
+        Swal.fire("Gagal!", errorMessage, "error");
+        console.error("Error:", err);
+      }
     }
   };
 
@@ -125,11 +233,16 @@ const Kategori = () => {
                     <td>
                       <button
                         className="update"
-                        onClick={() => openUpdateModal({ name: "" })}
+                        onClick={() => openUpdateModal(kategori)}
                       >
                         <span className="icon update-icon" />
                       </button>
-                      <button className="delete">
+                      <button
+                        className="delete"
+                        onClick={() =>
+                          handleDeleteCategory(kategori.id_kategori)
+                        }
+                      >
                         <span className="icon delete-icon" />
                       </button>
                     </td>
@@ -203,7 +316,9 @@ const Kategori = () => {
               <button className="cancel-button" onClick={closeAddModal}>
                 Kembali
               </button>
-              <button className="save-button" onClick={handleAddCategory}>Simpan</button>
+              <button className="save-button" onClick={handleAddCategory}>
+                Simpan
+              </button>
             </div>
           </div>
         </div>
@@ -214,7 +329,7 @@ const Kategori = () => {
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h5>Update Kategori</h5>
-              <button className="close-button" onClick={closeUpdateModal}>
+              <button className="close-button1" onClick={closeUpdateModal}>
                 ×
               </button>
             </div>
@@ -225,7 +340,7 @@ const Kategori = () => {
                   type="text"
                   id="kategoriName"
                   placeholder="Masukkan nama kategori"
-                  defaultValue={categoryToEdit.name}
+                  defaultValue={categoryToEdit?.nama}
                 />
               </div>
             </div>
@@ -233,7 +348,12 @@ const Kategori = () => {
               <button className="cancel-button" onClick={closeUpdateModal}>
                 Kembali
               </button>
-              <button className="save-buttonUpdate">Simpan</button>
+              <button
+                className="save-buttonUpdate"
+                onClick={handleUpdateCategory}
+              >
+                Simpan
+              </button>
             </div>
           </div>
         </div>

@@ -108,8 +108,6 @@ function CalenderEdit() {
   };
 
   const validateForm = () => {
-    console.log("Form Data:", formData);
-  console.log("Gambar:", formData.gambar);
     if (
       !formData.jenis ||
       !formData.judul ||
