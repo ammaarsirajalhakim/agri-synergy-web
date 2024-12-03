@@ -38,10 +38,17 @@ const validateFields = {
     const data = {};
 
     UPDATABLE_FIELDS.forEach((field) => {
-      if (req.body[field]) {
-        data[field] = req.body[field];
+      if (req.body[field] && req.body[field].trim() !== "") {
+        data[field] = req.body[field].trim();
       }
     });
+
+    if(!data.nama || data.nama === "") {
+      return{
+        isValid: false,
+        error: RESPONSE.updateError(400, "Kategori tidak boleh kosong!")
+      }
+    }
 
     return {
       isValid: true,

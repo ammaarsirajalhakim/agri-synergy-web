@@ -54,7 +54,7 @@ const validateFields = {
         isValid: false,
         error: {
           code: 400,
-          message: `Tidak boleh ada field kosong: ${emptyFields.join(', ')}`
+          message: `Field ${emptyFields.join(', ')} kosong!`,
         }
       };
     }
