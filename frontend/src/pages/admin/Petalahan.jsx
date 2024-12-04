@@ -2,15 +2,15 @@ import { useState } from "react";
 import Sidebar from "../../components/Sidebar";
 import "../../css/petalahan.css";
 
-
 const lahan = [
   {
-    image : 'src/assets/background_5.jpg',
-    nama : 'Lahan 1',
-    titik : '-7.520045399062036, 112.4692722667032',
-    deskripsi : 'Lorem ipsum dolor sit amet consectetur. Eget dictum magna tellus'
+    image: "src/assets/background_5.jpg",
+    nama: "Lahan 1",
+    titik: "-7.520045399062036, 112.4692722667032",
+    deskripsi:
+      "Lorem ipsum dolor sit amet consectetur. Eget dictum magna tellus",
   },
-]
+];
 
 const Petalahan = () => {
   const [activePage, setActivePage] = useState(1);
@@ -61,31 +61,44 @@ const Petalahan = () => {
                 <th>Action</th>
               </tr>
             </thead>
-           <tbody>
-            {lahan.map((lahan, index) => (
-              <tr key={index}>
-                <td>
-                  <img src={lahan.image} alt="lahan" width="70" height="50" />
-                </td>
-                <td>{lahan.nama}</td>
-                <td className="titik-column">{lahan.titik}</td>
-                <td className="deskripsi-column">{lahan.deskripsi}</td>
-                <td>
-                <button className="update4" onClick={() => openUpdateModal({ name: "", coordinates: "", description: "", image: "" })}>
-                    <span className="icon update-icon4" />
-                  </button>
-                  <button className="delete4">
-                    <span className="icon delete-icon4" />
-                  </button>
-                </td>
-              </tr>
-            ))}
-           </tbody>
+            <tbody>
+              {lahan.map((lahan, index) => (
+                <tr key={index}>
+                  <td>
+                    <img src={lahan.image} alt="lahan" width="70" height="50" />
+                  </td>
+                  <td>{lahan.nama}</td>
+                  <td className="titik-column">{lahan.titik}</td>
+                  <td className="deskripsi-column">{lahan.deskripsi}</td>
+                  <td>
+                    <button
+                      className="update4"
+                      onClick={() =>
+                        openUpdateModal({
+                          name: "",
+                          coordinates: "",
+                          description: "",
+                          image: "",
+                        })
+                      }
+                    >
+                      <span className="icon update-icon4" />
+                    </button>
+                    <button className="delete4">
+                      <span className="icon delete-icon4" />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
           </table>
         </div>
 
         <div className="entri">
-          <p className="entri-text">Menampilkan 1 dari 1 entri</p>
+          <p className="entri-text">
+            Menampilkan {activePage} dari {lahan.length} entri
+          </p>
+
           <div className="pagination">
             <button
               className={`pagination-button prev ${
@@ -120,23 +133,32 @@ const Petalahan = () => {
         </div>
       </div>
 
-
       {isModalOpen && (
         <div className="modal-overlay2" onClick={closeModal}>
           <div className="modal-content2" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header2">
               <h5>Tambah Lahan</h5>
-              <button className="close-button2" onClick={closeModal}>×</button>
+              <button className="close-button2" onClick={closeModal}>
+                ×
+              </button>
             </div>
 
             <div className="modal-body2">
               <div className="form-group2">
                 <label htmlFor="productName">Nama Lahan</label>
-                <input type="text" id="productName" placeholder="Masukkan nama Lahan" />
+                <input
+                  type="text"
+                  id="productName"
+                  placeholder="Masukkan nama Lahan"
+                />
               </div>
               <div className="form-group2">
                 <label htmlFor="productStock">Titik Koordinat</label>
-                <input type="text" id="productStock" placeholder="Masukkan Titik Koordinat" />
+                <input
+                  type="text"
+                  id="productStock"
+                  placeholder="Masukkan Titik Koordinat"
+                />
               </div>
               <div className="form-group2 full-width">
                 <label htmlFor="productImage">Gambar Lahan</label>
@@ -144,12 +166,18 @@ const Petalahan = () => {
               </div>
               <div className="form-group2 full-width">
                 <label htmlFor="productDescription">Deskripsi</label>
-                <textarea id="productDescription" placeholder="Masukkan Deskripsi" rows="4"></textarea>
+                <textarea
+                  id="productDescription"
+                  placeholder="Masukkan Deskripsi"
+                  rows="4"
+                ></textarea>
               </div>
             </div>
 
             <div className="modal-footer2">
-              <button className="cancel-button1" onClick={closeModal}>Kembali</button>
+              <button className="cancel-button1" onClick={closeModal}>
+                Kembali
+              </button>
               <button className="save-button2">Simpan</button>
             </div>
           </div>
@@ -161,17 +189,29 @@ const Petalahan = () => {
           <div className="modal-content2" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header2">
               <h5>Update Lahan</h5>
-              <button className="close-button2" onClick={closeUpdateModal}>×</button>
+              <button className="close-button2" onClick={closeUpdateModal}>
+                ×
+              </button>
             </div>
 
             <div className="modal-body2">
               <div className="form-group2">
                 <label htmlFor="updateProductName">Nama Lahan</label>
-                <input type="text" id="updateProductName" placeholder="Masukkan nama Lahan" defaultValue={currentProduct?.name || ''} />
+                <input
+                  type="text"
+                  id="updateProductName"
+                  placeholder="Masukkan nama Lahan"
+                  defaultValue={currentProduct?.name || ""}
+                />
               </div>
               <div className="form-group2">
                 <label htmlFor="updateProductStock">Titik Koordinat</label>
-                <input type="text" id="updateProductStock" placeholder="Masukkan Titik Koordinat" defaultValue={currentProduct?.coordinates || ''} />
+                <input
+                  type="text"
+                  id="updateProductStock"
+                  placeholder="Masukkan Titik Koordinat"
+                  defaultValue={currentProduct?.coordinates || ""}
+                />
               </div>
               <div className="form-group2 full-width">
                 <label htmlFor="updateProductImage">Gambar Lahan</label>
@@ -179,12 +219,19 @@ const Petalahan = () => {
               </div>
               <div className="form-group2 full-width">
                 <label htmlFor="updateProductDescription">Deskripsi</label>
-                <textarea id="updateProductDescription" placeholder="Masukkan Deskripsi" rows="4" defaultValue={currentProduct?.description || ''}></textarea>
+                <textarea
+                  id="updateProductDescription"
+                  placeholder="Masukkan Deskripsi"
+                  rows="4"
+                  defaultValue={currentProduct?.description || ""}
+                ></textarea>
               </div>
             </div>
 
             <div className="modal-footer2">
-              <button className="cancel-button2" onClick={closeUpdateModal}>Kembali</button>
+              <button className="cancel-button2" onClick={closeUpdateModal}>
+                Kembali
+              </button>
               <button className="save-button2Update">Simpan</button>
             </div>
           </div>

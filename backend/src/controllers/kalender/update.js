@@ -30,7 +30,14 @@ const RESPONSE = {
   }),
 };
 
-const UPDATABLE_FIELDS = ["id_user", "jenis", "judul", "tanggal", "deskripsi", "gambar"];
+const UPDATABLE_FIELDS = [
+  "id_user",
+  "jenis",
+  "judul",
+  "tanggal",
+  "deskripsi",
+  "gambar",
+];
 
 const validateFields = {
   validateUpdateData: async (req) => {
@@ -41,7 +48,10 @@ const validateFields = {
       if (field === "gambar") continue;
 
       if (req.body[field] !== undefined && req.body[field] !== null) {
-        if (typeof req.body[field] === 'string' && req.body[field].trim() === '') {
+        if (
+          typeof req.body[field] === "string" &&
+          req.body[field].trim() === ""
+        ) {
           emptyFields.push(field);
         } else {
           data[field] = req.body[field];
@@ -54,18 +64,28 @@ const validateFields = {
         isValid: false,
         error: {
           code: 400,
-          message: `Tidak boleh ada field kosong: ${emptyFields.join(', ')}`
-        }
+          message: `Field ${emptyFields.join(", ")} kosong!`,
+        },
       };
     }
 
     if (!req.body.gambar) {
       const [rows] = await req.db
         .promise()
-        .query("SELECT gambar FROM kalender WHERE id_kalender = ?", [req.params.id_kalender]);
-      
+        .query("SELECT gambar FROM kalender WHERE id_kalender = ?", [
+          req.params.id_kalender,
+        ]);
+
       if (rows.length > 0) {
         data.gambar = rows[0].gambar;
+      } else {
+        return {
+          isValid: false,
+          error: {
+            code: 400,
+            message: "Gambar tidak ditemukan!",
+          },
+        };
       }
     } else {
       data.gambar = req.body.gambar;
@@ -93,9 +113,11 @@ module.exports = async (req, res) => {
     const validation = await validateFields.validateUpdateData(req);
 
     if (!validation.isValid) {
-      return res.status(validation.error.code).json(
-        RESPONSE.updateError(validation.error.code, validation.error.message)
-      );
+      return res
+        .status(validation.error.code)
+        .json(
+          RESPONSE.updateError(validation.error.code, validation.error.message)
+        );
     }
 
     const affectedRows = await updateKalender(

@@ -54,7 +54,7 @@ const validateFields = {
     if (missingFieldsResult) {
       return {
         isValid: false,
-        error: RESPONSE.createError(400, "Semua field harus diisi", {
+        error: RESPONSE.createError(400, "Kategori tidak boleh kosong!", {
           missingFields: missingFieldsResult,
         }),
       };

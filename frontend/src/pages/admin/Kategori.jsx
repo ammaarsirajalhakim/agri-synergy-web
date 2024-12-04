@@ -1,14 +1,21 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Sidebar from "../../components/Sidebar";
 import axios from "axios";
+import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 import "../../css/kategori.css";
 
 const Kategori = () => {
+  const navigate = useNavigate();
   const [activePage, setActivePage] = useState(1);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [categoryToEdit, setCategoryToEdit] = useState(null);
   const [kategori, setKategori] = useState([]);
+
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalEntries, setTotalEntries] = useState(0);
 
   const checkAuthentication = async () => {
     const token = localStorage.getItem("jwtToken");
@@ -21,8 +28,7 @@ const Kategori = () => {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
       const response = await axios.get(
-        "http://localhost:3000/api/kategori",
-
+        `http://localhost:3000/api/kategori?page=${activePage}`,
         {
           validateStatus: function (status) {
             return status < 500;
@@ -42,6 +48,9 @@ const Kategori = () => {
 
       if (response.data?.data) {
         setKategori(response.data.data);
+
+        setTotalPages(response.data.pagination.total_pages);
+        setTotalEntries(response.data.pagination.total);
       }
     } catch (error) {
       if (error.response?.status === 401 || error.response?.status === 403) {
@@ -49,12 +58,20 @@ const Kategori = () => {
         navigate("/");
         return;
       }
-      console.log("Error Vakidating token:", error);
+      console.log("Error Validating token:", error);
     }
   };
 
   const handleAddCategory = async () => {
     const NamaCategory = document.getElementById("kategoriName").value;
+
+    if (!NamaCategory) {
+      toast.error("Kategori tidak boleh kosong!", {
+        position: "top-right",
+        autoClose: 1500,
+      });
+      return;
+    }
 
     try {
       const response = await axios.post("http://localhost:3000/api/kategori", {
@@ -62,21 +79,116 @@ const Kategori = () => {
       });
 
       if (response.status === 200) {
-        window.location.reload();
+        toast.success("Kategori berhasil ditambahkan!", {
+          position: "top-right",
+          autoClose: 1500,
+        });
+        checkAuthentication();
+        closeAddModal();
       } else {
-        console.log("Error adding category:", response);
+        toast.error("Kategori gagal ditambahkan!" || response.message, {
+          position: "top-right",
+          autoClose: 1500,
+        });
       }
-    } catch (error) {
-      console.log("Error adding category:", error);
+    } catch (err) {
+      const errorMessage =
+        err.response?.data?.message || "Terjadi kesalahan pada server";
+      toast.error(errorMessage, {
+        position: "top-right",
+        autoClose: 1500,
+      });
+      console.error("Error:", err);
+    }
+  };
+
+  const handleUpdateCategory = async () => {
+    const NamaCategory = document.getElementById("kategoriName").value;
+
+    if (!NamaCategory || !categoryToEdit) {
+      toast.error("Kategori tidak boleh kosong!", {
+        position: "top-right",
+        autoClose: 1500,
+      });
+      return;
+    }
+
+    try {
+      const response = await axios.put(
+        `http://localhost:3000/api/kategori/${categoryToEdit.id_kategori}`,
+        {
+          nama: NamaCategory,
+        }
+      );
+
+      if (response.status === 200) {
+        toast.success("Kategori berhasil diubah!", {
+          position: "top-right",
+          autoClose: 1500,
+        });
+
+        checkAuthentication();
+        closeUpdateModal();
+      } else {
+        toast.error("Kategori gagal diubah!" + response.message, {
+          position: "top-right",
+          autoClose: 1500,
+        });
+      }
+    } catch (err) {
+      const errorMessage =
+        err.response?.data?.message || "Terjadi kesalahan pada server";
+      toast.error(errorMessage, {
+        position: "top-right",
+        autoClose: 1500,
+      });
+      console.error("Error:", err);
+    }
+  };
+
+  const handleDeleteCategory = async (id) => {
+    const result = await Swal.fire({
+      title: "Konfirmasi",
+      text: "Apakah Anda yakin ingin menghapus kategori ini?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Ya, hapus!",
+      cancelButtonText: "Batal",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        const response = await axios.delete(
+          `http://localhost:3000/api/kategori/${id}`
+        );
+
+        if (response.status === 200) {
+          Swal.fire("Berhasil!", "Kategori berhasil dihapus.", "success");
+          checkAuthentication();
+        } else {
+          Swal.fire(
+            "Gagal!",
+            `Kategori gagal dihapus: ${response.message}`,
+            "error"
+          );
+        }
+      } catch (err) {
+        const errorMessage =
+          err.response?.data?.message || "Terjadi kesalahan pada server";
+        Swal.fire("Gagal!", errorMessage, "error");
+        console.error("Error:", err);
+      }
     }
   };
 
   useEffect(() => {
     checkAuthentication();
-  }, []);
+  }, [activePage]); 
 
   const handlePageChange = (page) => {
-    if (page >= 1 && page <= 3) {
+    if (page >= 1 && page <= totalPages) {
       setActivePage(page);
     }
   };
@@ -125,11 +237,16 @@ const Kategori = () => {
                     <td>
                       <button
                         className="update"
-                        onClick={() => openUpdateModal({ name: "" })}
+                        onClick={() => openUpdateModal(kategori)}
                       >
                         <span className="icon update-icon" />
                       </button>
-                      <button className="delete">
+                      <button
+                        className="delete"
+                        onClick={() =>
+                          handleDeleteCategory(kategori.id_kategori)
+                        }
+                      >
                         <span className="icon delete-icon" />
                       </button>
                     </td>
@@ -137,7 +254,7 @@ const Kategori = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="2">Tidak ada data produk.</td>
+                  <td colSpan="2">Tidak ada data kategori.</td>
                 </tr>
               )}
             </tbody>
@@ -145,34 +262,30 @@ const Kategori = () => {
         </div>
 
         <div className="entri">
-          <p className="entri-text">Menampilkan 1 dari 1 entri</p>
+          <p className="entri-text">
+            Menampilkan {(activePage - 1) * 10 + 1} - {Math.min(activePage * 10, totalEntries)} dari {totalEntries} entri
+          </p>
           <div className="pagination">
             <button
-              className={`pagination-button prev ${
-                activePage === 1 ? "disabled" : ""
-              }`}
+              className={`pagination-button prev ${activePage === 1 ? "disabled" : ""}`}
               onClick={() => handlePageChange(activePage - 1)}
               disabled={activePage === 1}
             >
               «
             </button>
-            {[1, 2, 3].map((page) => (
+            {[...Array(totalPages)].map((_, index) => (
               <button
-                key={page}
-                className={`pagination-button ${
-                  activePage === page ? "active" : ""
-                }`}
-                onClick={() => handlePageChange(page)}
+                key={index + 1}
+                className={`pagination-button ${activePage === index + 1 ? "active" : ""}`}
+                onClick={() => handlePageChange(index + 1)}
               >
-                {page}
+                {index + 1}
               </button>
             ))}
             <button
-              className={`pagination-button next ${
-                activePage === 3 ? "disabled" : ""
-              }`}
+              className={`pagination-button next ${activePage === totalPages ? "disabled" : ""}`}
               onClick={() => handlePageChange(activePage + 1)}
-              disabled={activePage === 3}
+              disabled={activePage === totalPages}
             >
               »
             </button>
@@ -203,7 +316,9 @@ const Kategori = () => {
               <button className="cancel-button" onClick={closeAddModal}>
                 Kembali
               </button>
-              <button className="save-button" onClick={handleAddCategory}>Simpan</button>
+              <button className="save-button" onClick={handleAddCategory}>
+                Simpan
+              </button>
             </div>
           </div>
         </div>
@@ -214,7 +329,7 @@ const Kategori = () => {
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h5>Update Kategori</h5>
-              <button className="close-button" onClick={closeUpdateModal}>
+              <button className="close-button1" onClick={closeUpdateModal}>
                 ×
               </button>
             </div>
@@ -225,7 +340,7 @@ const Kategori = () => {
                   type="text"
                   id="kategoriName"
                   placeholder="Masukkan nama kategori"
-                  defaultValue={categoryToEdit.name}
+                  defaultValue={categoryToEdit?.nama}
                 />
               </div>
             </div>
@@ -233,7 +348,12 @@ const Kategori = () => {
               <button className="cancel-button" onClick={closeUpdateModal}>
                 Kembali
               </button>
-              <button className="save-buttonUpdate">Simpan</button>
+              <button
+                className="save-buttonUpdate"
+                onClick={handleUpdateCategory}
+              >
+                Simpan
+              </button>
             </div>
           </div>
         </div>
