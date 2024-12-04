@@ -50,7 +50,7 @@ module.exports = async (req, res) => {
   try {
     const [countResult] = await req.db
       .promise()
-      .query("SELECT COUNT(*) as total FROM kategori");
+      .query("SELECT COUNT(*) AS total FROM kategori");
     const total = countResult[0].total;
 
     const [rows] = await req.db

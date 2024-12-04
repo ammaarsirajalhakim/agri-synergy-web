@@ -7,13 +7,16 @@ import Swal from "sweetalert2";
 import "../../css/produk.css";
 
 const Produk = () => {
+  const navigate = useNavigate();
   const [activePage, setActivePage] = useState(1);
   const [kategori, setKategori] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(null);
   const [product, setProduct] = useState([]);
-  const navigate = useNavigate();
+
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalEntries, setTotalEntries] = useState(0);
 
   const checkAuthentication = async () => {
     const token = localStorage.getItem("jwtToken");
@@ -26,7 +29,7 @@ const Produk = () => {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
       const response = await axios.get(
-        "http://localhost:3000/api/produk-detail",
+        `http://localhost:3000/api/produk-detail?page=${activePage}`,
 
         {
           validateStatus: function (status) {
@@ -47,6 +50,9 @@ const Produk = () => {
 
       if (response.data?.data) {
         setProduct(response.data.data);
+
+        setTotalPages(response.data.pagination.total_pages);
+        setTotalEntries(response.data.pagination.total);
       }
     } catch (error) {
       if (error.response?.status === 401 || error.response?.status === 403) {
@@ -214,7 +220,6 @@ const Produk = () => {
     }
   };
 
-
   const handleDeleteProduct = async (id) => {
     const result = await Swal.fire({
       title: "Konfirmasi",
@@ -254,7 +259,6 @@ const Produk = () => {
     }
   };
 
-
   const fetchCategories = async () => {
     try {
       const response = await axios.get("http://localhost:3000/api/kategori", {
@@ -274,10 +278,10 @@ const Produk = () => {
   useEffect(() => {
     checkAuthentication();
     fetchCategories();
-  }, []);
+  }, [activePage]);
 
   const handlePageChange = (page) => {
-    if (page >= 1 && page <= 3) {
+    if (page >= 1 && page <= totalPages) {
       setActivePage(page);
     }
   };
@@ -341,13 +345,14 @@ const Produk = () => {
                     <td>
                       <button
                         className="update1"
-                        onClick={() =>
-                          openUpdateModal(product)
-                        }
+                        onClick={() => openUpdateModal(product)}
                       >
                         <span className="icon update-icon1" />
                       </button>
-                      <button className="delete1" onClick={() => handleDeleteProduct(product.id_produk)}>
+                      <button
+                        className="delete1"
+                        onClick={() => handleDeleteProduct(product.id_produk)}
+                      >
                         <span className="icon delete-icon1" />
                       </button>
                     </td>
@@ -363,7 +368,11 @@ const Produk = () => {
         </div>
 
         <div className="entri">
-          <p className="entri-text">Menampilkan 1 dari 1 entri</p>
+          <p className="entri-text">
+            Menampilkan {(activePage - 1) * 10 + 1} -{" "}
+            {Math.min(activePage * 10, totalEntries)} dari {totalEntries} entri
+          </p>
+
           <div className="pagination">
             <button
               className={`pagination-button prev ${
@@ -374,23 +383,23 @@ const Produk = () => {
             >
               «
             </button>
-            {[1, 2, 3].map((page) => (
+            {[...Array(totalPages)].map((_, index) => (
               <button
-                key={page}
+                key={index + 1}
                 className={`pagination-button ${
-                  activePage === page ? "active" : ""
+                  activePage === index + 1 ? "active" : ""
                 }`}
-                onClick={() => handlePageChange(page)}
+                onClick={() => handlePageChange(index + 1)}
               >
-                {page}
+                {index + 1}
               </button>
             ))}
             <button
               className={`pagination-button next ${
-                activePage === 3 ? "disabled" : ""
+                activePage === totalPages ? "disabled" : ""
               }`}
               onClick={() => handlePageChange(activePage + 1)}
-              disabled={activePage === 3}
+              disabled={activePage === totalPages}
             >
               »
             </button>
