@@ -29,7 +29,7 @@ const Produk = () => {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
       const response = await axios.get(
-        `http://localhost:3000/api/produk-detail?page=${activePage}`,
+        `http://localhost:3000/api/produk?page=${activePage}`,
 
         {
           validateStatus: function (status) {

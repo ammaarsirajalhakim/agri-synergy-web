@@ -16,7 +16,7 @@ import ProductCard from '../components/ProductCard';
 import plant from '../assets/plant.png';
 import bag from '../assets/bag.png';
 import corn from '../assets/corn.png';
-import Footer from '../components/Footer';
+import Footer from '../components/footer';
 import { useNavigate } from "react-router-dom"
 import axios from "axios";
 
@@ -88,7 +88,7 @@ const HomePage = () => {
     try {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
-      const response = await axios.get("http://localhost:3000/api/produk-detail", {
+      const response = await axios.get("http://localhost:3000/api/produk", {
         validateStatus: (status) => status < 500,
       });
 

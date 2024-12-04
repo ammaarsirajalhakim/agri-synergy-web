@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../css/ProductPage.css";
 import Header from "./Header";
-import Footer from "./Footer";
+import Footer from "./footer";
 import axios from "axios";
 
 const ProductPage = () => {
@@ -22,7 +22,7 @@ const ProductPage = () => {
     try {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
-      const response = await axios.get("http://localhost:3000/api/produk-detail", {
+      const response = await axios.get("http://localhost:3000/api/produk", {
         validateStatus: (status) => status < 500,
       });
 

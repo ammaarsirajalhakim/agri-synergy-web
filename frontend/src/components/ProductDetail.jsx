@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "../css/ProductDetail.css";
 import Header from "./Header";
-import Footer from "./Footer";
+import Footer from "./footer";
 import axios from "axios";
 
 const ProductDetail = () => {
@@ -21,7 +21,7 @@ const ProductDetail = () => {
 
     try {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-      const response = await axios.get("http://localhost:3000/api/produk-detail", {
+      const response = await axios.get("http://localhost:3000/api/produk", {
         validateStatus: (status) => status < 500,
       });
 
@@ -102,7 +102,7 @@ const ProductDetail = () => {
             </div>
           </div>
           <div className="product-info-section">
-            <h2 className="product-price">{product.harga}</h2>
+            <h2 className="product-price">Rp. {product.harga}</h2>
             <p className="product-stock">({product.kuantitas} stock)</p>
             <div className="product-rating">
               {"⭐".repeat(product.rating)} <span>({product.reviews} reviews)</span>
