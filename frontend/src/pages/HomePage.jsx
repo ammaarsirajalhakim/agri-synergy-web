@@ -16,8 +16,9 @@ import ProductCard from '../components/ProductCard';
 import plant from '../assets/plant.png';
 import bag from '../assets/bag.png';
 import corn from '../assets/corn.png';
-import Footer from '../components/footer';
+import Footer from '../components/Footer';
 import { useNavigate } from "react-router-dom"
+import axios from "axios";
 
 const testimonials = [
   {
@@ -72,7 +73,67 @@ const products = [
 
 const HomePage = () => {
   const navigate = useNavigate();
+  const [categories, setCategories] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [activeCategory, setActiveCategory] = useState("");
   const [dropdownVisible, setDropdownVisible] = useState(false);
+
+  const checkAuthentication = async () => {
+    const token = localStorage.getItem("jwtToken");
+    if (!token) {
+      navigate("/");
+      return;
+    }
+
+    try {
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+      const response = await axios.get("http://localhost:3000/api/produk-detail", {
+        validateStatus: (status) => status < 500,
+      });
+
+      if (response.status === 401 || response.status === 403) {
+        localStorage.removeItem("jwtToken");
+        navigate("/");
+        return;
+      }
+
+      if (response.data?.token) {
+        localStorage.setItem("jwtToken", response.data.token);
+      }
+
+      if (response.data?.data) {
+        setProducts(response.data.data);
+      }
+    } catch (error) {
+      console.error("Error validating token:", error);
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        localStorage.removeItem("jwtToken");
+        navigate("/");
+      }
+    }
+  };
+
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get("http://localhost:3000/api/kategori", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+        },
+      });
+
+      if (response.data?.data) {
+        setCategories(response.data.data);
+      }
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
+
+  useEffect(() => {
+    checkAuthentication();
+    fetchCategories();
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -223,10 +284,10 @@ const HomePage = () => {
               {products.map((product, index) => (
                 <ProductCard
                   key={index}
-                  image={product.image}
-                  title={product.title}
-                  price={product.price}
-                  stock={product.stock}
+                  image={`http://localhost:3000/api/file/${product.foto_produk}`}
+                  title={product.nama}
+                  price={product.harga}
+                  stock={product.kuantitas}
                 />
               ))}
             </div>
