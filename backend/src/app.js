@@ -14,9 +14,9 @@ const pemesananRoutes = require("./routes/pemesananRoutes");
 const pengirimanRoutes = require("./routes/pengirimanRoutes");
 const riwayatTransaksiRoutes = require("./routes/riwayat_transaksiRoutes");
 const kategoriRoutes = require("./routes/kategoriRoutes");
+const reviewRoutes = require("./routes/reviewRoutes");
 
 const loginRoutes = require("./routes/loginRoutes");
-const joinRoutes = require("./routes/joinRoutes");
 
 const app = express();
 
@@ -39,7 +39,7 @@ apiRoutes.use(pemesananRoutes);
 apiRoutes.use(pengirimanRoutes);
 apiRoutes.use(riwayatTransaksiRoutes);
 apiRoutes.use(kategoriRoutes);
-apiRoutes.use(joinRoutes);
+apiRoutes.use(reviewRoutes);
 
 app.use("/api", apiRoutes);
 

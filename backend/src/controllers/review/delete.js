@@ -32,32 +32,33 @@ const RESPONSE = {
 };
 
 const deleteService = {
-  async deleteSawah(db, sawahId) {
+  async deleteReview(db, reviewId) {
     const [rows] = await db
       .promise()
-      .query("DELETE FROM sawah WHERE id_sawah = ?", [sawahId]);
+      .query("DELETE FROM review WHERE id_review = ?", [reviewId]);
     return rows.affectedRows > 0;
   },
 };
 
 module.exports = async (req, res) => {
   try {
-    const isDeleted = await deleteService.deleteSawah(
+    const isDeleted = await deleteService.deleteReview(
       req.db,
-      req.params.id_sawah
+      req.params.id_review
     );
+
     if (!isDeleted) {
       return res.status(400).json(
-        RESPONSE.deleteError(400, "sawah tidak ditemukan", {
-          message: "ID sawah tidak ada dalam database",
-          code: "SAWAH_NOT_FOUND",
+        RESPONSE.deleteError(400, "Review tidak ditemukan", {
+          message: "ID review tidak ada dalam database",
+          code: "REVIEW_NOT_FOUND",
         })
       );
     }
 
     return res
       .status(200)
-      .json(RESPONSE.deleteSuccess("Data sawah berhasil dihapus"));
+      .json(RESPONSE.deleteSuccess("Data review berhasil dihapus"));
   } catch (err) {
     console.log(err);
     return res

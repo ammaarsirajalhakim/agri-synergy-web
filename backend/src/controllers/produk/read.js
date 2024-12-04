@@ -12,19 +12,23 @@ const getFormattedTimestamp = () => {
 };
 
 module.exports = async (req, res) => {
-  const getSuccessResponse = (rows) => ({
+  const page = parseInt(req.query.page) || 1;
+  const limit = 10;
+  const offset = (page - 1) * limit;
+
+  const getSuccessResponse = (rows, total) => ({
     success: rows.length > 0,
     code: 200,
     message:
       rows.length > 0
         ? "Data produk berhasil diambil"
         : "Data produk tidak tersedia",
-    data: rows,
+    data: rows.map(({ id_kategori, ...row }) => row),
     pagination: {
-      total: rows.length,
-      per_page: rows.length,
-      current_page: 1,
-      total_pages: 1,
+      total: total,
+      per_page: limit,
+      current_page: page,
+      total_pages: Math.ceil(total / limit),
     },
     timestamp: getFormattedTimestamp(),
     errors: null,
@@ -44,12 +48,38 @@ module.exports = async (req, res) => {
   });
 
   try {
-    const [rows] = await req.db
+    const [countResult] = await req.db
       .promise()
-      .query(
-        "SELECT *, DATE_FORMAT(tanggal_diposting, '%Y-%m-%d') as tanggal_diposting FROM produk"
-      );
-    const responseData = getSuccessResponse(rows);
+      .query("SELECT COUNT(*) AS total FROM produk");
+    const total = countResult[0].total;
+
+    const [rows] = await req.db.promise().query(
+      `SELECT 
+            produk.*, 
+            kategori.nama AS nama_kategori, 
+            DATE_FORMAT(produk.tanggal_diposting, '%Y-%m-%d') AS tanggal_diposting,
+            ROUND(AVG(review.rating), 1) AS rata_rating,
+            GROUP_CONCAT(review.id_user SEPARATOR ', ') AS user_komen,
+            GROUP_CONCAT(review.koment SEPARATOR ', ') AS komentar,
+            GROUP_CONCAT(DATE_FORMAT(review.tgl_masuk, '%Y-%m-%d')) AS tanggal_ulasan
+        FROM 
+            produk 
+        LEFT JOIN 
+            kategori 
+        ON 
+            produk.id_kategori = kategori.id_kategori
+        LEFT JOIN 
+            review 
+        ON 
+            produk.id_produk = review.id_produk
+        GROUP BY 
+            produk.id_produk
+        LIMIT ? OFFSET ?
+        `,
+      [limit, offset]
+    );
+
+    const responseData = getSuccessResponse(rows, total);
     return res.status(responseData.code).json(responseData);
   } catch (err) {
     console.error(err);
