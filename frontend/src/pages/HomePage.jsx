@@ -284,7 +284,7 @@ const HomePage = () => {
               {products.map((product, index) => (
                 <ProductCard
                   key={index}
-                  image={`http://localhost:3000/api/file/${product.foto_produk}`}
+                  image={`http://localhost:3000/api/fileProduk/${product.foto_produk}`}
                   title={product.nama}
                   price={product.harga}
                   stock={product.kuantitas}

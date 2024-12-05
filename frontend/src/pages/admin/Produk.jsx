@@ -54,12 +54,12 @@ const Produk = () => {
         setTotalPages(response.data.pagination.total_pages);
         setTotalEntries(response.data.pagination.total);
       }
-    } catch (error) {
-      if (error.response?.status === 401 || error.response?.status === 403) {
+    } catch (err) {
+      if (err.response?.status === 401 || err.response?.status === 403) {
         localStorage.removeItem("jwtToken");
         navigate("/");
       }
-      console.error("Error validating token:", error);
+      console.error("Error validating token:", err);
     }
   };
 
@@ -333,7 +333,7 @@ const Produk = () => {
                     <td>{product.nama_kategori}</td>
                     <td>
                       <img
-                        src={`http://localhost:3000/api/file/${product.foto_produk}`}
+                        src={`http://localhost:3000/api/fileProduk/${product.foto_produk}`}
                         alt="Produk"
                         width="60"
                         height="60"
@@ -461,7 +461,7 @@ const Produk = () => {
                 </select>
               </div>
 
-              <div className="form-group1 full-width">
+              <div className="form-group2 full-width">
                 <label htmlFor="productDeskripsi">Deskripsi</label>
                 <textarea
                   id="productDeskripsi"
@@ -555,7 +555,6 @@ const Produk = () => {
                     <option
                       key={category.id_kategori}
                       value={category.id_kategori}
-                      selected={category.nama === currentProduct.nama_kategori}
                     >
                       {category.nama}
                     </option>
@@ -564,13 +563,13 @@ const Produk = () => {
               </div>
               <div className="form-group1">
                 <img
-                  src={`http://localhost:3000/api/file/${currentProduct.foto_produk}`}
+                  src={`http://localhost:3000/api/fileProduk/${currentProduct.foto_produk}`}
                   alt="Current Product"
                   width={100}
                   height={100}
                 />
               </div>
-              <div className="form-group1 full-width">
+              <div className="form-group2 full-width">
                 <label htmlFor="updateProductDeskripsi">Deskripsi</label>
                 <textarea
                   id="updateProductDeskripsi"

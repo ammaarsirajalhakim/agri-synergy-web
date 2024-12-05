@@ -95,7 +95,7 @@ const ProductPage = () => {
                 <div key={product.id_produk} className="product-page">
                   <div>
                     <img
-                      src={`http://localhost:3000/api/file/${product.foto_produk}`}
+                      src={`http://localhost:3000/api/fileProduk/${product.foto_produk}`}
                       alt={`Produk ${product.nama}`}
                       id="product-image"
                     />

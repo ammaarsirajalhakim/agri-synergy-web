@@ -88,14 +88,14 @@ const ProductDetail = () => {
         <div className="product-content">
           <div className="product-image-section">
             <img
-              src={`http://localhost:3000/api/file/${product.foto_produk}`}
+              src={`http://localhost:3000/api/fileProduk/${product.foto_produk}`}
               alt={product.name}
               className="product-main-image"
             />
             <div className="product-thumbnails">
               {product.sizes?.map((size, index) => (
                 <div key={index} className="thumbnail">
-                  <img src={`http://localhost:3000/api/file/${product.foto_produk}`} alt={size} />
+                  <img src={`http://localhost:3000/api/fileProduk/${product.foto_produk}`} alt={size} />
                   <p>{size}</p>
                 </div>
               ))}
