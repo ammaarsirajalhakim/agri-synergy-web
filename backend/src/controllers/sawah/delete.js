@@ -33,10 +33,29 @@ const RESPONSE = {
 
 const deleteService = {
   async deleteSawah(db, sawahId) {
-    const [rows] = await db
-      .promise()
-      .query("DELETE FROM sawah WHERE id_sawah = ?", [sawahId]);
-    return rows.affectedRows > 0;
+    const connection = await db.promise().getConnection();
+    try {
+      await connection.beginTransaction();
+
+      const [deleteSawahResult] = await connection.query(
+        "DELETE FROM sawah WHERE id_sawah = ?",
+        [sawahId]
+      );
+
+      if (deleteSawahResult.affectedRows > 0) {
+        await connection.commit();
+        return true;
+      }
+
+      await connection.rollback();
+      return false;
+    } catch (err) {
+      console.error(err);
+      await connection.rollback();
+      throw err;
+    } finally {
+      connection.release();
+    }
   },
 };
 
@@ -46,9 +65,10 @@ module.exports = async (req, res) => {
       req.db,
       req.params.id_sawah
     );
+
     if (!isDeleted) {
       return res.status(400).json(
-        RESPONSE.deleteError(400, "sawah tidak ditemukan", {
+        RESPONSE.deleteError(400, "Sawah tidak ditemukan", {
           message: "ID sawah tidak ada dalam database",
           code: "SAWAH_NOT_FOUND",
         })

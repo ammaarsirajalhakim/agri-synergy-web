@@ -44,7 +44,10 @@ module.exports = async (req, res) => {
   });
 
   try {
-    const [rows] = await req.db.promise().query("SELECT * FROM sawah");
+    const [rows] = await req.db.promise()
+    .query(`SELECT sawah.*, detail_sawah.*
+          FROM sawah
+          INNER JOIN detail_sawah ON sawah.id_sawah = detail_sawah.id_sawah`);
     const responseData = getSuccessResponse(rows);
     return res.status(responseData.code).json(responseData);
   } catch (err) {

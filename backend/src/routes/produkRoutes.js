@@ -8,9 +8,9 @@ const createProduk = require("../controllers/produk/create");
 const updateProduk = require("../controllers/produk/update");
 const deleteProduk = require("../controllers/produk/delete");
 
-router.use("/file", validateStaticFile, staticFileMiddleware);
+router.use("/fileProduk", validateStaticFile, staticFileMiddleware);
 
-router.use('/file/*', (req, res) => {
+router.use('/fileProduk/*', (req, res) => {
   res.status(400).json({
     success: false,
     code: 400,

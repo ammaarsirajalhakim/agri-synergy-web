@@ -47,8 +47,30 @@ const validateFields = {
   },
 
   validateData: (req) => {
-    const { id_user, lokasi, tipe, luas } = req.body;
-    const requiredFields = { id_user, lokasi, tipe, luas };
+    const {
+      id_user,
+      lokasi,
+      luas,
+      foto_lokasi,
+      jenis_tanah,
+      hasil_panen,
+      produksi,
+      deskripsi,
+      latitude,
+      longitude,
+    } = req.body;
+    const requiredFields = {
+      id_user,
+      lokasi,
+      luas,
+      foto_lokasi,
+      jenis_tanah,
+      hasil_panen,
+      produksi,
+      deskripsi,
+      latitude,
+      longitude,
+    };
 
     const missingFieldsResult = validateFields.checkRequired(requiredFields);
     if (missingFieldsResult) {
@@ -68,25 +90,74 @@ const validateFields = {
 };
 
 module.exports = async (req, res) => {
+  const connection = req.db;
+
   try {
     const validation = validateFields.validateData(req);
-
     if (!validation.isValid) {
       return res.status(validation.error.code).json(validation.error);
     }
 
-    const [rows] = await req.db
+    const [sawahResult] = await connection
       .promise()
-      .query("INSERT INTO sawah SET ?", validation.data);
+      .query("INSERT INTO sawah SET ?", {
+        id_user: validation.data.id_user,
+        lokasi: validation.data.lokasi,
+        luas: validation.data.luas,
+        foto_lokasi: validation.data.foto_lokasi,
+      });
 
-    if (rows.affectedRows > 0) {
+    const id_sawah = sawahResult.insertId;
+
+    try {
+      await connection.promise().query("INSERT INTO detail_sawah SET ?", {
+        id_sawah: id_sawah,
+        jenis_tanah: validation.data.jenis_tanah,
+        hasil_panen: validation.data.hasil_panen,
+        produksi: validation.data.produksi,
+        deskripsi: validation.data.deskripsi,
+        latitude: validation.data.latitude,
+        longitude: validation.data.longitude,
+      });
+
+      const insertData = {
+        sawah: {
+          id_user: validation.data.id_user,
+          lokasi: validation.data.lokasi,
+          luas: validation.data.luas,
+          foto_lokasi: validation.data.foto_lokasi,
+        },
+        detail_sawah: {
+          id_sawah: id_sawah,
+          jenis_tanah: validation.data.jenis_tanah,
+          hasil_panen: validation.data.hasil_panen,
+          produksi: validation.data.produksi,
+          deskripsi: validation.data.deskripsi,
+          latitude: validation.data.latitude,
+          longitude: validation.data.longitude,
+        },
+      };
+
       return res
         .status(200)
-        .json(RESPONSE.createSuccess(rows, "Data sawah berhasil ditambahkan"));
-    } else {
+        .json(
+          RESPONSE.createSuccess(insertData, "Data sawah berhasil ditambahkan")
+        );
+    } catch (detailError) {
+      console.error("Error inserting into detail_sawah:", detailError);
+
+      await connection
+        .promise()
+        .query("DELETE FROM sawah WHERE id_sawah = ?", [id_sawah]);
+
       return res
         .status(400)
-        .json(RESPONSE.createError(400, "Data sawah gagal ditambahkan"));
+        .json(
+          RESPONSE.createError(
+            400,
+            "Gagal menambahkan sawah, latitude dan longitude tidak valid!"
+          )
+        );
     }
   } catch (err) {
     console.error(err);
