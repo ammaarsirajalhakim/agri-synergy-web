@@ -32,9 +32,9 @@ CREATE TABLE `detail_sawah` (
   `latitude` decimal(10,8) NOT NULL,
   `longitude` decimal(11,8) NOT NULL,
   PRIMARY KEY (`id_lokasi`),
-  KEY `id_sawah` (`id_sawah`),
-  CONSTRAINT `detail_sawah_ibfk_1` FOREIGN KEY (`id_sawah`) REFERENCES `sawah` (`id_sawah`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  KEY `detail_sawah_ibfk_1` (`id_sawah`),
+  CONSTRAINT `detail_sawah_ibfk_1` FOREIGN KEY (`id_sawah`) REFERENCES `sawah` (`id_sawah`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -43,6 +43,7 @@ CREATE TABLE `detail_sawah` (
 
 LOCK TABLES `detail_sawah` WRITE;
 /*!40000 ALTER TABLE `detail_sawah` DISABLE KEYS */;
+INSERT INTO `detail_sawah` VALUES (1,1,'kering','jagung','adwada','fafaefafaf',-7.52004540,112.46927227);
 /*!40000 ALTER TABLE `detail_sawah` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -103,7 +104,7 @@ CREATE TABLE `kalender` (
 
 LOCK TABLES `kalender` WRITE;
 /*!40000 ALTER TABLE `kalender` DISABLE KEYS */;
-INSERT INTO `kalender` VALUES (1,1,'Event','dadada','2024-11-06','Lorem ipsum dolor sit amet consectetur adipiscing elit scelerisque, erat nunc fringilla et fusce placerat eros ultrices litora, diam ante a sed euismod tincidunt condimentum.','1732794630115.jpg');
+INSERT INTO `kalender` VALUES (1,1,'pengingat','bercocok tanam','2024-12-20','eros parturient commodo nulla tortor litora pellentesque sociosqu laoreet, himenaeos interdum non lacus proin viverra torquent.','1732794630115.jpg');
 /*!40000 ALTER TABLE `kalender` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -315,7 +316,7 @@ CREATE TABLE `produk` (
 
 LOCK TABLES `produk` WRITE;
 /*!40000 ALTER TABLE `produk` DISABLE KEYS */;
-INSERT INTO `produk` VALUES (1,1,1,'jagung',200000.00,2,'fafafdawdeawda','2024-12-08','1732882508237.png');
+INSERT INTO `produk` VALUES (1,1,3,'jagung',200000.00,2,'Lorem ipsum dolor sit amet consectetur adipiscing elit dignissim, a pellentesque odio luctus parturient tellus nulla enim pharetra, morbi facilisis cum netus hac velit himenaeos.','2024-12-05','1732882508237.png');
 /*!40000 ALTER TABLE `produk` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -338,7 +339,7 @@ CREATE TABLE `review` (
   KEY `id_produk` (`id_produk`),
   CONSTRAINT `review_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`),
   CONSTRAINT `review_ibfk_2` FOREIGN KEY (`id_produk`) REFERENCES `produk` (`id_produk`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -347,6 +348,7 @@ CREATE TABLE `review` (
 
 LOCK TABLES `review` WRITE;
 /*!40000 ALTER TABLE `review` DISABLE KEYS */;
+INSERT INTO `review` VALUES (1,1,1,5,'alhamdulillah','2024-12-04');
 /*!40000 ALTER TABLE `review` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -393,12 +395,12 @@ CREATE TABLE `sawah` (
   `id_sawah` int NOT NULL AUTO_INCREMENT,
   `id_user` int NOT NULL,
   `lokasi` varchar(255) NOT NULL,
-  `tipe` varchar(255) NOT NULL,
   `luas` decimal(10,2) NOT NULL,
+  `foto_lokasi` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`id_sawah`),
-  KEY `id_user` (`id_user`),
-  CONSTRAINT `sawah_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  KEY `sawah_ibfk_1` (`id_user`),
+  CONSTRAINT `sawah_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -407,6 +409,7 @@ CREATE TABLE `sawah` (
 
 LOCK TABLES `sawah` WRITE;
 /*!40000 ALTER TABLE `sawah` DISABLE KEYS */;
+INSERT INTO `sawah` VALUES (1,1,'surabaya',2.50,'1733430109098.jpg');
 /*!40000 ALTER TABLE `sawah` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -436,7 +439,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'admin','08123451729','jkdjafhaf','admin@gmail.com','$2b$10$wu4jlUnct1d1.0ccYUrsleN4yM6VGWSiVe9j05KGauEgbUI3O6VYq','admin','');
+INSERT INTO `user` VALUES (1,'admin','08123451729','jkdjafhaf','admin@gmail.com','$2b$10$piYcEHZ1EoW9ryAYwYGT3eCZMEZoh7QqbsxwvPTUoMSVlBznjjNXu','admin','');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -453,4 +456,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-12-02  4:39:48
+-- Dump completed on 2024-12-06  4:51:21
