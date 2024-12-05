@@ -23,7 +23,8 @@ module.exports = async (req, res) => {
       rows.length > 0
         ? "Data produk berhasil diambil"
         : "Data produk tidak tersedia",
-    data: rows.map(({ id_kategori, ...row }) => row),
+    data: rows,
+    // .map(({ id_kategori, ...row }) => row)
     pagination: {
       total: total,
       per_page: limit,
