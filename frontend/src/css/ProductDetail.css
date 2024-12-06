@@ -90,6 +90,15 @@
   color: #555;
 }
 
+.product-description1 {
+  max-height: 50px; 
+  overflow: hidden; 
+  text-overflow: ellipsis; 
+  line-height: 1.5; 
+  font-weight: normal !important;
+}
+
+
 .product-ingredients {
   list-style-type: disc;
   margin: 10px 0;

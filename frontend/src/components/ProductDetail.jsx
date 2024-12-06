@@ -12,6 +12,21 @@ const ProductDetail = () => {
   const [products, setProducts] = useState([]);
   const [activeCategory, setActiveCategory] = useState("");
 
+  const calculateAverageRating = (ratingString) => {
+    if (!ratingString) return 0;
+
+    const ratings = ratingString
+      .split(",")
+      .map((rating) => parseFloat(rating.trim()))
+      .filter((rating) => !isNaN(rating));
+
+    if (ratings.length === 0) return 0;
+
+    const averageRating =
+      ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length;
+    return Math.round(averageRating);
+  };
+
   const checkAuthentication = async () => {
     const token = localStorage.getItem("jwtToken");
     if (!token) {
@@ -69,7 +84,9 @@ const ProductDetail = () => {
   }, []);
 
   // Temukan produk berdasarkan id
-  const product = products.find((product) => product.id_produk === parseInt(id));
+  const product = products.find(
+    (product) => product.id_produk === parseInt(id)
+  );
 
   if (!product) {
     return <p>Product not found!</p>;
@@ -95,17 +112,28 @@ const ProductDetail = () => {
             <div className="product-thumbnails">
               {product.sizes?.map((size, index) => (
                 <div key={index} className="thumbnail">
-                  <img src={`http://localhost:3000/api/fileProduk/${product.foto_produk}`} alt={size} />
+                  <img
+                    src={`http://localhost:3000/api/fileProduk/${product.foto_produk}`}
+                    alt={size}
+                  />
                   <p>{size}</p>
                 </div>
               ))}
             </div>
           </div>
           <div className="product-info-section">
-            <h2 className="product-price">Rp. {product.harga}</h2>
+            <h2 className="product-price">{`Rp ${Number(
+              product.harga
+            ).toLocaleString("id-ID")}. -`}</h2>
             <p className="product-stock">({product.kuantitas} stock)</p>
             <div className="product-rating">
-              {"⭐".repeat(product.rating)} <span>({product.reviews} reviews)</span>
+              {"⭐".repeat(calculateAverageRating(product.rata_rating))}
+              <span>
+                (
+                {product.rata_rating
+                  ? product.rata_rating.split(",").length
+                  : 0}   reviews)
+              </span>
             </div>
             <p className="product-description">{product.deskripsi}</p>
             <ul className="product-ingredients">
@@ -115,7 +143,13 @@ const ProductDetail = () => {
             </ul>
             <div className="quantity-section">
               <label htmlFor="quantity">Qty:</label>
-              <input type="number" id="quantity" name="quantity" min="1" defaultValue="1" />
+              <input
+                type="number"
+                id="quantity"
+                name="quantity"
+                min="1"
+                defaultValue="1"
+              />
             </div>
             <button
               className="add-to-cart-button"
