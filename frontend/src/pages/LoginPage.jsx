@@ -39,6 +39,7 @@ const Login = () => {
       console.log('Login Response:', response.data);
       localStorage.setItem("jwtToken", response.data.data.token);
       localStorage.setItem("id_user", response.data.data.user.id_user.toString());
+      localStorage.setItem("role", response.data.data.user.role.toString());
       navigate("/");
     } catch (err) {
       if (err.response) {
