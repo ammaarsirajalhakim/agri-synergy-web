@@ -34,7 +34,7 @@ CREATE TABLE `detail_sawah` (
   PRIMARY KEY (`id_lokasi`),
   KEY `detail_sawah_ibfk_1` (`id_sawah`),
   CONSTRAINT `detail_sawah_ibfk_1` FOREIGN KEY (`id_sawah`) REFERENCES `sawah` (`id_sawah`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -43,7 +43,7 @@ CREATE TABLE `detail_sawah` (
 
 LOCK TABLES `detail_sawah` WRITE;
 /*!40000 ALTER TABLE `detail_sawah` DISABLE KEYS */;
-INSERT INTO `detail_sawah` VALUES (1,1,'kering','jagung','adwada','fafaefafaf',-7.52004540,112.46927227);
+INSERT INTO `detail_sawah` VALUES (1,1,'Liat Berpasir','537 kg (Jagung Manis: 400 kg, Tepung Jagung: 137 kg)\n','jagung','Lahan subur dengan drainase baik, cocok untuk jagung. Pemantauan rutin dan pupuk organik meningkatkan hasil panen.',-3.31669400,114.59011100),(2,2,'Liat Berpasir','537 kg (Jagung Manis: 400 kg, Tepung Jagung: 137 kg)\n','jagung','Lahan subur dengan drainase baik, cocok untuk jagung. Pemantauan rutin dan pupuk organik meningkatkan hasil panen.',-7.25044500,112.76884500);
 /*!40000 ALTER TABLE `detail_sawah` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -104,7 +104,7 @@ CREATE TABLE `kalender` (
 
 LOCK TABLES `kalender` WRITE;
 /*!40000 ALTER TABLE `kalender` DISABLE KEYS */;
-INSERT INTO `kalender` VALUES (1,1,'pengingat','bercocok tanam','2024-12-20','eros parturient commodo nulla tortor litora pellentesque sociosqu laoreet, himenaeos interdum non lacus proin viverra torquent.','1732794630115.jpg');
+INSERT INTO `kalender` VALUES (1,2,'pengingat','bercocok tanam','2024-12-19','malesuada sociis netus rutrum, nibh natoque neque aliquam torquent. Pellentesque ullamcorper nunc orci mollis, semper odio.','1732794630115.jpg');
 /*!40000 ALTER TABLE `kalender` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -316,7 +316,7 @@ CREATE TABLE `produk` (
 
 LOCK TABLES `produk` WRITE;
 /*!40000 ALTER TABLE `produk` DISABLE KEYS */;
-INSERT INTO `produk` VALUES (1,1,3,'jagung',200000.00,2,'Lorem ipsum dolor sit amet consectetur adipiscing elit dignissim, a pellentesque odio luctus parturient tellus nulla enim pharetra, morbi facilisis cum netus hac velit himenaeos.','2024-12-05','1732882508237.png');
+INSERT INTO `produk` VALUES (1,2,3,'jagung',200000.00,2,'Lorem ipsum dolor sit amet consectetur adipiscing elit dignissim, a pellentesque odio luctus parturient tellus nulla enim pharetra, morbi facilisis cum netus hac velit himenaeos.','2024-12-05','1732882508237.png');
 /*!40000 ALTER TABLE `produk` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -348,7 +348,7 @@ CREATE TABLE `review` (
 
 LOCK TABLES `review` WRITE;
 /*!40000 ALTER TABLE `review` DISABLE KEYS */;
-INSERT INTO `review` VALUES (1,1,1,5,'alhamdulillah','2024-12-04');
+INSERT INTO `review` VALUES (1,1,1,5,'bagus','2024-12-02');
 /*!40000 ALTER TABLE `review` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -400,7 +400,7 @@ CREATE TABLE `sawah` (
   PRIMARY KEY (`id_sawah`),
   KEY `sawah_ibfk_1` (`id_user`),
   CONSTRAINT `sawah_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -409,7 +409,7 @@ CREATE TABLE `sawah` (
 
 LOCK TABLES `sawah` WRITE;
 /*!40000 ALTER TABLE `sawah` DISABLE KEYS */;
-INSERT INTO `sawah` VALUES (1,1,'surabaya',2.50,'1733430109098.jpg');
+INSERT INTO `sawah` VALUES (1,1,'banjarmasin',2.50,'1733430109098.jpg'),(2,1,'surabaya',2.50,'1733430109098.jpg');
 /*!40000 ALTER TABLE `sawah` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -430,7 +430,7 @@ CREATE TABLE `user` (
   `role` enum('petani','pembeli','ahli','admin','tengkulak') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'pembeli',
   `foto` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id_user`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -439,7 +439,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'admin','08123451729','jkdjafhaf','admin@gmail.com','$2b$10$piYcEHZ1EoW9ryAYwYGT3eCZMEZoh7QqbsxwvPTUoMSVlBznjjNXu','admin','');
+INSERT INTO `user` VALUES (1,'admin','08123451729','jkdjafhaf','admin@gmail.com','$2b$10$Uvec4ij9UVml253O/p6vCurQuodZoqPQwIqi7ORRl9j.Fh2XZJjni','admin',''),(2,'petani','08223451729','jkdjafhaf','petani@gmail.com','$2b$10$5ts4468GrOIF6.QxU7HofOQmeQBhH2BT8/mweeIYKhqemoe1rg9mS','petani',''),(3,'ahli','08323451729','jkdjafhaf','ahli@gmail.com','$2b$10$Y4SuY6JS/nYNu1nZmYR80OmNBB20wbNjCeNNw1SYcfz6o9hNmHQrG','ahli',''),(4,'pembeli','08423451729','jkdjafhaf','pembeli@gmail.com','$2b$10$2VDzjRCJs9d7GHMLF/jNyOL.u3I67mkFimKUn4MyUJSSPbHhzUDw.','pembeli','');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -456,4 +456,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-12-06  4:51:21
+-- Dump completed on 2024-12-08 18:23:26
