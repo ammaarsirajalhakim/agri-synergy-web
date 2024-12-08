@@ -1,6 +1,9 @@
-import React, { useState } from 'react'; 
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
-import '../css/mapstyle.css';
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+import "../css/mapstyle.css";
+import { useNavigate } from "react-router-dom";
 
 function FlyToLocation({ position }) {
   const map = useMap();
@@ -9,60 +12,113 @@ function FlyToLocation({ position }) {
 }
 
 function MapComponent() {
-  const [searchQuery, setSearchQuery] = useState(""); 
-  const [position, setPosition] = useState([-7.5568, 112.2328]); 
-  const [showSidebar, setShowSidebar] = useState(false); 
-  const targetPosition = [-7.520045399062036, 112.4692722667032];
+  const [searchQuery, setSearchQuery] = useState("");
+  const [position, setPosition] = useState([-7.5568, 112.2328]);
+  const [showSidebar, setShowSidebar] = useState(false);
+  const [sidebarData, setSidebarData] = useState(null);
+  const [sawahData, setSawahData] = useState([]);
+  const navigate = useNavigate();
+
+  const checkAuthentication = async () => {
+    const token = localStorage.getItem("jwtToken");
+    if (!token) {
+      navigate("/");
+      return;
+    }
+
+    try {
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+      const response = await axios.get("http://localhost:3000/api/sawah", {
+        validateStatus: (status) => status < 500,
+      });
+
+      if (response.status === 401 || response.status === 403) {
+        localStorage.removeItem("jwtToken");
+        navigate("/");
+        return;
+      }
+
+      if (response.data?.data) {
+        setSawahData(response.data.data);
+        const firstData = response.data.data[0];
+        setSidebarData(firstData);
+      }
+    } catch (error) {
+      console.error("Error validating token:", error);
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        localStorage.removeItem("jwtToken");
+        navigate("/");
+        return;
+      }
+    }
+  };
+
+  useEffect(() => {
+    checkAuthentication();
+  }, []);
 
   const handleSearch = async () => {
     if (!searchQuery) return;
 
-    try {
-      const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${searchQuery}`);
-      const results = await response.json();
+    const matchedLocation = sawahData.find((data) => 
+      data.lokasi.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
-      if (results && results.length > 0) {
-        const { lat, lon } = results[0];
-        const newPos = [parseFloat(lat), parseFloat(lon)];
-        setPosition(newPos);
-      } else {
-        alert("Lokasi tidak ditemukan");
-      }
-    } catch (error) {
-      console.error("Error fetching location:", error);
-      alert("Terjadi kesalahan saat mencari lokasi");
+    if (matchedLocation) {
+
+      const newPos = [parseFloat(matchedLocation.latitude), parseFloat(matchedLocation.longitude)];
+      setPosition(newPos);
+
+      setSidebarData(matchedLocation);
+      setShowSidebar(true);
+    } else {
+      toast.error("Lokasi tidak ditemukan!");
     }
   };
 
-  const handleMarkerClick = () => {
+  const handleMarkerClick = (data) => {
     setShowSidebar(true);
+    setSidebarData(data);
+
+    setPosition([parseFloat(data.latitude), parseFloat(data.longitude)]);
   };
 
   return (
-    <div style={{ position: 'relative' }}>
-      {/* Sidebar Info */}
-      {showSidebar && (
+    <div style={{ position: "relative" }}>
+      {showSidebar && sidebarData && (
         <div className="sidebar-info">
-          <img src="src/assets/background_6.jpg" alt="Kebogerang Field" className="sidebar-image" />
-          <button className="close-btn" onClick={() => setShowSidebar(false)}>✖</button>
-          <h2>Kebogerang</h2>
+          <img
+            src={`http://localhost:3000/api/fileSawah/${sidebarData.foto_lokasi}`}
+            alt={sidebarData.lokasi}
+            className="sidebar-image"
+          />
+          <button className="close-btn" onClick={() => setShowSidebar(false)}>
+            ✖
+          </button>
+          <h2>{sidebarData.lokasi}</h2>
           <div className="sidebar-content">
-            <p><strong>Informasi Lahan:</strong></p>
+            <p>
+              <strong>Informasi Lahan:</strong>
+            </p>
             <ul>
-              <li>Luas Daerah: 1.5 Hektar</li>
-              <li>Jenis Tanah: Liat Berpasir</li>
+              <li>Luas tanah: {sidebarData.luas} Hektar</li>
+              <li>Jenis Tanah: {sidebarData.jenis_tanah}</li>
             </ul>
-            <p><strong>Analytics:</strong></p>
+            <p>
+              <strong>Analytics:</strong>
+            </p>
             <ul>
-              <li>Hasil Panen: 537 kg (Jagung Manis: 400 kg, Tepung Jagung: 137 kg)</li>
+              <li>Hasil Panen: {sidebarData.hasil_panen}</li>
             </ul>
-            <p><strong>Deskripsi:</strong></p>
-            <p>Lahan subur dengan drainase baik, cocok untuk jagung. Pemantauan rutin dan pupuk organik meningkatkan hasil panen.</p>
+            <p>
+              <strong>Deskripsi:</strong>
+            </p>
+            <p>{sidebarData.deskripsi}</p>
           </div>
         </div>
       )}
 
-      {/* Search Bar */}
       <div className="search-bar">
         <input
           type="text"
@@ -73,20 +129,28 @@ function MapComponent() {
         <button onClick={handleSearch}>Cari</button>
       </div>
 
-      {/* Map Component */}
       <MapContainer center={position} zoom={12} className="map-container">
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          attribution="&copy; OpenStreetMap contributors"
         />
-        <Marker position={position}>
-          <Popup>
-            {searchQuery || "Lokasi"}
-          </Popup>
-        </Marker>
-        <Marker position={targetPosition} eventHandlers={{ click: handleMarkerClick }}>
-          <Popup>Informasi Lokasi Khusus</Popup>
-        </Marker>
+
+         {/* <Marker position={position}>
+          <Popup>{searchQuery || "Lokasi"}</Popup>
+        </Marker> */}
+
+        {sawahData.map((data) => (
+          <Marker
+            key={data.id_sawah}
+            position={[parseFloat(data.latitude), parseFloat(data.longitude)]}
+            eventHandlers={{
+              click: () => handleMarkerClick(data),
+            }}
+          >
+            <Popup>{data.lokasi}</Popup>
+          </Marker>
+        ))}
+
         <FlyToLocation position={position} />
       </MapContainer>
     </div>
