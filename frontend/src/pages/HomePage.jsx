@@ -163,7 +163,7 @@ return (
         </ul>
         <div className="icon">
           <div className="icon-wrapper">
-            <img src={market} alt="Market Icon" onClick={() => navigate('/checkout')} />
+            <img src={market} alt="Market Icon" onClick={() => navigate('/cart')} />
             <span className="badge">1</span>
           </div>
           <div className="icon-wrapper">

@@ -30,6 +30,7 @@ import CommunityPage from './components/CommunityPage';
 import YourThreadsPage from './components/YourThreadsPage';
 import SavedPage from './components/SavedPage'
 import OrderHistoryPage from './components/OrderHistoryPage'
+import Cart from './components/Cart'
 
 function App() {
   return (
@@ -64,6 +65,7 @@ function App() {
         <Route path="/your-threads" element={<YourThreadsPage />} />
         <Route path="/saved" element={<SavedPage />} />
         <Route path="/orderhistory" element={<OrderHistoryPage />} />
+        <Route path="/cart" element={<Cart />} />
       </Routes>
     </Router>
     </>

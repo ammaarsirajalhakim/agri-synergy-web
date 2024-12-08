@@ -83,7 +83,7 @@ const Header = () => {
             ☰
           </button>
           <div className={`icon-container ${isMenuOpen ? 'open' : 'closed'}`}>
-            <div className="icon-wrapper" onClick={() => navigate('/checkout')}>
+            <div className="icon-wrapper" onClick={() => navigate('/cart')}>
               <img src={market} alt="Market Icon" />
               <span className="badge">1</span>
             </div>
