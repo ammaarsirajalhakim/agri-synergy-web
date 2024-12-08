@@ -66,7 +66,6 @@ function MapComponent() {
     );
 
     if (matchedLocation) {
-
       const newPos = [parseFloat(matchedLocation.latitude), parseFloat(matchedLocation.longitude)];
       setPosition(newPos);
 
@@ -77,6 +76,12 @@ function MapComponent() {
     }
   };
 
+  const handleKeyDown = (event) => {
+    if (event.keyCode === 13) {
+      handleSearch();
+    }
+  };
+  
   const handleMarkerClick = (data) => {
     setShowSidebar(true);
     setSidebarData(data);
@@ -125,6 +130,7 @@ function MapComponent() {
           placeholder="Cari lokasi..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
+          onKeyDown={handleKeyDown} // Menambahkan event listener untuk keydown
         />
         <button onClick={handleSearch}>Cari</button>
       </div>
@@ -134,10 +140,6 @@ function MapComponent() {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution="&copy; OpenStreetMap contributors"
         />
-
-         {/* <Marker position={position}>
-          <Popup>{searchQuery || "Lokasi"}</Popup>
-        </Marker> */}
 
         {sawahData.map((data) => (
           <Marker
