@@ -46,30 +46,66 @@ const validateFields = {
     return missingFields.length > 0 ? missingFields : null;
   },
 
-  validateData: (req) => {
-    const { id_produk, id_user, total_produk, total_harga } = req.body;
-    const requiredFields = { id_produk, id_user, total_produk, total_harga };
+  validateData: async (req, db) => {
+    const { id_produk, id_user, total_produk } = req.body;
+    const requiredFields = { id_produk, id_user, total_produk };
 
     const missingFieldsResult = validateFields.checkRequired(requiredFields);
     if (missingFieldsResult) {
       return {
         isValid: false,
-        error: RESPONSE.createError(400, "Semua field harus diisi", {
+        error: RESPONSE.createError(400, "total produk tidak boleh kurang dari 1", {
           missingFields: missingFieldsResult,
         }),
       };
     }
 
+    if (total_produk < 1) {
+      return {
+        isValid: false,
+        error: RESPONSE.createError(400, "Jumlah produk minimal 1"),
+      };
+    }
+
+    const [product] = await db.promise().query(
+      "SELECT * FROM produk WHERE id_produk = ?",
+      [id_produk]
+    );
+
+    if (product.length === 0) {
+      return {
+        isValid: false,
+        error: RESPONSE.createError(400, "Produk tidak ditemukan"),
+      };
+    }
+
+    const availableStock = product[0].kuantitas;
+    const productPrice = product[0].harga;
+
+    if (total_produk > availableStock) {
+      return {
+        isValid: false,
+        error: RESPONSE.createError(400, `Stok produk tidak mencukupi. Stok tersedia ${availableStock}`),
+      };
+    }
+
+    const total_harga = total_produk * productPrice;
+
     return {
       isValid: true,
-      data: requiredFields,
+      data: {
+        id_produk, 
+        id_user, 
+        total_produk, 
+        total_harga
+      },
     };
   },
 };
 
 module.exports = async (req, res) => {
   try {
-    const validation = validateFields.validateData(req);
+    const validation = await validateFields.validateData(req, req.db);
 
     if (!validation.isValid) {
       return res.status(validation.error.code).json(validation.error);

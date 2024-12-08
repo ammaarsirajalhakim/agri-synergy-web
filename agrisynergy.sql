@@ -150,7 +150,7 @@ CREATE TABLE `keranjang` (
   KEY `id_produk` (`id_produk`),
   CONSTRAINT `keranjang_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`),
   CONSTRAINT `keranjang_ibfk_2` FOREIGN KEY (`id_produk`) REFERENCES `produk` (`id_produk`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -159,7 +159,7 @@ CREATE TABLE `keranjang` (
 
 LOCK TABLES `keranjang` WRITE;
 /*!40000 ALTER TABLE `keranjang` DISABLE KEYS */;
-INSERT INTO `keranjang` VALUES (1,1,1,15,2.50);
+INSERT INTO `keranjang` VALUES (1,1,4,1,20000.00),(2,2,4,2,112000.00);
 /*!40000 ALTER TABLE `keranjang` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -307,7 +307,7 @@ CREATE TABLE `produk` (
   KEY `fk_kategori_id` (`id_kategori`),
   CONSTRAINT `fk_kategori_id` FOREIGN KEY (`id_kategori`) REFERENCES `kategori` (`id_kategori`) ON DELETE CASCADE ON UPDATE RESTRICT,
   CONSTRAINT `produk_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -316,7 +316,7 @@ CREATE TABLE `produk` (
 
 LOCK TABLES `produk` WRITE;
 /*!40000 ALTER TABLE `produk` DISABLE KEYS */;
-INSERT INTO `produk` VALUES (1,2,3,'jagung',200000.00,2,'Lorem ipsum dolor sit amet consectetur adipiscing elit dignissim, a pellentesque odio luctus parturient tellus nulla enim pharetra, morbi facilisis cum netus hac velit himenaeos.','2024-12-05','1732882508237.png');
+INSERT INTO `produk` VALUES (1,2,3,'jagung',20000.00,2,'Lorem ipsum dolor sit amet consectetur adipiscing elit dignissim, a pellentesque odio luctus parturient tellus nulla enim pharetra, morbi facilisis cum netus hac velit himenaeos.','2024-12-05','1732882508237.png'),(2,1,2,'Fetilizer Spreader',56000.00,10,'Alat untuk membantu menyebarkan pupuk secara merata ke lahan jagung','2024-12-08','1733659505310.png');
 /*!40000 ALTER TABLE `produk` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -348,7 +348,7 @@ CREATE TABLE `review` (
 
 LOCK TABLES `review` WRITE;
 /*!40000 ALTER TABLE `review` DISABLE KEYS */;
-INSERT INTO `review` VALUES (1,1,1,5,'bagus','2024-12-02');
+INSERT INTO `review` VALUES (1,4,1,5,'bagus','2024-12-02');
 /*!40000 ALTER TABLE `review` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -456,4 +456,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-12-08 18:23:26
+-- Dump completed on 2024-12-09  3:51:46

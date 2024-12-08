@@ -83,8 +83,9 @@ const Kategori = () => {
           position: "top-right",
           autoClose: 1500,
         });
-        checkAuthentication();
-        closeAddModal();
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
       } else {
         toast.error("Kategori gagal ditambahkan!" || response.message, {
           position: "top-right",
@@ -185,7 +186,7 @@ const Kategori = () => {
 
   useEffect(() => {
     checkAuthentication();
-  }, [activePage]); 
+  }, [activePage]);
 
   const handlePageChange = (page) => {
     if (page >= 1 && page <= totalPages) {
@@ -263,11 +264,14 @@ const Kategori = () => {
 
         <div className="entri">
           <p className="entri-text">
-            Menampilkan {(activePage - 1) * 10 + 1} - {Math.min(activePage * 10, totalEntries)} dari {totalEntries} entri
+            Menampilkan {(activePage - 1) * 10 + 1} -{" "}
+            {Math.min(activePage * 10, totalEntries)} dari {totalEntries} entri
           </p>
           <div className="pagination">
             <button
-              className={`pagination-button prev ${activePage === 1 ? "disabled" : ""}`}
+              className={`pagination-button prev ${
+                activePage === 1 ? "disabled" : ""
+              }`}
               onClick={() => handlePageChange(activePage - 1)}
               disabled={activePage === 1}
             >
@@ -276,14 +280,18 @@ const Kategori = () => {
             {[...Array(totalPages)].map((_, index) => (
               <button
                 key={index + 1}
-                className={`pagination-button ${activePage === index + 1 ? "active" : ""}`}
+                className={`pagination-button ${
+                  activePage === index + 1 ? "active" : ""
+                }`}
                 onClick={() => handlePageChange(index + 1)}
               >
                 {index + 1}
               </button>
             ))}
             <button
-              className={`pagination-button next ${activePage === totalPages ? "disabled" : ""}`}
+              className={`pagination-button next ${
+                activePage === totalPages ? "disabled" : ""
+              }`}
               onClick={() => handlePageChange(activePage + 1)}
               disabled={activePage === totalPages}
             >

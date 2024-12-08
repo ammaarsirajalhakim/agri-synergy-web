@@ -46,6 +46,7 @@ const HomePage = () => {
   const [activeCategory, setActiveCategory] = useState("");
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [role, setRole] = useState("");
+  const [cartItemCount, setCartItemCount] = useState(0);
 
   const checkAuthentication = async () => {
     const token = localStorage.getItem("jwtToken");
@@ -105,9 +106,20 @@ const HomePage = () => {
     }
   };
 
+  const feacthCartItems = async () => {
+    try {
+      const response = await axios.get("http://localhost:3000/api/keranjang");
+      setCartItemCount(response.data.data.length);
+    } catch (error) {
+      console.error("Error fetching cart items:", error);
+      setCartItemCount(0);
+    }
+  }
+
   useEffect(() => {
     checkAuthentication();
     fetchCategories();
+    feacthCartItems();
   }, []);
 
   useEffect(() => {
@@ -151,11 +163,10 @@ return (
                 <a href="#" onClick={() => navigate('/calendar')}>KALENDER</a>
                 <a href="#" onClick={() => navigate('/petalahan')}>PETA LAHAN</a>
                 <a href="#" onClick={() => navigate('/community')}>FORUM KOMUNITAS</a>
-                {role === "admin" && (
-                  <a href='#' onClick={() => navigate("/kategori")}>Admin Page</a>
-                )}
-                {role === "tengkulak" && (
-                  <a href='#' onClick={() => navigate("/kategori")}>Dropshipper Page</a>
+                {(role === "admin" || role === "tengkulak") && (
+                  <a href="#" onClick={() => navigate("/kategori")}>
+                    {role === "admin" ? "Admin Page" : "Dropshipper Page"}
+                  </a>
                 )}
               </div>
             )}
@@ -164,11 +175,11 @@ return (
         <div className="icon">
           <div className="icon-wrapper">
             <img src={market} alt="Market Icon" onClick={() => navigate('/cart')} />
-            <span className="badge">1</span>
+            {cartItemCount > 0 && <span className="badge">{cartItemCount}</span>}
           </div>
           <div className="icon-wrapper">
             <img src={notification} alt="Notification Icon" />
-            <span className="badge">2</span>
+            {/* <span className="badge">2</span> */}
           </div>
           <div className="icon-wrapper">
             <img src={profile} alt="Profile Icon" onClick={() => navigate('/login')} />

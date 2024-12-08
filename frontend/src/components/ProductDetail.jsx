@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import "../css/ProductDetail.css";
 import Header from "./Header";
 import Footer from "./footer";
@@ -8,9 +9,10 @@ import axios from "axios";
 const ProductDetail = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const [categories, setCategories] = useState([]);
+  // const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
-  const [activeCategory, setActiveCategory] = useState("");
+  const [quantity, setQuantity] = useState(1);
+  // const [activeCategory, setActiveCategory] = useState("");
 
   const calculateAverageRating = (ratingString) => {
     if (!ratingString) return 0;
@@ -53,9 +55,9 @@ const ProductDetail = () => {
       if (response.data?.data) {
         setProducts(response.data.data);
       }
-    } catch (error) {
-      console.error("Error validating token:", error);
-      if (error.response?.status === 401 || error.response?.status === 403) {
+    } catch (err) {
+      console.error("Error validating token:", err);
+      if (err.response?.status === 401 || err.response?.status === 403) {
         localStorage.removeItem("jwtToken");
         navigate("/");
       }
@@ -75,6 +77,45 @@ const ProductDetail = () => {
       }
     } catch (error) {
       console.error("Error fetching categories:", error);
+    }
+  };
+
+  const addToCart = async () => {
+    try {
+      const idUser = localStorage.getItem("id_user");
+
+      if (!idUser) {
+        navigate("/");
+        return;
+      }
+
+      const requestBody = {
+        id_produk: parseInt(id),
+        id_user: parseInt(idUser),
+        total_produk: quantity,
+      };
+
+      const response = await axios.post(
+        "http://localhost:3000/api/keranjang",
+        requestBody,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.data.success) {
+        window.location.reload();
+      }
+    } catch (err) {
+      const errorMeasge =
+        err.response?.data?.message || "Gagal menambahkan ke keranjang";
+      toast.error(errorMeasge, {
+        position: "top-right",
+        autoClose: 1500,
+      });
     }
   };
 
@@ -131,7 +172,8 @@ const ProductDetail = () => {
                 (
                 {product.rata_rating
                   ? product.rata_rating.split(",").length
-                  : 0}   reviews)
+                  : 0}{" "}
+                reviews)
               </span>
             </div>
             <p className="product-description">{product.deskripsi}</p>
@@ -147,14 +189,19 @@ const ProductDetail = () => {
                 id="quantity"
                 name="quantity"
                 min="1"
-                defaultValue="1"
+                max={product.kuantitas}
+                value={quantity}
+                onChange={(e) => setQuantity(parseInt(e.target.value))}
               />
             </div>
+            <button className="add-to-cart-button" onClick={addToCart}>
+              <i className="fas fa-shopping-cart"></i> Add to cart
+            </button>
             <button
-              className="add-to-cart-button"
+              className="add-to-buy-button"
               onClick={() => navigate("/checkout")}
             >
-              <i className="fas fa-shopping-cart"></i> Add to cart
+              <i className="fa-solid fa-bag-shopping"></i> buy
             </button>
           </div>
         </div>

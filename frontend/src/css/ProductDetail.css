@@ -122,7 +122,8 @@
   border-radius: 4px;
 }
 
-.add-to-cart-button {
+.add-to-cart-button,
+.add-to-buy-button {
   display: inline-block;
   padding: 10px 20px;
   font-size: 18px;
@@ -133,6 +134,11 @@
   cursor: pointer;
 }
 
-.add-to-cart-button:hover {
+.add-to-cart-button {
+  margin-right: 10px; 
+}
+
+.add-to-cart-button:hover, 
+.add-to-buy-button:hover{
   background-color: #0056b3;
 }

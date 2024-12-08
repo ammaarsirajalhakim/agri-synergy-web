@@ -73,12 +73,15 @@ module.exports = async (req, res) => {
             review 
         ON 
             produk.id_produk = review.id_produk
+        WHERE 
+            produk.id_produk IS NOT NULL
         GROUP BY 
             produk.id_produk
         LIMIT ? OFFSET ?
         `,
       [limit, offset]
     );
+    
 
     const responseData = getSuccessResponse(rows, total);
     return res.status(responseData.code).json(responseData);

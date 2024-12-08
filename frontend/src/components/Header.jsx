@@ -1,23 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios'; // Make sure to import axios if it's not already
-import '../css/header.css';
-import logo from '../assets/AGRI_SYNERGY.png';
-import profile from '../assets/header/profileicon.png';
-import market from '../assets/header/marketicon.png';
-import notification from '../assets/header/notificationicon.png';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import "../css/header.css";
+import logo from "../assets/AGRI_SYNERGY.png";
+import profile from "../assets/header/profileicon.png";
+import market from "../assets/header/marketicon.png";
+import notification from "../assets/header/notificationicon.png";
 
 const Header = () => {
   const navigate = useNavigate();
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [role, setRole] = useState("");
+  const [cartItemCount, setCartItemCount] = useState(0);
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const toggleDropdown = () => setDropdownVisible(!dropdownVisible);
 
-  // Check if the user is authenticated and handle token validation
-  const checkAuthentication = async () => {
+  const fetchCartItems = async () => {
     const token = localStorage.getItem("jwtToken");
     if (!token) {
       navigate("/");
@@ -26,29 +26,32 @@ const Header = () => {
 
     try {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-      const response = await axios.get("http://localhost:3000/api/produk", {
+      const response = await axios.get("http://localhost:3000/api/keranjang", {
         validateStatus: (status) => status < 500,
       });
 
       if (response.status === 401 || response.status === 403) {
         localStorage.removeItem("jwtToken");
         navigate("/");
+        return;
       }
 
       const storedRole = localStorage.getItem("role");
       if (storedRole) {
         setRole(storedRole);
       }
+
+      setCartItemCount(response.data.data.length);
     } catch (error) {
-      console.error("Error validating token:", error);
+      console.error("Error fetching cart items:", error);
       localStorage.removeItem("jwtToken");
       navigate("/");
+      setCartItemCount(0);
     }
   };
 
-  // Fetch the user's role and other necessary data
   useEffect(() => {
-    checkAuthentication();
+    fetchCartItems();
   }, []);
 
   return (
@@ -59,21 +62,44 @@ const Header = () => {
 
       <nav>
         <ul>
-          <li className="float-in"><a href="#" onClick={() => navigate('/')}>HOME</a></li>
-          <li className="float-in"><a href="#" onClick={() => navigate('/market')}>MARKET</a></li>
-          <li className="float-in"><a href="#" onClick={() => navigate('/konsultasi')}>KONSULTASI</a></li>
+          <li className="float-in">
+            <a href="#" onClick={() => navigate("/")}>
+              HOME
+            </a>
+          </li>
+          <li className="float-in">
+            <a href="#" onClick={() => navigate("/market")}>
+              MARKET
+            </a>
+          </li>
+          <li className="float-in">
+            <a href="#" onClick={() => navigate("/konsultasi")}>
+              KONSULTASI
+            </a>
+          </li>
           <li className="float-in">
             <a onClick={toggleDropdown} className="explore-button">
               <span className="explore-text">EXPLORE</span>
-              <span className="explore-icon">{dropdownVisible ? '▲' : '▼'}</span>
+              <span className="explore-icon">
+                {dropdownVisible ? "▲" : "▼"}
+              </span>
             </a>
             {dropdownVisible && (
               <div className="dropdown-menu">
-                <a href="#" onClick={() => navigate('/calendar')}>KALENDER</a>
-                <a href="#" onClick={() => navigate('/petalahan')}>PETA LAHAN</a>
-                <a href="#" onClick={() => navigate('/community')}>FORUM KOMUNITAS</a>
-                {role === "admin" && <a href="#" onClick={() => navigate("/kategori")}>Admin Page</a>}
-                {role === "tengkulak" && <a href="#" onClick={() => navigate("/kategori")}>Dropshipper Page</a>}
+                <a href="#" onClick={() => navigate("/calendar")}>
+                  KALENDER
+                </a>
+                <a href="#" onClick={() => navigate("/petalahan")}>
+                  PETA LAHAN
+                </a>
+                <a href="#" onClick={() => navigate("/community")}>
+                  FORUM KOMUNITAS
+                </a>
+                {(role === "admin" || role === "petani") && (
+                  <a href="#" onClick={() => navigate("/kategori")}>
+                    {role === "admin" ? "Admin Page" : "Dropshipper Page"}
+                  </a>
+                )}
               </div>
             )}
           </li>
@@ -82,16 +108,18 @@ const Header = () => {
           <button className="hamburger" onClick={toggleMenu}>
             ☰
           </button>
-          <div className={`icon-container ${isMenuOpen ? 'open' : 'closed'}`}>
-            <div className="icon-wrapper" onClick={() => navigate('/cart')}>
+          <div className={`icon-container ${isMenuOpen ? "open" : "closed"}`}>
+            <div className="icon-wrapper" onClick={() => navigate("/cart")}>
               <img src={market} alt="Market Icon" />
-              <span className="badge">1</span>
+              {cartItemCount > 0 && (
+                <span className="badge">{cartItemCount}</span>
+              )}
             </div>
             <div className="icon-wrapper">
               <img src={notification} alt="Notification Icon" />
-              <span className="badge">2</span>
+              {/* <span className="badge">2</span> */}
             </div>
-            <div className="icon-wrapper" onClick={() => navigate('/login')}>
+            <div className="icon-wrapper" onClick={() => navigate("/login")}>
               <img src={profile} alt="Profile Icon" />
             </div>
           </div>

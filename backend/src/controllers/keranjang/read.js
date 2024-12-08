@@ -44,7 +44,15 @@ module.exports = async (req, res) => {
   });
 
   try {
-    const [rows] = await req.db.promise().query("SELECT * FROM keranjang");
+    const [rows] = await req.db.promise().query(
+      `SELECT 
+      keranjang.*,
+      produk.nama AS nama_produk,
+      produk.foto_produk  
+     FROM produk 
+     LEFT JOIN keranjang ON produk.id_produk = keranjang.id_produk
+     WHERE keranjang.id_keranjang IS NOT NULL`
+    );
     const responseData = getSuccessResponse(rows);
     return res.status(responseData.code).json(responseData);
   } catch (err) {
