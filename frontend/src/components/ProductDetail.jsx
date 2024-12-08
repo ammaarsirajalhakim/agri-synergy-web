@@ -83,7 +83,6 @@ const ProductDetail = () => {
     fetchCategories();
   }, []);
 
-  // Temukan produk berdasarkan id
   const product = products.find(
     (product) => product.id_produk === parseInt(id)
   );
