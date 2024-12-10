@@ -9,6 +9,7 @@ import "../css/Cart.css";
 const Cart = () => {
   const navigate = useNavigate();
   const [keranjang, setKeranjang] = useState([]);
+  const [subTotal, setsubTotal] = useState(0);
 
   const handleContinueToCheckout = () => {
     navigate("/checkout");
@@ -40,6 +41,12 @@ const Cart = () => {
 
       if (response.data?.data) {
         setKeranjang(response.data.data);
+
+        const calculatedSubtotal = response.data.data.reduce(
+          (acc, item) => acc + Number(item.total_harga),
+          0
+        );
+        setsubTotal(calculatedSubtotal);
       }
     } catch (err) {
       console.error("Error validating token:", err);
@@ -70,15 +77,20 @@ const Cart = () => {
 
         if (response.status === 200) {
           Swal.fire("Berhasil!", "Item berhasil dihapus.", "success");
-          setTimeout(() => {
-            window.location.reload();
-          }, 1500);
-        } else {
-          Swal.fire(
-            "Gagal!",
-            `Item gagal dihapus: ${response.message}`,
-            "error"
+
+          const updatedKeranjang = keranjang.filter(
+            (item) => item.id_keranjang !== id
           );
+          setKeranjang(updatedKeranjang);
+
+          const deletedItem = keranjang.find(
+            (item) => item.id_keranjang === id
+          );
+          if (deletedItem) {
+            setsubTotal(
+              (prevSubtotal) => prevSubtotal - Number(deletedItem.total_harga)
+            );
+          }
         }
       } catch (err) {
         const errorMessage =
@@ -142,11 +154,11 @@ const Cart = () => {
               Coupon (-): <span>Rp 0</span>
             </p>
             <p>
-              Subtotal: <span>Rp 300.000</span>
+              Subtotal: <span>{`Rp ${subTotal.toLocaleString("id-ID")}`}</span>
             </p>
             <hr />
             <p>
-              Total: <span>Rp 300.000</span>
+              Total: <span>{`Rp ${subTotal.toLocaleString("id-ID")}`}</span>
             </p>
           </div>
           <button
