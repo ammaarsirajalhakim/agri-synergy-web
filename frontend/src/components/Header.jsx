@@ -13,6 +13,7 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [role, setRole] = useState("");
   const [cartItemCount, setCartItemCount] = useState(0);
+  const [cartNotivCount, setCartNotivCount] = useState(0);
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const toggleDropdown = () => setDropdownVisible(!dropdownVisible);
@@ -50,8 +51,19 @@ const Header = () => {
     }
   };
 
+  const feacthNotivItems = async () => {
+    try {
+      const response = await axios.get("http://localhost:3000/api/kalender");
+      setCartNotivCount(response.data.data.length);
+    } catch (error) {
+      console.error("Error fetching cart items:", error);
+      setCartNotivCount(0);
+    }
+  }
+
   useEffect(() => {
     fetchCartItems();
+    feacthNotivItems();
   }, []);
 
   return (
@@ -116,8 +128,8 @@ const Header = () => {
               )}
             </div>
             <div className="icon-wrapper">
-              <img src={notification} alt="Notification Icon" />
-              {/* <span className="badge">2</span> */}
+            <img src={notification} alt="Notification Icon" onClick={() => navigate('/calendar')} />
+            {cartNotivCount > 0 && <span className="badge">{cartNotivCount}</span>}
             </div>
             <div className="icon-wrapper" onClick={() => navigate("/login")}>
               <img src={profile} alt="Profile Icon" />

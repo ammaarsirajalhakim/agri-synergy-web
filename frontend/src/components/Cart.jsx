@@ -9,7 +9,7 @@ import "../css/Cart.css";
 const Cart = () => {
   const navigate = useNavigate();
   const [keranjang, setKeranjang] = useState([]);
-  const [subTotal, setsubTotal] = useState(0);
+  const [subtotal, setSubtotal] = useState(0);
 
   const handleContinueToCheckout = () => {
     navigate("/checkout");
@@ -41,12 +41,6 @@ const Cart = () => {
 
       if (response.data?.data) {
         setKeranjang(response.data.data);
-
-        const calculatedSubtotal = response.data.data.reduce(
-          (acc, item) => acc + Number(item.total_harga),
-          0
-        );
-        setsubTotal(calculatedSubtotal);
       }
     } catch (err) {
       console.error("Error validating token:", err);
@@ -77,20 +71,15 @@ const Cart = () => {
 
         if (response.status === 200) {
           Swal.fire("Berhasil!", "Item berhasil dihapus.", "success");
-
-          const updatedKeranjang = keranjang.filter(
-            (item) => item.id_keranjang !== id
+          setTimeout(() => {
+            window.location.reload();
+          }, 1500);
+        } else {
+          Swal.fire(
+            "Gagal!",
+            `Item gagal dihapus: ${response.message}`,
+            "error"
           );
-          setKeranjang(updatedKeranjang);
-
-          const deletedItem = keranjang.find(
-            (item) => item.id_keranjang === id
-          );
-          if (deletedItem) {
-            setsubTotal(
-              (prevSubtotal) => prevSubtotal - Number(deletedItem.total_harga)
-            );
-          }
         }
       } catch (err) {
         const errorMessage =
@@ -106,6 +95,14 @@ const Cart = () => {
   useEffect(() => {
     checkAuthentication();
   }, []);
+
+  useEffect(() => {
+    const total = keranjang.reduce(
+      (sum, item) => sum + Number(item.total_harga),
+      0
+    );
+    setSubtotal(total);
+  }, [keranjang]);
 
   return (
     <div>
@@ -150,15 +147,21 @@ const Cart = () => {
             className="coupon-input"
           />
           <div className="summary-details">
-            <p>
+          <p>
               Coupon (-): <span>Rp 0</span>
             </p>
             <p>
-              Subtotal: <span>{`Rp ${subTotal.toLocaleString("id-ID")}`}</span>
+              Subtotal:{" "}
+              <span>
+                Rp {subtotal.toLocaleString("id-ID")}
+              </span>
             </p>
             <hr />
             <p>
-              Total: <span>{`Rp ${subTotal.toLocaleString("id-ID")}`}</span>
+              Total:{" "}
+              <span>
+                Rp {subtotal.toLocaleString("id-ID")}
+              </span>
             </p>
           </div>
           <button
