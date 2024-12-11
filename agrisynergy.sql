@@ -159,7 +159,7 @@ CREATE TABLE `keranjang` (
 
 LOCK TABLES `keranjang` WRITE;
 /*!40000 ALTER TABLE `keranjang` DISABLE KEYS */;
-INSERT INTO `keranjang` VALUES (1,1,4,1,20000.00),(2,2,4,2,112000.00);
+INSERT INTO `keranjang` VALUES (1,1,1,1,20000.00),(2,2,1,2,112000.00);
 /*!40000 ALTER TABLE `keranjang` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -242,7 +242,7 @@ CREATE TABLE `memesan` (
   KEY `id_produk` (`id_produk`),
   CONSTRAINT `memesan_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`),
   CONSTRAINT `memesan_ibfk_2` FOREIGN KEY (`id_produk`) REFERENCES `produk` (`id_produk`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -251,7 +251,6 @@ CREATE TABLE `memesan` (
 
 LOCK TABLES `memesan` WRITE;
 /*!40000 ALTER TABLE `memesan` DISABLE KEYS */;
-INSERT INTO `memesan` VALUES (1,1,1,2.50,20,'2024-07-24','pending');
 /*!40000 ALTER TABLE `memesan` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -429,6 +428,9 @@ CREATE TABLE `user` (
   `katasandi` varchar(255) NOT NULL,
   `role` enum('petani','pembeli','ahli','admin','tengkulak') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'pembeli',
   `foto` varchar(255) DEFAULT NULL,
+  `provinsi` varchar(255) DEFAULT NULL,
+  `kota` varchar(255) DEFAULT NULL,
+  `kodepos` char(5) DEFAULT NULL,
   PRIMARY KEY (`id_user`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -439,7 +441,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'admin','08123451729','jkdjafhaf','admin@gmail.com','$2b$10$Uvec4ij9UVml253O/p6vCurQuodZoqPQwIqi7ORRl9j.Fh2XZJjni','admin',''),(2,'petani','08223451729','jkdjafhaf','petani@gmail.com','$2b$10$5ts4468GrOIF6.QxU7HofOQmeQBhH2BT8/mweeIYKhqemoe1rg9mS','petani',''),(3,'ahli','08323451729','jkdjafhaf','ahli@gmail.com','$2b$10$Y4SuY6JS/nYNu1nZmYR80OmNBB20wbNjCeNNw1SYcfz6o9hNmHQrG','ahli',''),(4,'pembeli','08423451729','jkdjafhaf','pembeli@gmail.com','$2b$10$2VDzjRCJs9d7GHMLF/jNyOL.u3I67mkFimKUn4MyUJSSPbHhzUDw.','pembeli','');
+INSERT INTO `user` VALUES (1,'admin1','08123451729','jkdjafhaf','admin@gmail.com','$2b$10$Uvec4ij9UVml253O/p6vCurQuodZoqPQwIqi7ORRl9j.Fh2XZJjni','admin','','','',''),(2,'petani','08223451729','jkdjafhaf','petani@gmail.com','$2b$10$5ts4468GrOIF6.QxU7HofOQmeQBhH2BT8/mweeIYKhqemoe1rg9mS','petani','',NULL,NULL,NULL),(3,'ahli','08323451729','jkdjafhaf','ahli@gmail.com','$2b$10$Y4SuY6JS/nYNu1nZmYR80OmNBB20wbNjCeNNw1SYcfz6o9hNmHQrG','ahli','',NULL,NULL,NULL),(4,'pembeli','08423451729','jkdjafhaf','pembeli@gmail.com','$2b$10$2VDzjRCJs9d7GHMLF/jNyOL.u3I67mkFimKUn4MyUJSSPbHhzUDw.','pembeli','',NULL,NULL,NULL);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -456,4 +458,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-12-09  3:51:46
+-- Dump completed on 2024-12-12  5:35:52
