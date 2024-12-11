@@ -44,7 +44,26 @@ module.exports = async (req, res) => {
   });
 
   try {
-    const [rows] = await req.db.promise().query("SELECT * FROM user");
+    const idUser = req.headers["id_user"];
+    if (!idUser) {
+      return res.status(400).json({
+        success: false,
+        code: 400,
+        message: "id_user tidak ditemukan dalam permintaan",
+        data: null,
+        pagination: null,
+        timestamp: getFormattedTimestamp(),
+        errors: {
+          message: "id_user harus disertakan dalam header",
+          code: "BAD_REQUEST",
+        },
+      });
+    }
+
+    const [rows] = await req.db
+      .promise()
+      .query("SELECT * FROM user WHERE id_user = ?", [idUser]);
+
     const responseData = getSuccessResponse(rows);
     return res.status(responseData.code).json(responseData);
   } catch (err) {

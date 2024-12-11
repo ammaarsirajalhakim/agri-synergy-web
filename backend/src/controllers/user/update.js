@@ -40,7 +40,16 @@ const RESPONSE = {
 
 const validateFields = {
   validateUpdateData: async (req, db) => {
-    const { email, katasandi, no_hp } = req.body;
+    const { 
+      nama, 
+      alamat, 
+      email, 
+      no_hp, 
+      provinsi, 
+      kota, 
+      kodepos,
+      katasandi 
+    } = req.body;
     const userId = req.params.id_user;
 
     const validations = [
@@ -49,14 +58,36 @@ const validateFields = {
         errorMessage: "Email tidak valid",
       },
       {
-        condition: katasandi && !validasiKatasandi(katasandi),
-        errorMessage: "Kata sandi tidak valid",
-      },
-      {
         condition: no_hp && !validasiHandphone(no_hp),
         errorMessage: "Nomor handphone tidak valid",
       },
     ];
+
+    if (!provinsi || !kota || !kodepos) {
+      const addressValidations = [
+        {
+          condition: !provinsi,
+          errorMessage: "Provinsi harus diisi!",
+        },
+        {
+          condition: !kota,
+          errorMessage: "Kota harus diisi!",
+        },
+        {
+          condition: !kodepos,
+          errorMessage: "Kode pos harus diisi!",
+        },
+      ];
+
+      validations.push(...addressValidations);
+    }
+
+    if (katasandi) {
+      validations.push({
+        condition: !validasiKatasandi(katasandi),
+        errorMessage: "Kata sandi tidak valid",
+      });
+    }
 
     for (const validation of validations) {
       if (validation.condition) {
@@ -78,22 +109,30 @@ const validateFields = {
       };
     }
 
-    if (email && email !== currentUser[0].email) {
+    if (email) {
       const [emailExists] = await db
         .promise()
-        .query("SELECT 1 FROM user WHERE email = ?", [email]);
+        .query(
+          "SELECT id_user FROM user WHERE email = ? AND id_user != ?", 
+          [email, userId]
+        );
+      
       if (emailExists.length > 0) {
         return {
           isValid: false,
-          error: RESPONSE.updateError(400, "Email sudah digunakan"),
+          error: RESPONSE.updateError(400, "Email sudah digunakan oleh user lain"),
         };
       }
     }
 
-    if (no_hp && no_hp !== currentUser[0].no_hp) {
+    if (no_hp) {
       const [phoneExists] = await db
         .promise()
-        .query("SELECT 1 FROM user WHERE no_hp = ?", [no_hp]);
+        .query(
+          "SELECT id_user FROM user WHERE no_hp = ? AND id_user != ?", 
+          [no_hp, userId]
+        );
+      
       if (phoneExists.length > 0) {
         return {
           isValid: false,
@@ -101,14 +140,25 @@ const validateFields = {
         };
       }
     }
+    
+
+    const updateData = {
+      ...(nama && { nama }),
+      ...(alamat && { alamat }),
+      ...(email && { email }),
+      ...(no_hp && { no_hp }),
+      ...(provinsi && { provinsi }),
+      ...(kota && { kota }),
+      ...(kodepos && { kodepos })
+    };
 
     if (katasandi) {
-      req.body.katasandi = await bcrypt.hash(katasandi, 10);
+      updateData.katasandi = await bcrypt.hash(katasandi, 10);
     }
 
     return {
       isValid: true,
-      data: req.body,
+      data: updateData,
     };
   },
 };
@@ -119,6 +169,10 @@ module.exports = async (req, res) => {
 
     if (!validation.isValid) {
       return res.status(validation.error.code).json(validation.error);
+    }
+
+    if (Object.keys(validation.data).length === 0) {
+      return res.status(400).json(RESPONSE.updateError(400, "Tidak ada data untuk diupdate"));
     }
 
     const [rows] = await req.db
@@ -133,9 +187,11 @@ module.exports = async (req, res) => {
         .status(200)
         .json(RESPONSE.updateSuccess("Data user berhasil diupdate"));
     }
+
     return res
       .status(400)
       .json(RESPONSE.updateError(400, "User tidak ditemukan"));
+
   } catch (err) {
     console.log(err);
     return res
