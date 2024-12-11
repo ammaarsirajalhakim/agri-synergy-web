@@ -120,9 +120,7 @@ const Cart = () => {
                 <div className="item-details">
                   <h4>{item.nama_produk}</h4>
                   <p>Jumlah Produk: {item.total_produk}</p>
-                  <p>{`Rp ${Number(item.total_harga).toLocaleString(
-                    "id-ID"
-                  )}. -`}</p>
+                  <p>{`Rp ${Number(item.total_harga).toLocaleString("id-ID")}. -`}</p>
                 </div>
                 <button
                   className="remove-button"
