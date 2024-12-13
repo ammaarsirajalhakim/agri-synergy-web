@@ -23,37 +23,53 @@ const PaymentModal = ({ onClose, totalAmount, updateUser, keranjang }) => {
         "Authorization"
       ] = `Bearer ${localStorage.getItem("jwtToken")}`;
 
-      const tanggalMemesan = new Date().toISOString().split("T")[0];
+      const getFormattedTimestamp = () => {
+        return new Date().toLocaleString("en-US", {
+          timeZone: "Asia/Jakarta",
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: false,
+        });
+      };
 
-      for (const item of keranjang) {
-        const response = await axios.post(
-          "http://localhost:3000/api/pemesanan",
-          {
-            id_user: idUser,
-            id_produk: item.id_produk,
-            kuantitas: item.total_produk,
-            total_harga: totalAmount,
-            tgl_memesan: tanggalMemesan,
-            status: "pending",
-          }
-        );
+      const indonesiaTime = getFormattedTimestamp();
+      const tanggal = indonesiaTime.replace(
+        /(\d{1,2})\/(\d{1,2})\/(\d{4}), (\d{2}):(\d{2}):(\d{2})/,
+        "$3-$1-$2 $4:$5:$6"
+      );
 
-        if (response.status === 200) {
-          const result = await Swal.fire({
-            icon: "success",
-            title: "Success",
-            text: "Pemesanan berhasil!",
-            confirmButtonText: "Lihat Order",
-            cancelButtonText: "Kembali ke Home",
-            showCancelButton: true,
-          });
+      const paymentData = keranjang.map((item) => ({
+        id_user: idUser,
+        id_produk: item.id_produk,
+        kuantitas: item.total_produk,
+        total_harga: totalAmount,
+        tgl_memesan: tanggal,
+        status: "pending",
+      }));
 
-          if (result.isConfirmed) {
-            navigate("/orderhistory");
-          } else {
-            navigate("/");
-          }
-          break;
+      const response = await axios.post(
+        "http://localhost:3000/api/pemesanan",
+        paymentData
+      );
+
+      if (response.status === 200) {
+        const result = await Swal.fire({
+          icon: "success",
+          title: "Success",
+          text: "Pemesanan berhasil!",
+          confirmButtonText: "Lihat Order",
+          cancelButtonText: "Kembali ke Home",
+          showCancelButton: true,
+        });
+
+        if (result.isConfirmed) {
+          navigate("/orderhistory");
+        } else {
+          navigate("/");
         }
       }
     } catch (err) {

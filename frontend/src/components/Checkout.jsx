@@ -18,7 +18,13 @@ const Checkout = () => {
   const [cities, setCities] = useState([]);
   const [selectedProvince, setSelectedProvince] = useState("");
   const [selectedCity, setSelectedCity] = useState("");
-  const [users, setUsers] = useState({});
+  const [users, setUsers] = useState({
+    nama: '',
+    email: '',
+    alamat: '',
+    no_hp: '',
+    kodepos: ''
+  });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -117,7 +123,13 @@ const Checkout = () => {
   
       if (response.data?.data) {
         const userData = response.data.data[0];
-        setUsers(userData);
+        setUsers({
+          nama: userData.nama || '',
+          email: userData.email || '',
+          alamat: userData.alamat || '',
+          no_hp: userData.no_hp || '',
+          kodepos: userData.kodepos || ''
+        });
 
         if (userData.provinsi) {
           setSelectedProvince(userData.provinsi);

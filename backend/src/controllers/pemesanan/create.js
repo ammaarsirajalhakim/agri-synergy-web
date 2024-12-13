@@ -47,31 +47,44 @@ const validateFields = {
   },
 
   validateData: (req) => {
-    const { id_produk, id_user, total_harga, kuantitas, tgl_memesan, status } =
-      req.body;
+    const data = req.body;
 
-    const requiredFields = {
-      id_produk,
-      id_user,
-      total_harga,
-      kuantitas,
-      tgl_memesan,
-    };
-
-    const missingFields = validateFields.checkRequired(requiredFields);
-    if (missingFields) {
+    if (!Array.isArray(data)) {
       return {
         isValid: false,
-        error: RESPONSE.createError(400, "Semua field harus diisi", {
-          missingFields: missingFields,
-        }),
+        error: RESPONSE.createError(400, "Data harus berupa array"),
       };
     }
 
-    const validatedData = {
-      ...requiredFields,
-      status: status || "pending",
-    };
+    const validatedData = [];
+
+    for (const item of data) {
+      const { id_produk, id_user, total_harga, kuantitas, tgl_memesan, status } =
+        item;
+
+      const requiredFields = {
+        id_produk,
+        id_user,
+        total_harga,
+        kuantitas,
+        tgl_memesan,
+      };
+
+      const missingFields = validateFields.checkRequired(requiredFields);
+      if (missingFields) {
+        return {
+          isValid: false,
+          error: RESPONSE.createError(400, "Semua field harus diisi", {
+            missingFields: missingFields,
+          }),
+        };
+      }
+
+      validatedData.push({
+        ...requiredFields,
+        status: status || "pending",
+      });
+    }
 
     return {
       isValid: true,
@@ -87,14 +100,19 @@ module.exports = async (req, res) => {
       return res.status(validation.error.code).json(validation.error);
     }
 
-    const [rows] = await req.db
-      .promise()
-      .query("INSERT INTO memesan SET ?", validation.data);
+    const rows = await Promise.all(
+      validation.data.map((item) =>
+        req.db.promise().query("INSERT INTO memesan SET ?", item)
+      )
+    );
 
     return res
       .status(200)
       .json(
-        RESPONSE.createSuccess(rows, "Data pemesanan berhasil ditambahkan")
+        RESPONSE.createSuccess(
+          rows.map((row) => row[0]),
+          "Data pemesanan berhasil ditambahkan"
+        )
       );
   } catch (err) {
     console.error(err);
