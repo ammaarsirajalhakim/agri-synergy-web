@@ -44,7 +44,7 @@ module.exports = async (req, res) => {
   });
 
   try {
-    const [rows] = await req.db.promise().query("SELECT * FROM kalender");
+    const [rows] = await req.db.promise().query("SELECT *, DATE_FORMAT(tanggal, '%Y-%m-%d') AS tanggal FROM kalender");
     const responseData = getSuccessResponse(rows);
     return res.status(responseData.code).json(responseData);
   } catch (err) {

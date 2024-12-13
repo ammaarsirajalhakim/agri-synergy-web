@@ -12,23 +12,52 @@ const getFormattedTimestamp = () => {
 };
 
 module.exports = async (req, res) => {
-  const getSuccessResponse = (rows) => ({
-    success: rows.length > 0,
-    code: 200,
-    message:
-      rows.length > 0
-        ? "Data pemesanan berhasil diambil"
-        : "Data pemesanan tidak tersedia",
-    data: rows,
-    pagination: {
-      total: rows.length,
-      per_page: rows.length,
-      current_page: 1,
-      total_pages: 1,
-    },
-    timestamp: getFormattedTimestamp(),
-    errors: null,
-  });
+  const getSuccessResponse = (rows) => {
+    const groupedData = rows.reduce((acc, current) => {
+      const key = `${current.id_user}_${current.tgl_memesan}_${current.total_harga}`;
+      if (!acc[key]) {
+        acc[key] = {
+          id_user: current.id_user,
+          tgl_memesan: `${new Date(current.tgl_memesan).getDate()}/${new Date(current.tgl_memesan).getMonth() + 1}/${new Date(current.tgl_memesan).getFullYear()} ${new Date(current.tgl_memesan).toLocaleTimeString("en-US", {
+            timeZone: "Asia/Jakarta",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: false,
+          })}`,
+          status: current.status,
+          total_harga: current.total_harga,
+          items: []
+        };
+      }
+      acc[key].items.push({
+        id_produk: current.id_produk,
+        nama_produk: current.nama_produk,
+        foto_produk: current.foto_produk,
+        kuantitas: current.kuantitas
+      });
+      return acc;
+    }, {});
+
+    const responseData = {
+      success: Object.keys(groupedData).length > 0,
+      code: 200,
+      message:
+        Object.keys(groupedData).length > 0
+          ? "Data pemesanan berhasil diambil"
+          : "Data pemesanan tidak tersedia",
+      data: Object.values(groupedData),
+      pagination: {
+        total: Object.keys(groupedData).length,
+        per_page: Object.keys(groupedData).length,
+        current_page: 1,
+        total_pages: 1,
+      },
+      timestamp: getFormattedTimestamp(),
+      errors: null,
+    };
+    return responseData;
+  };
 
   const getErrorResponse = (err) => ({
     success: false,
@@ -45,8 +74,13 @@ module.exports = async (req, res) => {
 
   try {
     const [rows] = await req.db.promise().query(`
-      SELECT *, DATE_FORMAT(tgl_memesan, '%Y-%m-%d') as tgl_memesan 
-      FROM memesan
+    SELECT 
+    memesan.*,
+    produk.nama AS nama_produk, 
+    produk.foto_produk
+    FROM memesan
+    LEFT JOIN produk ON produk.id_produk = memesan.id_produk
+    WHERE memesan.id_memesan IS NOT NULL;
     `);
     const responseData = getSuccessResponse(rows);
     return res.status(responseData.code).json(responseData);
@@ -56,4 +90,3 @@ module.exports = async (req, res) => {
     return res.status(responseData.code).json(responseData);
   }
 };
-  

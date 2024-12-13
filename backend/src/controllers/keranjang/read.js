@@ -51,7 +51,7 @@ module.exports = async (req, res) => {
       produk.foto_produk  
      FROM produk 
      LEFT JOIN keranjang ON produk.id_produk = keranjang.id_produk
-     WHERE keranjang.id_keranjang IS NOT NULL`
+     WHERE keranjang.id_keranjang IS NOT NULL;`
     );
     const responseData = getSuccessResponse(rows);
     return res.status(responseData.code).json(responseData);
