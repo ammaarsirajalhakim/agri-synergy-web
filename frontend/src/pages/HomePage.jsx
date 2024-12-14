@@ -178,7 +178,7 @@ const HomePage = () => {
             </li>
             <li className="float-in">
               <a onClick={toggleDropdown} className="explore-button">
-                EXPLORE {dropdownVisible ? "▲" : "▼"}
+                JELAJAH {dropdownVisible ? "▲" : "▼"}
               </a>
               {dropdownVisible && (
                 <div className="unique-dropdown-menu">

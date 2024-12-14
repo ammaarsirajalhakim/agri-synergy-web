@@ -91,7 +91,7 @@ const Header = () => {
           </li>
           <li className="float-in">
             <a onClick={toggleDropdown} className="explore-button">
-              <span className="explore-text">EXPLORE</span>
+              <span className="explore-text">JELAJAH</span>
               <span className="explore-icon">
                 {dropdownVisible ? "▲" : "▼"}
               </span>

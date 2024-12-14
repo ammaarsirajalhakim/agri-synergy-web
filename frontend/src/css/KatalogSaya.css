@@ -56,17 +56,4 @@
     border: 1px solid #ccc;
   }
   
-  .explore-button {
-    background-color: #005f28;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-  }
-  
-  .explore-button:hover {
-    background-color: #007f34;
-  }
-  
+ 
