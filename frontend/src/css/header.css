@@ -1,12 +1,15 @@
 .nav {
-  position: relative;
+  position: sticky;
   top: 0;
   display: flex;
-  padding: 48px 64px 20px 48px !important;
-  margin-left: 64px;
+  padding: 48px 64px 20px 98px !important;
   width: 100%;
   z-index: 1000;
   align-items: center;
+}
+
+.nav.scrolled {
+  background-color: #ffff;
 }
 
 .nav nav {
@@ -121,6 +124,55 @@
   background-color: #ddd;
 }
 
+/* notification dropdown */
+.notification-dropdown {
+  position: absolute;
+  top: 50px;
+  right: 20px;
+  width: 300px;
+  background: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  z-index: 1000;
+  overflow: hidden;
+  padding: 10px;
+}
+
+.notification-dropdown .dropdown-header {
+  font-weight: bold;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 5px;
+}
+
+.notification-item {
+  padding: 10px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.notification-item:last-child {
+  border-bottom: none;
+}
+
+.notification-item strong {
+  display: block;
+  color: #333;
+}
+
+.notification-item p {
+  margin: 5px 0;
+  color: #666;
+}
+
+.notification-item small {
+  color: #999;
+}
+
+.no-notifications {
+  text-align: center;
+  color: #666;
+  padding: 10px;
+}
 
 
 @media screen and (max-width: 480px) {

@@ -9,15 +9,24 @@ import notification from "../assets/header/notificationicon.png";
 
 const Header = () => {
   const navigate = useNavigate();
+
+  // State untuk menu dan dropdown
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+
+  // State untuk data
   const [role, setRole] = useState("");
   const [cartItemCount, setCartItemCount] = useState(0);
   const [cartNotivCount, setCartNotivCount] = useState(0);
+  const [notifications, setNotifications] = useState([]);
 
+  // Toggle Menu dan Dropdown
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const toggleDropdown = () => setDropdownVisible(!dropdownVisible);
+  const toggleNotificationDropdown = () => setIsNotificationOpen(!isNotificationOpen);
 
+  // Fetch data cart
   const fetchCartItems = async () => {
     const token = localStorage.getItem("jwtToken");
     if (!token) {
@@ -27,44 +36,48 @@ const Header = () => {
 
     try {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-      const response = await axios.get("http://localhost:3000/api/keranjang", {
-        validateStatus: (status) => status < 500,
-      });
-
-      if (response.status === 401 || response.status === 403) {
-        localStorage.removeItem("jwtToken");
-        navigate("/");
-        return;
-      }
-
-      const storedRole = localStorage.getItem("role");
-      if (storedRole) {
-        setRole(storedRole);
-      }
-
+      const response = await axios.get("http://localhost:3000/api/keranjang");
       setCartItemCount(response.data.data.length);
     } catch (error) {
       console.error("Error fetching cart items:", error);
-      localStorage.removeItem("jwtToken");
-      navigate("/");
       setCartItemCount(0);
     }
   };
 
-  const feacthNotivItems = async () => {
+  // Fetch data notifikasi
+  const fetchNotifications = async () => {
     try {
       const response = await axios.get("http://localhost:3000/api/kalender");
+      setNotifications(response.data.data);
       setCartNotivCount(response.data.data.length);
     } catch (error) {
-      console.error("Error fetching cart items:", error);
+      console.error("Error fetching notifications:", error);
+      setNotifications([]);
       setCartNotivCount(0);
     }
-  }
+  };
 
+  // Fetch data saat komponen pertama kali dirender
   useEffect(() => {
     fetchCartItems();
-    feacthNotivItems();
+    fetchNotifications();
   }, []);
+
+  useEffect(() => {
+      const handleScroll = () => {
+        const navbar = document.querySelector(".nav");
+        if (navbar) {
+          if (window.scrollY > 0) {
+            navbar.classList.add("scrolled");
+          } else {
+            navbar.classList.remove("scrolled");
+          }
+        }
+      };
+  
+      window.addEventListener("scroll", handleScroll);
+      return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
 
   return (
     <div className="nav" id="navbar">
@@ -74,22 +87,16 @@ const Header = () => {
 
       <nav>
         <ul>
-          <li className="float-in">
-            <a href="#" onClick={() => navigate("/")}>
-              HOME
-            </a>
+          <li>
+            <a href="#" onClick={() => navigate("/")}>HOME</a>
           </li>
-          <li className="float-in">
-            <a href="#" onClick={() => navigate("/market")}>
-              MARKET
-            </a>
+          <li>
+            <a href="#" onClick={() => navigate("/market")}>MARKET</a>
           </li>
-          <li className="float-in">
-            <a href="#" onClick={() => navigate("/konsultasi")}>
-              KONSULTASI
-            </a>
+          <li>
+            <a href="#" onClick={() => navigate("/konsultasi")}>KONSULTASI</a>
           </li>
-          <li className="float-in">
+          <li>
             <a onClick={toggleDropdown} className="explore-button">
               <span className="explore-text">JELAJAH</span>
               <span className="explore-icon">
@@ -98,15 +105,9 @@ const Header = () => {
             </a>
             {dropdownVisible && (
               <div className="dropdown-menu">
-                <a href="#" onClick={() => navigate("/calendar")}>
-                  KALENDER
-                </a>
-                <a href="#" onClick={() => navigate("/petalahan")}>
-                  PETA LAHAN
-                </a>
-                <a href="#" onClick={() => navigate("/community")}>
-                  FORUM KOMUNITAS
-                </a>
+                <a href="#" onClick={() => navigate("/calendar")}>KALENDER</a>
+                <a href="#" onClick={() => navigate("/petalahan")}>PETA LAHAN</a>
+                <a href="#" onClick={() => navigate("/community")}>FORUM KOMUNITAS</a>
                 {(role === "admin" || role === "petani") && (
                   <a href="#" onClick={() => navigate("/kategori")}>
                     {role === "admin" ? "Admin Page" : "Dropshipper Page"}
@@ -116,21 +117,42 @@ const Header = () => {
             )}
           </li>
         </ul>
+
         <div className="icon">
           <button className="hamburger" onClick={toggleMenu}>
             ☰
           </button>
+
           <div className={`icon-container ${isMenuOpen ? "open" : "closed"}`}>
+            {/* Market Icon */}
             <div className="icon-wrapper" onClick={() => navigate("/cart")}>
               <img src={market} alt="Market Icon" />
-              {cartItemCount > 0 && (
-                <span className="badge">{cartItemCount}</span>
+              {cartItemCount > 0 && <span className="badge">{cartItemCount}</span>}
+            </div>
+
+            {/* Notification Icon */}
+            <div className="icon-wrapper" onClick={toggleNotificationDropdown}>
+              <img src={notification} alt="Notification Icon" />
+              {cartNotivCount > 0 && <span className="badge">{cartNotivCount}</span>}
+              {isNotificationOpen && (
+                <div className="notification-dropdown">
+                  <div className="dropdown-header">Notifikasi</div>
+                  {notifications.length > 0 ? (
+                    notifications.map((kalender, index) => (
+                      <div key={index} className="notification-item">
+                        <strong>{kalender.judul}</strong>
+                        <p>{kalender.deskripsi}</p>
+                        <small>{kalender.tanggal}</small>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="no-notifications">Tidak ada notifikasi</div>
+                  )}
+                </div>
               )}
             </div>
-            <div className="icon-wrapper">
-            <img src={notification} alt="Notification Icon" onClick={() => navigate('/calendar')} />
-            {cartNotivCount > 0 && <span className="badge">{cartNotivCount}</span>}
-            </div>
+
+            {/* Profile Icon */}
             <div className="icon-wrapper" onClick={() => navigate("/login")}>
               <img src={profile} alt="Profile Icon" />
             </div>

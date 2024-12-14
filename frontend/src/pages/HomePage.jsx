@@ -47,6 +47,9 @@ const HomePage = () => {
   const [role, setRole] = useState("");
   const [cartItemCount, setCartItemCount] = useState(0);
   const [cartNotivCount, setCartNotivCount] = useState(0);
+  const [notifications, setNotifications] = useState([]);
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const toggleNotificationDropdown = () => setIsNotificationOpen(!isNotificationOpen);
 
   const checkAuthentication = async () => {
     const token = localStorage.getItem("jwtToken");
@@ -115,12 +118,14 @@ const HomePage = () => {
     }
   };
 
-  const feacthNotivItems = async () => {
+  const fetchNotifications = async () => {
     try {
       const response = await axios.get("http://localhost:3000/api/kalender");
+      setNotifications(response.data.data);
       setCartNotivCount(response.data.data.length);
     } catch (error) {
-      console.error("Error fetching cart items:", error);
+      console.error("Error fetching notifications:", error);
+      setNotifications([]);
       setCartNotivCount(0);
     }
   };
@@ -129,7 +134,7 @@ const HomePage = () => {
     checkAuthentication();
     fetchCategories();
     feacthCartItems();
-    feacthNotivItems();
+    fetchNotifications();
   }, []);
 
   useEffect(() => {
@@ -211,14 +216,24 @@ const HomePage = () => {
                 <span className="badge">{cartItemCount}</span>
               )}
             </div>
-            <div className="icon-wrapper">
-              <img
-                src={notification}
-                alt="Notification Icon"
-                onClick={() => navigate("/calendar")}
-              />
-              {localStorage.getItem("jwtToken") && cartNotivCount > 0 && (
-                <span className="badge">{cartNotivCount}</span>
+          <div className="icon-wrapper" onClick={toggleNotificationDropdown}>
+              <img src={notification} alt="Notification Icon" />
+              {cartNotivCount > 0 && <span className="badge">{cartNotivCount}</span>}
+              {isNotificationOpen && (
+                <div className="notification-dropdown">
+                  <div className="dropdown-header">Notifikasi</div>
+                  {notifications.length > 0 ? (
+                    notifications.map((kalender, index) => (
+                      <div key={index} className="notification-item">
+                        <strong>{kalender.judul}</strong>
+                        <p>{kalender.deskripsi}</p>
+                        <small>{kalender.tanggal}</small>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="no-notifications">Tidak ada notifikasi</div>
+                  )}
+                </div>
               )}
             </div>
             <div className="icon-wrapper">
