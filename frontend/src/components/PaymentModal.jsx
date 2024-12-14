@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { toast } from "react-toastify";
 import BRIIcon from "../assets/payment/BRIVA.jpg";
 import GoPayIcon from "../assets/payment/GOPAY.jpg";
 import ShopeePayIcon from "../assets/payment/SHOPEEPAY.png";
@@ -50,6 +51,14 @@ const PaymentModal = ({ onClose, totalAmount, updateUser, keranjang }) => {
         tgl_memesan: tanggal,
         status: "pending",
       }));
+
+      if(paymentData.length === 0) {
+        toast.error("Keranjang kosong!", {
+          position: "top-right",
+          autoClose: 1500,
+        });
+        return;
+      }
 
       const response = await axios.post(
         "http://localhost:3000/api/pemesanan",

@@ -150,7 +150,7 @@ CREATE TABLE `keranjang` (
   KEY `id_produk` (`id_produk`),
   CONSTRAINT `keranjang_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`),
   CONSTRAINT `keranjang_ibfk_2` FOREIGN KEY (`id_produk`) REFERENCES `produk` (`id_produk`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -159,7 +159,7 @@ CREATE TABLE `keranjang` (
 
 LOCK TABLES `keranjang` WRITE;
 /*!40000 ALTER TABLE `keranjang` DISABLE KEYS */;
-INSERT INTO `keranjang` VALUES (1,1,1,1,20000.00),(2,2,1,2,112000.00);
+INSERT INTO `keranjang` VALUES (3,1,1,1,20000.00);
 /*!40000 ALTER TABLE `keranjang` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -235,14 +235,14 @@ CREATE TABLE `memesan` (
   `id_user` int NOT NULL,
   `total_harga` decimal(10,2) NOT NULL,
   `kuantitas` int NOT NULL,
-  `tgl_memesan` date NOT NULL,
+  `tgl_memesan` datetime NOT NULL,
   `status` enum('pending','dikirim','berhasil','batal') DEFAULT 'pending',
   PRIMARY KEY (`id_memesan`),
   KEY `id_user` (`id_user`),
   KEY `id_produk` (`id_produk`),
   CONSTRAINT `memesan_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`),
   CONSTRAINT `memesan_ibfk_2` FOREIGN KEY (`id_produk`) REFERENCES `produk` (`id_produk`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -251,6 +251,7 @@ CREATE TABLE `memesan` (
 
 LOCK TABLES `memesan` WRITE;
 /*!40000 ALTER TABLE `memesan` DISABLE KEYS */;
+INSERT INTO `memesan` VALUES (1,1,1,133000.00,1,'2024-12-14 08:22:34','pending'),(2,2,1,133000.00,2,'2024-12-14 08:22:34','pending');
 /*!40000 ALTER TABLE `memesan` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -441,7 +442,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'admin1','08123451729','jkdjafhaf','admin@gmail.com','$2b$10$Uvec4ij9UVml253O/p6vCurQuodZoqPQwIqi7ORRl9j.Fh2XZJjni','admin','','','',''),(2,'petani','08223451729','jkdjafhaf','petani@gmail.com','$2b$10$5ts4468GrOIF6.QxU7HofOQmeQBhH2BT8/mweeIYKhqemoe1rg9mS','petani','',NULL,NULL,NULL),(3,'ahli','08323451729','jkdjafhaf','ahli@gmail.com','$2b$10$Y4SuY6JS/nYNu1nZmYR80OmNBB20wbNjCeNNw1SYcfz6o9hNmHQrG','ahli','',NULL,NULL,NULL),(4,'pembeli','08423451729','jkdjafhaf','pembeli@gmail.com','$2b$10$2VDzjRCJs9d7GHMLF/jNyOL.u3I67mkFimKUn4MyUJSSPbHhzUDw.','pembeli','',NULL,NULL,NULL);
+INSERT INTO `user` VALUES (1,'admin','08123451729','jkdjafhaf','admin@gmail.com','$2b$10$Uvec4ij9UVml253O/p6vCurQuodZoqPQwIqi7ORRl9j.Fh2XZJjni','admin','','Jawa Timur','Kota Surabaya','12345'),(2,'petani','08223451729','jkdjafhaf','petani@gmail.com','$2b$10$5ts4468GrOIF6.QxU7HofOQmeQBhH2BT8/mweeIYKhqemoe1rg9mS','petani','',NULL,NULL,NULL),(3,'ahli','08323451729','jkdjafhaf','ahli@gmail.com','$2b$10$Y4SuY6JS/nYNu1nZmYR80OmNBB20wbNjCeNNw1SYcfz6o9hNmHQrG','ahli','',NULL,NULL,NULL),(4,'pembeli','08423451729','jkdjafhaf','pembeli@gmail.com','$2b$10$2VDzjRCJs9d7GHMLF/jNyOL.u3I67mkFimKUn4MyUJSSPbHhzUDw.','pembeli','',NULL,NULL,NULL);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -458,4 +459,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-12-12  5:35:52
+-- Dump completed on 2024-12-14  8:29:19

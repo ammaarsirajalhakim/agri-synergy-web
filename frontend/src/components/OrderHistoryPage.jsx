@@ -39,18 +39,15 @@
 
 // export default OrderHistoryPage;
 
-
-
-
-import React, { useState, useEffect } from 'react';
-import '../css/OrderHistoryPage.css';
+import React, { useState, useEffect } from "react";
+import "../css/OrderHistoryPage.css";
 
 function OrderHistoryPage() {
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
     const fetchOrders = async () => {
-      const response = await fetch('http://localhost:3000/api/pemesanan');
+      const response = await fetch("http://localhost:3000/api/pemesanan");
       const data = await response.json();
       setOrders(data.data);
     };
@@ -59,37 +56,66 @@ function OrderHistoryPage() {
 
   return (
     <div className="order-history-page">
-      <h2 className='dropshipper-page-h2'>Order History</h2>
+      <h2 className="dropshipper-page-h2">Order History</h2>
       <div className="order-history-cards">
-        {orders.map((order) => (
-          <div className="order-card" key={order.id_user}>
-            <div className="order-header">
-              <span className="order-date">{order.tgl_memesan}</span>
-              <span className={`order-status ${order.status === 'pending' ? 'order-status-pending' : order.status === 'dikirim' ? 'order-status-dikirim' : order.status === 'berhasil' ? 'order-status-berhasil' : order.status === 'batal' ? 'order-status-batal' : ''}`}>{order.status}</span>
-            </div>
-            <table className="order-table">
-              <thead>
-                <tr>
-                  <th>Image</th>
-                  <th>Product</th>
-                  <th>Quantity</th>
-                </tr>
-              </thead>
-              <tbody>
-                {order.items.map((item) => (
-                  <tr key={item.id_produk}>
-                    <td><img src={`http://localhost:3000/api/fileProduk/${item.foto_produk}`} alt={item.nama_produk} className="product-image" /></td>
-                    <td>{item.nama_produk}</td>
-                    <td>{item.kuantitas}</td>
+        {orders.length > 0 ? (
+          orders.map((order) => (
+            <div className="order-card" key={order.id_user}>
+              <div className="order-header">
+                <span className="order-date">{order.tgl_memesan}</span>
+                <span
+                  className={`order-status ${
+                    order.status === "pending"
+                      ? "order-status-pending"
+                      : order.status === "dikirim"
+                      ? "order-status-dikirim"
+                      : order.status === "berhasil"
+                      ? "order-status-berhasil"
+                      : order.status === "batal"
+                      ? "order-status-batal"
+                      : ""
+                  }`}
+                >
+                  {order.status}
+                </span>
+              </div>
+              <table className="order-table">
+                <thead>
+                  <tr>
+                    <th>Image</th>
+                    <th>Product</th>
+                    <th>Quantity</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-            <div className="order-total">
-              <span>Total : {`Rp ${Number(order.total_harga).toLocaleString("id-ID")}. -`}</span>
+                </thead>
+                <tbody>
+                  {order.items.map((item) => (
+                    <tr key={item.id_produk}>
+                      <td>
+                        <img
+                          src={`http://localhost:3000/api/fileProduk/${item.foto_produk}`}
+                          alt={item.nama_produk}
+                          className="product-image"
+                        />
+                      </td>
+                      <td>{item.nama_produk}</td>
+                      <td>{item.kuantitas}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <div className="order-total">
+                <span>
+                  Total :{" "}
+                  {`Rp ${Number(order.total_harga).toLocaleString("id-ID")}. -`}
+                </span>
+              </div>
             </div>
+          ))
+        ) : (
+          <div className="card-red">
+            <p>Tidak ada history pemesanan</p>
           </div>
-        ))}
+        )}
       </div>
     </div>
   );

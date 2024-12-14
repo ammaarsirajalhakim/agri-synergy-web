@@ -9,7 +9,7 @@ import axios from "axios";
 const ProductDetail = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  // const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
   const [quantity, setQuantity] = useState(1);
   // const [activeCategory, setActiveCategory] = useState("");
@@ -196,12 +196,6 @@ const ProductDetail = () => {
             </div>
             <button className="add-to-cart-button" onClick={addToCart}>
               <i className="fas fa-shopping-cart"></i> Add to cart
-            </button>
-            <button
-              className="add-to-buy-button"
-              onClick={() => navigate("/checkout")}
-            >
-              <i className="fa-solid fa-bag-shopping"></i> buy
             </button>
           </div>
         </div>

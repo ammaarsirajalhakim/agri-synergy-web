@@ -52,7 +52,7 @@ const validateFields = {
     if (!Array.isArray(data)) {
       return {
         isValid: false,
-        error: RESPONSE.createError(400, "Data harus berupa array"),
+        error: RESPONSE.createError(400, "Data yang anda masukkan tidak valid"),
       };
     }
 
@@ -100,20 +100,42 @@ module.exports = async (req, res) => {
       return res.status(validation.error.code).json(validation.error);
     }
 
-    const rows = await Promise.all(
-      validation.data.map((item) =>
-        req.db.promise().query("INSERT INTO memesan SET ?", item)
-      )
-    );
+    const connection = await req.db.promise().getConnection();
+    try {
+      await connection.beginTransaction();
 
-    return res
-      .status(200)
-      .json(
-        RESPONSE.createSuccess(
-          rows.map((row) => row[0]),
-          "Data pemesanan berhasil ditambahkan"
+      const rows = await Promise.all(
+        validation.data.map((item) =>
+          connection.query("INSERT INTO memesan SET ?", item)
         )
       );
+
+      // Hapus data dari tabel keranjang
+      await Promise.all(
+        validation.data.map((item) =>
+          connection.query("DELETE FROM keranjang WHERE id_produk = ? AND id_user = ?", [item.id_produk, item.id_user])
+        )
+      );
+
+      await connection.commit();
+
+      return res
+        .status(200)
+        .json(
+          RESPONSE.createSuccess(
+            rows.map((row) => row[0]),
+            "Data pemesanan berhasil ditambahkan"
+          )
+        );
+    } catch (err) {
+      await connection.rollback();
+      console.error(err);
+      return res
+        .status(500)
+        .json(RESPONSE.createError(500, "Terjadi kesalahan pada server"));
+    } finally {
+      connection.release();
+    }
   } catch (err) {
     console.error(err);
     return res
