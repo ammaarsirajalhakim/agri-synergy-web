@@ -84,8 +84,7 @@ const getFormattedTimestamp = () => {
       
       let query = "INSERT INTO komunitas (id_user, deskripsi";
       let values = [validation.data.id_user, validation.data.deskripsi];
-      
-      // Tambahkan gambar ke query hanya jika ada
+
       if (validation.data.gambar) {
         query += ", gambar";
         values.push(validation.data.gambar);

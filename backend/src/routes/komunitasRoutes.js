@@ -9,6 +9,7 @@ const {
 
 const createKomunitas = require("../controllers/komunitas/create");
 const readKomunitas = require("../controllers/komunitas/read");
+const updateKomunitas = require("../controllers/komunitas/update");
 
 router.use("/fileKomunitas", validateStaticFile, staticFileMiddleware);
 
@@ -25,11 +26,13 @@ router.use("/fileKomunitas/*", (req, res) => {
   });
 });
 
-// router.post("/komunitas", passport.authenticate('jwt', { session: false }), createKomunitas);
+// router.post("/komunitas", passport.authenticate('jwt', { session: false }), uploadMiddleware, createKomunitas);
 // router.get("/komunitas", passport.authenticate("jwt", { session: false }), readKomunitas);
+// router.put("/komunitas/:id_komunitas", passport.authenticate("jwt", { session: false }), uploadMiddleware, updateKomunitas);
 
 router.post("/komunitas", uploadMiddleware, createKomunitas);
 router.get("/komunitas", readKomunitas);
+router.put("/komunitas/:id_komunitas", uploadMiddleware, updateKomunitas);
 
 
 module.exports = router;
