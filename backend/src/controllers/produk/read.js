@@ -19,12 +19,10 @@ module.exports = async (req, res) => {
   const getSuccessResponse = (rows, total) => ({
     success: rows.length > 0,
     code: 200,
-    message:
-      rows.length > 0
-        ? "Data produk berhasil diambil"
-        : "Data produk tidak tersedia",
+    message: rows.length > 0 
+      ? "Data produk berhasil diambil" 
+      : "Data produk tidak tersedia",
     data: rows,
-    // .map(({ id_kategori, ...row }) => row)
     pagination: {
       total: total,
       per_page: limit,
@@ -49,41 +47,48 @@ module.exports = async (req, res) => {
   });
 
   try {
-    const [countResult] = await req.db
-      .promise()
-      .query("SELECT COUNT(*) AS total FROM produk");
+
+    const [countResult] = await req.db.promise().query(`
+      SELECT COUNT(*) AS total 
+      FROM produk p
+      JOIN kategori k ON p.id_kategori = k.id_kategori
+    `);
     const total = countResult[0].total;
 
-    const [rows] = await req.db.promise().query(
-      `SELECT 
-            produk.*, 
-            kategori.nama AS nama_kategori, 
-            DATE_FORMAT(produk.tanggal_diposting, '%Y-%m-%d') AS tanggal_diposting,
-            ROUND(AVG(review.rating), 1) AS rata_rating,
-            GROUP_CONCAT(review.id_user SEPARATOR ', ') AS user_komen,
-            GROUP_CONCAT(review.koment SEPARATOR ', ') AS komentar,
-            GROUP_CONCAT(DATE_FORMAT(review.tgl_masuk, '%Y-%m-%d')) AS tanggal_ulasan
-        FROM 
-            produk 
-        LEFT JOIN 
-            kategori 
-        ON 
-            produk.id_kategori = kategori.id_kategori
-        LEFT JOIN 
-            review 
-        ON 
-            produk.id_produk = review.id_produk
-        WHERE 
-            produk.id_produk IS NOT NULL
-        GROUP BY 
-            produk.id_produk
-        LIMIT ? OFFSET ?
-        `,
-      [limit, offset]
-    );
-    
+    const [produk] = await req.db.promise().query(`
+      SELECT 
+        p.*,
+        k.nama AS nama_kategori
+      FROM produk p
+      JOIN kategori k ON p.id_kategori = k.id_kategori
+      LIMIT ? OFFSET ?
+    `, [limit, offset]);
 
-    const responseData = getSuccessResponse(rows, total);
+    const produkWithReviews = await Promise.all(
+      produk.map(async (prod) => {
+        const [reviews] = await req.db.promise().query(
+          `
+            SELECT 
+              r.id_review,
+              r.id_user,
+              r.rating,
+              r.koment AS komentar,
+              u.nama AS nama_user
+            FROM review r
+            JOIN user u ON r.id_user = u.id_user
+            WHERE r.id_produk = ?
+          `,
+          [prod.id_produk]
+        );
+
+        return {
+          ...prod,
+          reviews,
+        };
+      })
+    );
+
+    const responseData = getSuccessResponse(produkWithReviews, total);
     return res.status(responseData.code).json(responseData);
   } catch (err) {
     console.error(err);
