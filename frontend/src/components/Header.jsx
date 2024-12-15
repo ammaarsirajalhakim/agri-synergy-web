@@ -64,20 +64,20 @@ const Header = () => {
   }, []);
 
   useEffect(() => {
-      const handleScroll = () => {
-        const navbar = document.querySelector(".nav");
-        if (navbar) {
-          if (window.scrollY > 0) {
-            navbar.classList.add("scrolled");
-          } else {
-            navbar.classList.remove("scrolled");
-          }
+    const handleScroll = () => {
+      const navbar = document.querySelector(".nav");
+      if (navbar) {
+        if (window.scrollY > 0) {
+          navbar.classList.add("scrolled");
+        } else {
+          navbar.classList.remove("scrolled");
         }
-      };
-  
-      window.addEventListener("scroll", handleScroll);
-      return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <div className="nav" id="navbar">
@@ -104,25 +104,27 @@ const Header = () => {
               </span>
             </a>
             {dropdownVisible && (
-                <div className="unique-dropdown-menu">
-                  <a href="#" onClick={() => navigate("/calendar")}>
-                    KALENDER
-                  </a>
-                  <a href="#" onClick={() => navigate("/petalahan")}>
-                    PETA LAHAN
-                  </a>
-                  {(role === "petani" || role === "admin" || role === "tengkulak") &&(
-                  <a href="#" onClick={() => navigate("/community")}>
-                    FORUM KOMUNITAS
-                  </a>
-                  )}
-                  {(role === "admin" || role === "tengkulak") && (
-                    <a href="#" onClick={() => navigate("/kategori")}>
-                      {role === "admin" ? "Admin Page" : "Dropshipper Page"}
-                    </a>
-                  )}
-                </div>
-              )}
+              <div className="unique-dropdown-menu">
+                {role === "pembeli" && (
+                  <a href="#" onClick={() => navigate("/orderhistory")}>Order History</a>
+                )}
+
+                {(role === "petani" || role === "admin" || role === "tengkulak") && (
+                  <>
+                    <a href="#" onClick={() => navigate("/calendar")}>KALENDER</a>
+                    <a href="#" onClick={() => navigate("/petalahan")}>PETA LAHAN</a>
+                    <a href="#" onClick={() => navigate("/community")}>FORUM KOMUNITAS</a>
+
+                    {(role === "admin" || role === "tengkulak") && (
+                      <a href="#" onClick={() => navigate("/kategori")}>
+                        {role === "admin" ? "Admin Page" : "Dropshipper Page"}
+                      </a>
+                    )}
+                  </>
+                )}
+              </div>
+            )}
+
           </li>
         </ul>
 

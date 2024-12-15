@@ -187,24 +187,26 @@ const HomePage = () => {
               </a>
               {dropdownVisible && (
                 <div className="unique-dropdown-menu">
-                  <a href="#" onClick={() => navigate("/calendar")}>
-                    KALENDER
-                  </a>
-                  <a href="#" onClick={() => navigate("/petalahan")}>
-                    PETA LAHAN
-                  </a>
-                  {(role === "petani" || role === "admin" || role === "tengkulak") &&(
-                  <a href="#" onClick={() => navigate("/community")}>
-                    FORUM KOMUNITAS
-                  </a>
+                  {role === "pembeli" && (
+                    <a href="#" onClick={() => navigate("/orderhistory")}>Order History</a>
                   )}
-                  {(role === "admin" || role === "tengkulak") && (
-                    <a href="#" onClick={() => navigate("/kategori")}>
-                      {role === "admin" ? "Admin Page" : "Dropshipper Page"}
-                    </a>
+
+                  {(role === "petani" || role === "admin" || role === "tengkulak") && (
+                    <>
+                      <a href="#" onClick={() => navigate("/calendar")}>KALENDER</a>
+                      <a href="#" onClick={() => navigate("/petalahan")}>PETA LAHAN</a>
+                      <a href="#" onClick={() => navigate("/community")}>FORUM KOMUNITAS</a>
+
+                      {(role === "admin" || role === "tengkulak") && (
+                        <a href="#" onClick={() => navigate("/kategori")}>
+                          {role === "admin" ? "Admin Page" : "Dropshipper Page"}
+                        </a>
+                      )}
+                    </>
                   )}
                 </div>
               )}
+
             </li>
           </ul>
           <div className="icon">
@@ -218,7 +220,7 @@ const HomePage = () => {
                 <span className="badge">{cartItemCount}</span>
               )}
             </div>
-          <div className="icon-wrapper" onClick={toggleNotificationDropdown}>
+            <div className="icon-wrapper" onClick={toggleNotificationDropdown}>
               <img src={notification} alt="Notification Icon" />
               {cartNotivCount > 0 && <span className="badge">{cartNotivCount}</span>}
               {isNotificationOpen && (
