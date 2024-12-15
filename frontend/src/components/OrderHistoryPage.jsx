@@ -41,6 +41,8 @@
 
 import React, { useState, useEffect } from "react";
 import "../css/OrderHistoryPage.css";
+import Header from "./Header";
+import Footer from "./footer";
 
 function OrderHistoryPage() {
   const [orders, setOrders] = useState([]);
@@ -55,6 +57,8 @@ function OrderHistoryPage() {
   }, []);
 
   return (
+    <>
+    <Header />
     <div className="order-history-page">
       <h2 className="dropshipper-page-h2">Order History</h2>
       <div className="order-history-cards">
@@ -118,6 +122,8 @@ function OrderHistoryPage() {
         )}
       </div>
     </div>
+    <Footer />
+    </>
   );
 }
 

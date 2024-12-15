@@ -9,6 +9,7 @@ import notification from "../assets/header/notificationicon.png";
 
 const Header = () => {
   const navigate = useNavigate();
+  const [categories, setCategories] = useState([]);
 
   // State untuk menu dan dropdown
   const [dropdownVisible, setDropdownVisible] = useState(false);
@@ -44,6 +45,28 @@ const Header = () => {
     }
   };
 
+  // fetch kategori
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get("http://localhost:3000/api/kategori", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+        },
+      });
+
+      if (response.data?.data) {
+        setCategories(response.data.data);
+      }
+
+      const storedRole = localStorage.getItem("role");
+      if (storedRole) {
+        setRole(storedRole);
+      }
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
+
   // Fetch data notifikasi
   const fetchNotifications = async () => {
     try {
@@ -61,6 +84,7 @@ const Header = () => {
   useEffect(() => {
     fetchCartItems();
     fetchNotifications();
+    fetchCategories();
   }, []);
 
   useEffect(() => {
@@ -108,7 +132,6 @@ const Header = () => {
                 {role === "pembeli" && (
                   <a href="#" onClick={() => navigate("/orderhistory")}>Order History</a>
                 )}
-
                 {(role === "petani" || role === "admin" || role === "tengkulak") && (
                   <>
                     <a href="#" onClick={() => navigate("/calendar")}>KALENDER</a>
