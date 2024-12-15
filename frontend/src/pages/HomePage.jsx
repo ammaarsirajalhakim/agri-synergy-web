@@ -193,9 +193,11 @@ const HomePage = () => {
                   <a href="#" onClick={() => navigate("/petalahan")}>
                     PETA LAHAN
                   </a>
+                  {(role === "petani" || role === "admin" || role === "tengkulak") &&(
                   <a href="#" onClick={() => navigate("/community")}>
                     FORUM KOMUNITAS
                   </a>
+                  )}
                   {(role === "admin" || role === "tengkulak") && (
                     <a href="#" onClick={() => navigate("/kategori")}>
                       {role === "admin" ? "Admin Page" : "Dropshipper Page"}

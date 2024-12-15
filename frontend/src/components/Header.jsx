@@ -104,17 +104,25 @@ const Header = () => {
               </span>
             </a>
             {dropdownVisible && (
-              <div className="dropdown-menu">
-                <a href="#" onClick={() => navigate("/calendar")}>KALENDER</a>
-                <a href="#" onClick={() => navigate("/petalahan")}>PETA LAHAN</a>
-                <a href="#" onClick={() => navigate("/community")}>FORUM KOMUNITAS</a>
-                {(role === "admin" || role === "petani") && (
-                  <a href="#" onClick={() => navigate("/kategori")}>
-                    {role === "admin" ? "Admin Page" : "Dropshipper Page"}
+                <div className="unique-dropdown-menu">
+                  <a href="#" onClick={() => navigate("/calendar")}>
+                    KALENDER
                   </a>
-                )}
-              </div>
-            )}
+                  <a href="#" onClick={() => navigate("/petalahan")}>
+                    PETA LAHAN
+                  </a>
+                  {(role === "petani" || role === "admin" || role === "tengkulak") &&(
+                  <a href="#" onClick={() => navigate("/community")}>
+                    FORUM KOMUNITAS
+                  </a>
+                  )}
+                  {(role === "admin" || role === "tengkulak") && (
+                    <a href="#" onClick={() => navigate("/kategori")}>
+                      {role === "admin" ? "Admin Page" : "Dropshipper Page"}
+                    </a>
+                  )}
+                </div>
+              )}
           </li>
         </ul>
 
