@@ -164,6 +164,37 @@ INSERT INTO `keranjang` VALUES (3,1,1,1,20000.00);
 UNLOCK TABLES;
 
 --
+-- Table structure for table `komentator`
+--
+
+DROP TABLE IF EXISTS `komentator`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `komentator` (
+  `id_komentator` int NOT NULL AUTO_INCREMENT,
+  `id_user` int NOT NULL,
+  `id_komunitas` int NOT NULL,
+  `deskripsi` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `type` enum('like','dislike') DEFAULT NULL,
+  PRIMARY KEY (`id_komentator`),
+  KEY `id_user` (`id_user`),
+  KEY `id_komunitas` (`id_komunitas`),
+  CONSTRAINT `komentator_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`) ON DELETE CASCADE,
+  CONSTRAINT `komentator_ibfk_2` FOREIGN KEY (`id_komunitas`) REFERENCES `komunitas` (`id_komunitas`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `komentator`
+--
+
+LOCK TABLES `komentator` WRITE;
+/*!40000 ALTER TABLE `komentator` DISABLE KEYS */;
+INSERT INTO `komentator` VALUES (1,3,1,'Lorem ipsum dolor sit amet consectetur adipiscing elit quisque, euismod felis nascetur arcu ',NULL),(2,2,1,'','dislike');
+/*!40000 ALTER TABLE `komentator` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `komunitas`
 --
 
@@ -173,14 +204,12 @@ DROP TABLE IF EXISTS `komunitas`;
 CREATE TABLE `komunitas` (
   `id_komunitas` int NOT NULL AUTO_INCREMENT,
   `id_user` int NOT NULL,
-  `image` varchar(255) NOT NULL,
+  `gambar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `deskripsi` text NOT NULL,
-  `status` enum('like','dislike') DEFAULT NULL,
-  `komen` text NOT NULL,
   PRIMARY KEY (`id_komunitas`),
   KEY `id_user` (`id_user`),
   CONSTRAINT `komunitas_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -189,6 +218,7 @@ CREATE TABLE `komunitas` (
 
 LOCK TABLES `komunitas` WRITE;
 /*!40000 ALTER TABLE `komunitas` DISABLE KEYS */;
+INSERT INTO `komunitas` VALUES (1,1,'1734272687057.jpg','Lorem ipsum dolor sit amet consectetur adipiscing elit quisque, euismod felis nascetur arcu');
 /*!40000 ALTER TABLE `komunitas` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -459,4 +489,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-12-14  8:29:19
+-- Dump completed on 2024-12-15 22:20:39
