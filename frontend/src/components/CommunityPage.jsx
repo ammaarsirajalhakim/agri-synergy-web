@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from "axios";
 import Header from './Header';
 import Footer from './footer';
 import '../css/CommunityPage.css';
 
 const CommunityPage = () => {
     const [image, setImage] = useState(null);
-    const navigate = useNavigate(); 
+    const [komunitas, setKomunitas] = useState([]);
+    const navigate = useNavigate();
 
     // Fungsi untuk menangani perubahan pada input gambar
     const handleImageChange = (event) => {
@@ -15,6 +17,37 @@ const CommunityPage = () => {
             setImage(URL.createObjectURL(selectedImage));
         }
     };
+
+    const checkAuthentication = async () => {
+        const token = localStorage.getItem("jwtToken");
+        if (!token) {
+            navigate("/");
+            return;
+        }
+
+        try {
+            axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+            const response = await axios.get(`http://localhost:3000/api/komunitas`);
+
+            if (response.status === 200 && response.data?.data) {
+                setKomunitas(response.data.data);
+            } else if (response.status === 401 || response.status === 403) {
+                localStorage.removeItem("jwtToken");
+                navigate("/");
+            }
+        } catch (error) {
+            console.error("Error fetching data:", error);
+            if (error.response?.status === 401 || error.response?.status === 403) {
+                localStorage.removeItem("jwtToken");
+                navigate("/");
+            }
+        }
+    };
+
+    useEffect(() => {
+        checkAuthentication();
+    }, []);
 
     return (
         <div className="community-page">
@@ -26,8 +59,8 @@ const CommunityPage = () => {
                     <button className="sidebar-button active">
                         <i className="fas fa-users"></i> Community
                     </button>
-                    <button 
-                        className="sidebar-button" 
+                    <button
+                        className="sidebar-button"
                         onClick={() => navigate('/your-threads')}
                     >
                         <i className="fas fa-hashtag"></i> Your Threads
@@ -35,7 +68,7 @@ const CommunityPage = () => {
                     <button className="sidebar-button" onClick={() => navigate('/saved')}>
                         <i className="fas fa-bookmark"></i> Saved
                     </button>
-                    <button className="sidebar-button"onClick={() => navigate('/login')}>
+                    <button className="sidebar-button" onClick={() => navigate('/login')}>
                         <i className="fas fa-sign-out-alt"></i> Logout
                     </button>
                 </div>
@@ -45,8 +78,7 @@ const CommunityPage = () => {
                     <div className="share-form">
                         <input type="text" placeholder="Apa yang ingin Anda diskusikan?" />
                         <button className="share-button">Bagikan</button>
-                        
-                        {/* Input untuk gambar */}
+
                         <input
                             type="file"
                             accept="image/*"
@@ -54,7 +86,6 @@ const CommunityPage = () => {
                             className="image-input"
                         />
 
-                        {/* Menampilkan preview gambar */}
                         {image && (
                             <div className="image-preview">
                                 <img src={image} alt="Preview Gambar" />
@@ -62,41 +93,31 @@ const CommunityPage = () => {
                         )}
                     </div>
 
-                    {/* Post Forum */}
-                    <div className="post">
-                        <div className="post-header">
-                            <p><strong>Yanto, Petani Jagung</strong></p>
-                            <span>1h ago</span>
-                        </div>
-                        <p>Forum ini sangat membantu saya dalam berbagai pengalaman dengan petani lain...</p>
-                        <div className="post-actions">
-                            <button className="like-button">
-                                <i className="fas fa-thumbs-up"></i> Like
-                            </button>
-                            <button className="unlike-button">
-                                <i className="fas fa-thumbs-down"></i> Unlike
-                            </button>
-                        </div>
-                    </div>
-
-                    <div className="post">
-                        <div className="post-header">
-                            <p><strong>Siti, Distributor Hasil Pertanian</strong></p>
-                            <span>1h ago</span>
-                        </div>
-                        <p>Berkat forum ini, saya lebih mudah bertanya tentang pengelolaan hasil pertanian...</p>
-                        <div className="post-actions">
-                            <button className="like-button">
-                                <i className="fas fa-thumbs-up"></i> Like
-                            </button>
-                            <button className="unlike-button">
-                                <i className="fas fa-thumbs-down"></i> Unlike
-                            </button>
-                        </div>
+                    <div className="post-container">
+                        {komunitas.length > 0 ? (
+                            komunitas.map((item, index) => (
+                                <div className="post" key={index}>
+                                    <div className="post-header">
+                                        <p><strong>{item.id_user}</strong></p>
+                                        <span>1h ago</span>
+                                    </div>
+                                    <p>{item.deskripsi}</p>
+                                    <div className="post-actions">
+                                        <button className="like-button">
+                                            <i className="fas fa-thumbs-up"></i> Like
+                                        </button>
+                                        <button className="unlike-button">
+                                            <i className="fas fa-thumbs-down"></i> Unlike
+                                        </button>
+                                    </div>
+                                </div>
+                            ))
+                        ) : (
+                            <p>Belum ada komunitas yang tersedia.</p>
+                        )}
                     </div>
                 </div>
 
-                {/* Sidebar Kanan */}
                 <div className="sidebar-right">
                     <button className="login-button" onClick={() => navigate('/login')}>Login</button>
                     <div className="community-list">
@@ -110,7 +131,7 @@ const CommunityPage = () => {
                             <li>Devi Anggraini</li>
                         </ul>
                     </div>
-                    
+
                     <div className="trending-topics">
                         <h3>Trending Topik</h3>
                         <ul>
