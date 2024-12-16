@@ -11,17 +11,15 @@ const ProductPage = () => {
   const [activeCategory, setActiveCategory] = useState("");
   const navigate = useNavigate();
 
-  const calculateAverageRating = (ratingString) => {
+  const calculateAverageRating = (reviews) => {
+    if (!reviews || reviews.length === 0) return 0;
 
-    if (!ratingString) return 0;
-
-    const ratings = ratingString.split(',')
-      .map(rating => parseFloat(rating.trim()))
-      .filter(rating => !isNaN(rating));
+    const ratings = reviews.map((review) => review.rating);
 
     if (ratings.length === 0) return 0;
 
-    const averageRating = ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length;
+    const averageRating =
+      ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length;
     return Math.round(averageRating);
   };
 
@@ -114,10 +112,12 @@ const ProductPage = () => {
                   </div>
                   <h3>{product.nama}</h3>
                   <div className="rating">
-                    {"⭐".repeat(calculateAverageRating(product.rata_rating))}
+                    {"⭐".repeat(calculateAverageRating(product.reviews))}
                   </div>
                   <p className="product-description1">{product.deskripsi}</p>
-                  <p>{`Rp ${Number(product.harga).toLocaleString('id-ID')}. -`}</p>
+                  <p>{`Rp ${Number(product.harga).toLocaleString(
+                    "id-ID"
+                  )}. -`}</p>
                   <Link to={`/detail/${product.id_produk}`}>
                     <button>Detail</button>
                   </Link>

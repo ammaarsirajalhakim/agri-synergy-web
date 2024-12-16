@@ -8,7 +8,7 @@ const ChatSidebar = ({ users, onLogout }) => {
   return (
     <div className='chat-container'>
       <div className="chat-header sidebar-chat">
-        <p>Your Chat</p>
+        <p>Parah Ahli</p>
         <div className="user-list">
           {users.map(user => (
             <div key={user.id} className="chat-item">
