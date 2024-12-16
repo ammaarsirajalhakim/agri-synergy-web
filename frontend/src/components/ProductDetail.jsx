@@ -14,18 +14,14 @@ const ProductDetail = () => {
   const [quantity, setQuantity] = useState(1);
   // const [activeCategory, setActiveCategory] = useState("");
 
-  const calculateAverageRating = (ratingString) => {
-    if (!ratingString) return 0;
-
-    const ratings = ratingString
-      .split(",")
-      .map((rating) => parseFloat(rating.trim()))
-      .filter((rating) => !isNaN(rating));
-
+  const calculateAverageRating = (reviews) => {
+    if (!reviews || reviews.length === 0) return 0;
+  
+    const ratings = reviews.map(review => review.rating);
+    
     if (ratings.length === 0) return 0;
-
-    const averageRating =
-      ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length;
+  
+    const averageRating = ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length;
     return Math.round(averageRating);
   };
 
@@ -167,13 +163,9 @@ const ProductDetail = () => {
             ).toLocaleString("id-ID")}. -`}</h2>
             <p className="product-stock">({product.kuantitas} stock)</p>
             <div className="product-rating">
-              {"⭐".repeat(calculateAverageRating(product.rata_rating))}
+              {"⭐".repeat(calculateAverageRating(product.reviews))}
               <span>
-                (
-                {product.rata_rating
-                  ? product.rata_rating.split(",").length
-                  : 0}{" "}
-                reviews)
+              ({product.reviews.length} reviews)
               </span>
             </div>
             <p className="product-description">{product.deskripsi}</p>
