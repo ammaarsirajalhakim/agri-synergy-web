@@ -16,6 +16,7 @@ const kategoriRoutes = require("./routes/kategoriRoutes");
 const reviewRoutes = require("./routes/reviewRoutes");
 const komunitasRoutes = require("./routes/komunitasRoutes");
 const komentatorRoutes = require("./routes/komentatorRoutes");
+const sendRoutes = require("./routes/sendRoutes");
 
 const loginRoutes = require("./routes/loginRoutes");
 
@@ -42,6 +43,7 @@ apiRoutes.use(kategoriRoutes);
 apiRoutes.use(reviewRoutes);
 apiRoutes.use(komunitasRoutes);
 apiRoutes.use(komentatorRoutes);
+apiRoutes.use(sendRoutes);
 
 app.use("/api", apiRoutes);
 

@@ -23,8 +23,8 @@ router.use('/fileUsers/*', (req, res) => {
   });
 });
 
-// router.get("/users/:id_user", readUser);
-router.get("/users", readUser);
+router.get("/users/:id_user", readUser);
+// router.get("/users", readUser);
 router.post("/users", createUser);
 router.put("/users/:id_user", uploadMiddleware, updateUser);
 router.delete("/users/:id_user", deleleteUser);
