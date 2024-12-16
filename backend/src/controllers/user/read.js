@@ -62,7 +62,10 @@ module.exports = async (req, res) => {
 
     const [rows] = await req.db
       .promise()
-      .query("SELECT * FROM user WHERE id_user = ?", [idUser]);
+      .query(idUser === "all"
+        ? "SELECT * FROM user WHERE role = 'petani'"
+        : "SELECT * FROM user WHERE id_user = ?",
+      idUser === "all" ? [] : [idUser]);
 
     const responseData = getSuccessResponse(rows);
     return res.status(responseData.code).json(responseData);

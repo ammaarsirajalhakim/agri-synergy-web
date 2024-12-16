@@ -9,6 +9,7 @@ const CommunityPage = () => {
     const [image, setImage] = useState(null);
     const [komunitas, setKomunitas] = useState([]);
     const navigate = useNavigate();
+    const [petaniList, setPetaniList] = useState([]);
 
     // Fungsi untuk menangani perubahan pada input gambar
     const handleImageChange = (event) => {
@@ -18,6 +19,7 @@ const CommunityPage = () => {
         }
     };
 
+    // Fungsi untuk memeriksa autentikasi dan mengambil data komunitas
     const checkAuthentication = async () => {
         const token = localStorage.getItem("jwtToken");
         if (!token) {
@@ -27,7 +29,6 @@ const CommunityPage = () => {
 
         try {
             axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-
             const response = await axios.get(`http://localhost:3000/api/komunitas`);
 
             if (response.status === 200 && response.data?.data) {
@@ -45,8 +46,33 @@ const CommunityPage = () => {
         }
     };
 
+    const fetchPetani = async () => {
+        try {
+          const response = await axios.get("http://localhost:3000/api/users/:id_users", {
+            headers: { id_user: "all" },
+          });
+      
+          if (response.status === 200) {
+            const data = response.data?.data;
+            
+            if (Array.isArray(data)) {
+              const petaniData = data.filter((user) => user.role === "petani");
+              setPetaniList(petaniData);
+            } else {
+              console.error("Unexpected data format:", data);
+            }
+          } else {
+            console.error(`Unexpected response status: ${response.status}`);
+          }
+        } catch (error) {
+          console.error("Error fetching petani data:", error.message);
+        }
+      };
+      
+
     useEffect(() => {
         checkAuthentication();
+        fetchPetani();
     }, []);
 
     return (
@@ -98,9 +124,17 @@ const CommunityPage = () => {
                             komunitas.map((item, index) => (
                                 <div className="post" key={index}>
                                     <div className="post-header">
-                                        <p><strong>{item.id_user}</strong></p>
+                                        <p>
+                                            <strong>
+                                                {item.nama_user}, {item.role_user}
+                                            </strong>
+                                        </p>
                                         <span>1h ago</span>
                                     </div>
+                                    <img
+                                        src={`http://localhost:3000/api/fileKomunitas/${item.gambar}`}
+                                        alt="imgKomunitas"
+                                    />
                                     <p>{item.deskripsi}</p>
                                     <div className="post-actions">
                                         <button className="like-button">
@@ -118,17 +152,19 @@ const CommunityPage = () => {
                     </div>
                 </div>
 
+                {/* Sidebar Kanan */}
                 <div className="sidebar-right">
                     <button className="login-button" onClick={() => navigate('/login')}>Login</button>
                     <div className="community-list">
                         <h3>Anggota Komunitas</h3>
                         <ul>
-                            <li>Yanto Pratama</li>
-                            <li>Siti Marlina</li>
-                            <li>Rudi Santoso</li>
-                            <li>Wahyu Nugroho</li>
-                            <li>Fifi Rahayu</li>
-                            <li>Devi Anggraini</li>
+                            {petaniList.length > 0 ? (
+                                petaniList.map((petani, index) => (
+                                    <li key={index}>{petani.nama}</li>
+                                ))
+                            ) : (
+                                <li>Belum ada petani terdaftar</li>
+                            )}
                         </ul>
                     </div>
 

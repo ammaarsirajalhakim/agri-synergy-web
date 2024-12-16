@@ -44,34 +44,17 @@ module.exports = async (req, res) => {
   });
 
   try {
-    const [komunitas] = await req.db.promise().query("SELECT * FROM komunitas");
+    // Query komunitas dengan JOIN untuk mengambil nama_user dan role
+    const [komunitas] = await req.db.promise().query(`
+      SELECT 
+        k.*, 
+        u.nama AS nama_user, 
+        u.role AS role_user 
+      FROM komunitas k
+      LEFT JOIN user u ON k.id_user = u.id_user
+    `);
 
-    const komunitasWithKomentator = await Promise.all(
-      komunitas.map(async (kom) => {
-        const [komentator] = await req.db.promise().query(
-          `
-            SELECT 
-              kk.id_komentator,
-              kk.id_user,
-              u.nama AS nama_user,
-              kk.deskripsi,
-              kk.type
-            FROM komentator kk
-            JOIN user u ON kk.id_user = u.id_user
-            WHERE kk.id_komunitas = ?
-            LIMIT 3
-          `,
-          [kom.id_komunitas]
-        );
-
-        return {
-          ...kom,
-          komentator,
-        };
-      })
-    );
-
-    const responseData = getSuccessResponse(komunitasWithKomentator);
+    const responseData = getSuccessResponse(komunitas);
     return res.status(responseData.code).json(responseData);
   } catch (err) {
     console.error(err);
