@@ -30,3 +30,4 @@ router.put("/users/:id_user", uploadMiddleware, updateUser);
 router.delete("/users/:id_user", deleleteUser);
 
 module.exports = router;
+
