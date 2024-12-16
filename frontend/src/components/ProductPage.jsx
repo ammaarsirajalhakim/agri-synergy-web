@@ -13,12 +13,13 @@ const ProductPage = () => {
 
   const calculateAverageRating = (reviews) => {
     if (!reviews || reviews.length === 0) return 0;
-  
-    const ratings = reviews.map(review => review.rating);
-    
+
+    const ratings = reviews.map((review) => review.rating);
+
     if (ratings.length === 0) return 0;
-  
-    const averageRating = ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length;
+
+    const averageRating =
+      ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length;
     return Math.round(averageRating);
   };
 
@@ -114,7 +115,9 @@ const ProductPage = () => {
                     {"⭐".repeat(calculateAverageRating(product.reviews))}
                   </div>
                   <p className="product-description1">{product.deskripsi}</p>
-                  <p>{`Rp ${Number(product.harga).toLocaleString('id-ID')}. -`}</p>
+                  <p>{`Rp ${Number(product.harga).toLocaleString(
+                    "id-ID"
+                  )}. -`}</p>
                   <Link to={`/detail/${product.id_produk}`}>
                     <button>Detail</button>
                   </Link>
