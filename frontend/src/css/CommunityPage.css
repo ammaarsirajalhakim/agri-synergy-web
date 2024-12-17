@@ -183,3 +183,15 @@ body {
     background-color: #388E3C; /* Warna untuk tombol aktif */
     color: #fff;
 }
+
+.like-button.liked {
+  color: blue; /* Mengubah warna tombol Like menjadi biru */
+}
+
+.dislike-button.disliked {
+  color: red; /* Mengubah warna tombol Dislike menjadi merah */
+}
+
+.like-button:hover, .dislike-button:hover {
+  background-color: #e0e0e0;
+}

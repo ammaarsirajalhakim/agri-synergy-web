@@ -13,7 +13,7 @@ const CommunityPage = () => {
   const [petaniList, setPetaniList] = useState([]);
 
   const handleAddKomunitas = async () => {
-    const deskripsi = document.getElementById("deskripsi").value;
+    let deskripsi = document.getElementById("deskripsi").value;
     const gambar = document.getElementById("gambar").files[0];
     const userId = localStorage.getItem("id_user");
 
@@ -25,9 +25,17 @@ const CommunityPage = () => {
       return;
     }
 
+    let topik = "";
+    const topikMatch = deskripsi.match(/#\S+/);
+    if (topikMatch) {
+      topik = topikMatch[0];
+      deskripsi = deskripsi.replace(topik, "").trim();
+    }
+
     const formData = new FormData();
     formData.append("id_user", userId);
     formData.append("deskripsi", deskripsi);
+    formData.append("topic", topik);
     formData.append("gambar", gambar);
 
     try {
@@ -116,6 +124,68 @@ const CommunityPage = () => {
     }
   };
 
+  const handleLike = async (id_komunitas) => {
+    console.log("ID yang diklik:", id_komunitas);
+    if (!id_komunitas) {
+      toast.error("ID komunitas tidak valid!");
+      return;
+    }
+    try {
+      const response = await axios.put(
+        `http://localhost:3000/api/komunitas/${id_komunitas}`,
+        { like_count: 1 },
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("jwtToken")}` },
+        }
+      );
+      console.log("Response:", response.data);
+      if (response.status === 200) {
+        toast.success("Like berhasil!", { autoClose: 1500 });
+        setKomunitas((prevKomunitas) =>
+          prevKomunitas.map((item) =>
+            item.id_komunitas === id_komunitas
+              ? { ...item, like_count: item.like_count + 1 }
+              : item
+          )
+        );
+      }
+    } catch (err) {
+      console.error("Error:", err.response?.data || err.message);
+      toast.error("Gagal memberi like", { autoClose: 1500 });
+    }
+  };
+  
+  const handleDislike = async (id_komunitas) => {
+    console.log("ID yang diklik:", id_komunitas);
+    if (!id_komunitas) {
+      toast.error("ID komunitas tidak valid!");
+      return;
+    }
+    try {
+      const response = await axios.put(
+        `http://localhost:3000/api/komunitas/${id_komunitas}`,
+        { dislike_count: 1 },
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("jwtToken")}` },
+        }
+      );
+      console.log("Response:", response.data);
+      if (response.status === 200) {
+        toast.success("Dislike berhasil!", { autoClose: 1500 });
+        setKomunitas((prevKomunitas) =>
+          prevKomunitas.map((item) =>
+            item.id_komunitas === id_komunitas
+              ? { ...item, dislike_count: item.dislike_count + 1 }
+              : item
+          )
+        );
+      }
+    } catch (err) {
+      console.error("Error:", err.response?.data || err.message);
+      toast.error("Gagal memberi dislike", { autoClose: 1500 });
+    }
+  };
+
   useEffect(() => {
     checkAuthentication();
     fetchPetani();
@@ -126,7 +196,6 @@ const CommunityPage = () => {
       <Header />
 
       <div className="content-container">
-        {/* Sidebar Kiri */}
         <div className="sidebar-left">
           <button className="sidebar-button active">
             <i className="fas fa-users"></i> Community
@@ -145,7 +214,6 @@ const CommunityPage = () => {
           </button>
         </div>
 
-        {/* Konten Utama */}
         <div className="main-content">
           <div className="share-form">
             <input type="text" placeholder="Apa yang ingin Anda diskusikan?" id="deskripsi" />
@@ -169,12 +237,10 @@ const CommunityPage = () => {
           <div className="post-container">
             {komunitas.length > 0 ? (
               komunitas.map((item, index) => (
-                <div className="post" key={index}>
+                <div className="post" key={item.id_komunitas}> {/* Ganti key menjadi id_komunitas */}
                   <div className="post-header">
                     <p>
-                      <strong>
-                        {item.nama_user}, {item.role_user}
-                      </strong>
+                      <strong>{item.nama_user}, {item.role_user}</strong>
                     </p>
                     <span>{item.waktu}</span>
                   </div><br />
@@ -186,10 +252,16 @@ const CommunityPage = () => {
                   <p><strong>{item.topic}</strong></p>
                   <br />
                   <div className="post-actions">
-                    <button className="like-button">
+                    <button
+                      className="like-button"
+                      onClick={() => handleLike(item.id_komunitas)} // Ganti id menjadi id_komunitas
+                    >
                       {item.like_count}<i className="fas fa-thumbs-up"></i> Like
                     </button>
-                    <button className="unlike-button">
+                    <button
+                      className="unlike-button"
+                      onClick={() => handleDislike(item.id_komunitas)} // Ganti id menjadi id_komunitas
+                    >
                       {item.dislike_count}<i className="fas fa-thumbs-down"></i> Unlike
                     </button>
                   </div>
@@ -198,10 +270,10 @@ const CommunityPage = () => {
             ) : (
               <p>Belum ada komunitas yang tersedia.</p>
             )}
+
           </div>
         </div>
 
-        {/* Sidebar Kanan */}
         <div className="sidebar-right">
           <button className="login-button" onClick={() => navigate('/login')}>Login</button>
           <div className="community-list">

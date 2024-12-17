@@ -213,6 +213,7 @@ CREATE TABLE `komunitas` (
   `dislike_count` int(11) DEFAULT 0,
   `deskripsi` text NOT NULL,
   `topic` varchar(225) NOT NULL,
+  `waktu` timestamp NOT NULL DEFAULT current_timestamp()
   PRIMARY KEY (`id_komunitas`),
   KEY `id_user` (`id_user`),
   CONSTRAINT `komunitas_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`)
@@ -226,8 +227,10 @@ CREATE TABLE `komunitas` (
 LOCK TABLES `komunitas` WRITE;
 /*!40000 ALTER TABLE `komunitas` DISABLE KEYS */;
 INSERT INTO `komunitas` (`id_komunitas`, `id_user`, `gambar`, `like_count`, `dislike_count`, `deskripsi`, `topic`, `waktu`) VALUES
-(1, 1, '1734272687057.jpg', 2, 0, 'Lorem ipsum dolor sit amet consectetur adipiscing elit quisque, euismod felis nascetur arcu', '#pertanian jagung', '2024-12-17 04:37:55'),
-(3, 2, '1734433790298.jpg', 0, 0, 'hai aku petani', '', '2024-12-17 11:09:50');/*!40000 ALTER TABLE `komunitas` ENABLE KEYS */;
+(1, 1, '1734272687057.jpg', 2, 1, 'Lorem ipsum dolor sit amet consectetur adipiscing elit quisque, euismod felis nascetur arcu', '#pertanian jagung', '2024-12-17 22:55:45'),
+(3, 2, '1734433790298.jpg', 4, 0, 'hai aku petani', '', '2024-12-17 23:00:14'),
+(4, 2, '1734440019929.png', 0, 0, 'aku bisa memanen 12ton jagung tahun ini dengan melakukan perawatan yang baik terhadap tanaman jagungku seperti menyiramnya secara rutin, memberinya pupuk serta pemberian pestisida organik secara berkala', '#menanam_jagung', '2024-12-17 12:53:39');
+/*!40000 ALTER TABLE `komunitas` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --

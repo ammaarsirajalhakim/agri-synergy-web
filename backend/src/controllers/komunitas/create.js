@@ -47,7 +47,7 @@ const validateFields = {
   },
 
   validateData: (req) => {
-    const { id_user, gambar, deskripsi } = req.body;
+    const { id_user, gambar, deskripsi, topic } = req.body;
     const requiredFields = {
       id_user,
       deskripsi,
@@ -63,10 +63,10 @@ const validateFields = {
         }),
       };
     }
-    
+
     return {
       isValid: true,
-      data: requiredFields,
+      data: { ...requiredFields, topic: topic || null },
     };
   },
 };
@@ -78,7 +78,7 @@ module.exports = async (req, res) => {
     if (!validation.isValid) {
       return res.status(validation.error.code).json(validation.error);
     }
-    
+
     let query = "INSERT INTO komunitas (id_user, deskripsi";
     const values = [validation.data.id_user, validation.data.deskripsi];
 
@@ -86,13 +86,17 @@ module.exports = async (req, res) => {
       query += ", gambar";
       values.push(validation.data.gambar);
     }
+
+    if (validation.data.topic) {
+      query += ", topic";
+      values.push(validation.data.topic);
+    }
     
     query += ") VALUES (?, ?";
-    if (validation.data.gambar) {
-      query += ", ?";
-    }
+    if (validation.data.gambar) query += ", ?";
+    if (validation.data.topic) query += ", ?";
     query += ")";
-    
+
     const [rows] = await req.db.promise().query(query, values);
 
     if (rows.affectedRows > 0) {
