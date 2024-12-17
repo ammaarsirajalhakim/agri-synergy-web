@@ -169,7 +169,7 @@ const Header = () => {
               {cartNotivCount > 0 && <span className="badge">{cartNotivCount}</span>}
               {isNotificationOpen && (
                 <div className="notification-dropdown">
-                  <div className="dropdown-header">Notifikasi</div>
+                  <div className="dropdown-header">Notifikasi Kalender</div>
                   {notifications.length > 0 ? (
                     notifications.map((kalender, index) => (
                       <div key={index} className="notification-item">
