@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
 import Logo from '../assets/AGRI_SYNERGY.png';
 import Kategori from '../assets/icons/kategori.png';
 import Produk from '../assets/icons/produk.png';
@@ -11,6 +11,7 @@ import '../css/sidebar.css';
 
 const Sidebar = () => {
     const location = useLocation();
+    const navigate = useNavigate();
     const [activeItem, setActiveItem] = useState('Kategori');
 
     useEffect(() => {
@@ -37,6 +38,14 @@ const Sidebar = () => {
                 setActiveItem('Kategori'); 
         }
     }, [location.pathname]);
+
+    const handleLogout = (e) => {
+        e.preventDefault(); // Mencegah navigasi default sementara
+        // Hapus token atau sesi autentikasi pengguna
+        localStorage.removeItem('token'); // Contoh: hapus token dari localStorage
+        // Arahkan ke halaman login
+        navigate('/login');
+    };
 
     return (
         <div className="sidebar1">
@@ -90,6 +99,7 @@ const Sidebar = () => {
                     <li>
                         <Link
                             to="/logout"
+                            onClick={handleLogout}
                             className={activeItem === 'Logout' ? 'active' : ''}
                         >
                             <img src={Logout} alt="Logout" /> Logout
@@ -99,6 +109,6 @@ const Sidebar = () => {
             </div>
         </div>
     );
-}
+};
 
 export default Sidebar;
