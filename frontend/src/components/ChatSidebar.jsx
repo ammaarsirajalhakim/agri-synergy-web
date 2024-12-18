@@ -2,13 +2,18 @@
 import React from 'react';
 import { useNavigate } from "react-router-dom";
 
-const ChatSidebar = ({ users, onLogout }) => {
+const ChatSidebar = ({ users }) => {
   const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // Arahkan pengguna ke halaman login
+    navigate('/login');
+  };
 
   return (
     <div className='chat-container'>
       <div className="chat-header sidebar-chat">
-        <p>Parah Ahli</p>
+        <p>Pakar Ahli</p>
         <div className="user-list">
           {users.map(user => (
             <div key={user.id} className="chat-item">
@@ -23,7 +28,7 @@ const ChatSidebar = ({ users, onLogout }) => {
       </div>
 
       <div className="logout-button sidebar-chat">
-        <button onClick={() => navigate('/')}>
+        <button onClick={handleLogout}>
           <div className='icon-out'>
             <img src="src/assets/out.png" alt="Logout Icon" className="logout-icon" />
           </div>
