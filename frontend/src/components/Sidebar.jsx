@@ -7,6 +7,7 @@ import DetailSaldo from '../assets/icons/detail_saldo.png';
 import PetaLahan from '../assets/icons/peta_lahan.png';
 import Dropshipper from '../assets/icons/dropshipper.png';
 import Logout from '../assets/icons/logout.png';
+import Home from '../assets/icons/home.png';
 import '../css/sidebar.css';
 
 const Sidebar = () => {
@@ -56,6 +57,15 @@ const Sidebar = () => {
 
             <div className="menu1">
                 <ul>
+                <li>
+                        <Link
+                            to="/logout"
+                            onClick={() => navigate('/')}
+                            className={activeItem === 'Logout' ? 'active' : ''}
+                        >
+                            <img src={Home} alt="home" /> Kembali
+                        </Link>
+                    </li>
                     <li>
                         <Link
                             to="/kategori"

@@ -206,9 +206,9 @@ const CommunityPage = () => {
           >
             <i className="fas fa-hashtag"></i> Your Threads
           </button>
-          <button className="sidebar-button" onClick={() => navigate('/saved')}>
+          {/* <button className="sidebar-button" onClick={() => navigate('/saved')}>
             <i className="fas fa-bookmark"></i> Saved
-          </button>
+          </button> */}
           <button className="sidebar-button" onClick={() => navigate('/login')}>
             <i className="fas fa-sign-out-alt"></i> Logout
           </button>
