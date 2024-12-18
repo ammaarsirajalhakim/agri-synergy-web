@@ -1,8 +1,17 @@
 import React from 'react';
 import { FaUser, FaShoppingCart, FaTruck, FaSignOutAlt } from 'react-icons/fa';
-import '../css/SidebarProfile.css'
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import '../css/SidebarProfile.css';
 
 function Sidebar({ setActivePage }) {
+  const navigate = useNavigate(); // Inisialisasi navigate
+
+  const handleLogout = () => {
+    localStorage.removeItem('jwtToken'); // Hapus token autentikasi
+    localStorage.removeItem('role'); // Hapus data role jika ada
+    navigate('/login'); // Arahkan ke halaman login
+  };
+
   return (
     <div className="sidebar-container">
       <div className="sidebar-option sidebar-profile" onClick={() => setActivePage('profile')}>
@@ -17,7 +26,7 @@ function Sidebar({ setActivePage }) {
         <FaTruck className="sidebar-icon icon-dropshipper" />
         <span>Dropshipper</span>
       </div>
-      <div className="sidebar-option sidebar-logout" onClick={() => setActivePage('logout')}>
+      <div className="sidebar-option sidebar-logout" onClick={handleLogout}>
         <FaSignOutAlt className="sidebar-icon icon-logout" />
         <span>Logout</span>
       </div>
