@@ -140,7 +140,7 @@ const Header = () => {
 
                     {(role === "admin" || role === "tengkulak" || role === "petani") && (
                       <a href="#" onClick={() => navigate("/kategori")}>
-                        {role === "admin" ? "ADMIN PAGE" : "Petani Page"}
+                        {role === "admin" ? "ADMIN PAGE" : "PETANI PAGE"}
                       </a>
                     )}
                   </>

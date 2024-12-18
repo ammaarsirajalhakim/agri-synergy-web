@@ -199,7 +199,7 @@ const HomePage = () => {
 
                       {(role === "admin" || role === "tengkulak") && (
                         <a href="#" onClick={() => navigate("/kategori")}>
-                          {role === "admin" ? "ADMIN PAGE" : "Dropshipper Page"}
+                          {role === "admin" ? "ADMIN PAGE" : "DROPSHIPPER PAGE" }
                         </a>
                       )}
                     </>
