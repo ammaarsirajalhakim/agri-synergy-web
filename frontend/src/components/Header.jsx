@@ -132,15 +132,15 @@ const Header = () => {
                 {role === "pembeli" && (
                   <a href="#" onClick={() => navigate("/orderhistory")}>Order History</a>
                 )}
-                {(role === "petani" || role === "admin" || role === "tengkulak") && (
+                {(role === "petani" || role === "admin" || role === "tengkulak" || role === "ahli") && (
                   <>
                     <a href="#" onClick={() => navigate("/calendar")}>KALENDER</a>
                     <a href="#" onClick={() => navigate("/petalahan")}>PETA LAHAN</a>
                     <a href="#" onClick={() => navigate("/community")}>FORUM KOMUNITAS</a>
 
-                    {(role === "admin" || role === "tengkulak") && (
+                    {(role === "admin" || role === "tengkulak" || role === "petani") && (
                       <a href="#" onClick={() => navigate("/kategori")}>
-                        {role === "admin" ? "ADMIN PAGE" : "Dropshipper Page"}
+                        {role === "admin" ? "ADMIN PAGE" : "Petani Page"}
                       </a>
                     )}
                   </>

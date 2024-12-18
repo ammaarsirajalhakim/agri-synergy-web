@@ -112,7 +112,7 @@ const CommunityPage = () => {
 
   const fetchPetani = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/api/users", {
+      const response = await axios.get("http://localhost:3000/api/users/:id_user", {
         headers: { id_user: "all" },
       });
       if (response.status === 200 && Array.isArray(response.data?.data)) {
