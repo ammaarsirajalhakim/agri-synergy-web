@@ -55,6 +55,7 @@ module.exports = async (req, res) => {
           SELECT
           kk.id_chat,
           kk.id_sender,
+          kk.gambar AS file,
           u.nama AS nama_pengguna,
           u.foto,
           u.role,

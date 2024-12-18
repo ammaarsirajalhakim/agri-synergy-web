@@ -11,10 +11,10 @@ function MainChat() {
   const navigate = useNavigate();
   const [inputText, setInputText] = useState("");
   const [showEmojiBar, setShowEmojiBar] = useState(false);
-  // const [idUser, setIdUser] = useState(localStorage.getItem("id_user"));
-  // const [userRole, setUserRole] = useState(localStorage.getItem("role"));
   const [currentConsultationId, setCurrentConsultationId] = useState(null);
   const [users, setUsers] = useState([]);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
 
   const [experts] = useState([
     {
@@ -39,50 +39,57 @@ function MainChat() {
 
   const [messages, setMessages] = useState([]);
 
-  const checkAuthentication = async () => {
-    const token = localStorage.getItem("jwtToken");
-    const userId = localStorage.getItem("id_user");
-    const userRole = localStorage.getItem("role");
-    const isOnlone = localStorage.getItem("isOnline");
-
-    if (!token) {
-      navigate("/");
-      return;
-    }
-
-    try {
-      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-      const response = await axios.get("http://localhost:3000/api/send", {
-        validateStatus: function (status) {
-          return status < 500;
-        },
-      });
-
-      if (response.status === 401 || response.status === 403) {
-        localStorage.removeItem("jwtToken");
+  useEffect(() => {
+    const checkAuthentication = async () => {
+      const token = localStorage.getItem("jwtToken");
+      const userId = localStorage.getItem("id_user");
+      const userRole = localStorage.getItem("role");
+  
+      if (!token) {
         navigate("/");
         return;
       }
-
-      if (response.data?.data && response.data.data.length > 0) {
-        const filteredConsultations = response.data.data.filter((konsultasi) =>
-          userRole === "petani"
-            ? konsultasi.id_user == userId
-            : konsultasi.ahli_id == userId
-        );
-
-        if (filteredConsultations.length > 0) {
-          setCurrentConsultationId(filteredConsultations[0].id_konsultasi);
+  
+      try {
+        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  
+        const responseAhli = await axios.get("http://localhost:3000/api/ahli");
+  
+        if (responseAhli.data.data.length > 0) {
+          const transformedUsers = responseAhli.data.data.map((ahli) => ({
+            id: ahli.id_user,
+            name: ahli.nama,
+            avatar: `http://localhost:3000/api/fileUsers/${ahli.foto}`,
+            online: true,
+          }));
+          setUsers(transformedUsers);
         }
-
-        const transformedMessages = filteredConsultations.flatMap(
-          (konsultasi) =>
-            konsultasi.send
-              .filter(
-                (message) =>
-                  message.role === "petani" || message.role === "ahli"
-              )
-              .map((message) => ({
+  
+        const response = await axios.get("http://localhost:3000/api/send");
+  
+        if (response.status === 401 || response.status === 403) {
+          localStorage.removeItem("jwtToken");
+          navigate("/");
+          return;
+        }
+  
+        if (response.data?.data && response.data.data.length > 0) {
+          const filteredConsultations = response.data.data.filter((konsultasi) => {
+            if (userRole === "petani") {
+              return konsultasi.petani_id == userId; 
+            } else if (userRole === "ahli") {
+              return konsultasi.ahli_id == userId; 
+            }
+          });
+  
+          if (filteredConsultations.length > 0) {
+            // setCurrentConsultationId(filteredConsultations[0].id_konsultasi);
+            setCurrentConsultationId(filteredConsultations[0]);
+          }
+  
+          const transformedMessages = filteredConsultations.flatMap(
+            (konsultasi) =>
+              konsultasi.send.map((message) => ({
                 id: message.id_chat,
                 text: message.message,
                 sender: message.id_sender == userId ? "user" : "expert",
@@ -90,113 +97,125 @@ function MainChat() {
                 senderRole: message.role,
                 sentAt: message.sent_at,
                 avatar: message.foto,
+                file: message.file,
               }))
-        );
-
-        if (transformedMessages.length === 0) {
-          console.log("Tidak ada pesan ditemukan");
-        }
-
-        setMessages(transformedMessages);
-
-        const transformedUsers = response.data.data.flatMap((konsultasi) =>
-          konsultasi.send
-            .filter((message) => message.role === "ahli")
-            .map((message) => ({
-              id: message.id_sender,
-              name: message.nama_pengguna,
-              avatar: `http://localhost:3000/api/fileUsers/${message.foto}`,
-              online: true,
-            }))
-        );
-        setUsers(transformedUsers);
-      } else {
-        console.log("Tidak ada data konsultasi");
-        setMessages([]);
-      }
-    } catch (error) {
-      if (error.response?.status === 401 || error.response?.status === 403) {
-        localStorage.removeItem("jwtToken");
-        navigate("/");
-        return;
-      }
-      console.log("Error Validating token:", error);
-    }
-  };
-
-  useEffect(() => {
-    checkAuthentication();
-  }, []);
-
-  const handleSendMessage = async () => {
-    if (inputText.trim() === "" || !currentConsultationId) return;
-
-    try {
-      const response = await axios.post("http://localhost:3000/api/send", {
-        message: inputText,
-        id_sender: idUser,
-        id_konsultasi: currentConsultationId,
-      });
-
-      if (response.data.success) {
-        const newMessage = {
-          id: messages.length + 1,
-          text: inputText,
-          sender: "user",
-          senderName: userRole,
-          avatar: localStorage.getItem("user_avatar") || "default_avatar.jpg",
-          sentAt: new Date().toISOString(),
-        };
-        setMessages([...messages, newMessage]);
-        setInputText("");
-      }
-    } catch (error) {
-      console.error("Error sending message:", error);
-    }
-  };
-
-  const handleImageUpload = async (event) => {
-    const file = event.target.files[0];
-    if (file && currentConsultationId) {
-      const formData = new FormData();
-      formData.append("image", file);
-      formData.append("id_sender", idUser);
-      formData.append("id_konsultasi", currentConsultationId);
-
-      try {
-        const response = await axios.post(
-          "http://localhost:3000/api/upload",
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-
-        if (response.data.success) {
-          const imageUrl = URL.createObjectURL(file);
-          const newMessage = {
-            id: messages.length + 1,
-            text: imageUrl,
-            sender: "user",
-            isImage: true,
-            avatar: localStorage.getItem("user_avatar") || "default_avatar.jpg",
-            sentAt: new Date().toISOString(),
-          };
-          setMessages([...messages, newMessage]);
+          );
+  
+          setMessages(transformedMessages);
+        } else {
+          setMessages([]);
         }
       } catch (error) {
-        console.error("Error uploading image:", error);
+        if (error.response?.status === 401 || error.response?.status === 403) {
+          localStorage.removeItem("jwtToken");
+          navigate("/");
+          return;
+        }
+        console.log("Error Validating token:", error);
       }
+    };
+  
+    checkAuthentication();
+  }, []);
+  
+  const handleFileSelect = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
     }
   };
+
+  const handleSendMessage = async () => {
+    const Pesan = document.getElementById("message").value;
+    const idUser = localStorage.getItem("id_user");
+    const userRole = localStorage.getItem("role");
+    let petaniId;
+  
+    try {
+      const responseAhli = await axios.get("http://localhost:3000/api/ahli");
+  
+      if (responseAhli.data.data.length === 0) {
+        alert("Tidak ada ahli yang tersedia");
+        return;
+      }
+  
+      const idAhli = responseAhli.data.data[0].id_user;
+  
+      if (!Pesan.trim()) {
+        alert("Pesan tidak boleh kosong");
+        return;
+      }
+
+      const formData = new FormData();
+      if (userRole === "petani") {
+        formData.append("petani_id", idUser);
+        formData.append("ahli_id", idAhli);
+      } else if (userRole === "ahli") {
+        formData.append("ahli_id", idUser);
+         petaniId = currentConsultationId ? currentConsultationId?.petani_id : idUser;
+        formData.append("petani_id", petaniId); 
+      }
+  
+      formData.append("id_sender", idUser);
+      formData.append("message", Pesan);
+  
+      if (currentConsultationId) {
+        formData.append("id_konsultasi", currentConsultationId);
+      }
+  
+      formData.append("gambar", selectedFile);
+  
+      const respons = await axios.post("http://localhost:3000/api/send", formData);
+
+      window.location.reload();
+  
+      if (!currentConsultationId) {
+        setCurrentConsultationId(respons.data.data.konsultasi.id);
+      }
+  
+      document.getElementById("message").value = "";
+      setSelectedFile(null);
+      setImagePreview(null);
+  
+      setMessages([
+        ...messages,
+        {
+          id: respons.data.data.chatingan.id_konsultasi,
+          text: Pesan,
+          sender: "user",
+          senderName: respons.data.data.konsultasi.petani_id,
+          sentAt: new Date().toISOString(),
+        },
+      ]);
+    } catch (err) {
+      console.error("Kesalahan mengirim pesan:", err);
+      alert("Gagal mengirim pesan. Silakan coba lagi.");
+    }
+  };
+  
+  
+  
 
   const addEmojiToInput = (emoji) => {
     setInputText(inputText + emoji);
     setShowEmojiBar(false);
   };
 
+  const removeImagePreview = () => {
+    setSelectedFile(null);
+    setImagePreview(null);
+    // Clear the file input
+    const fileInput = document.getElementById("imageUpload");
+    if (fileInput) {
+      fileInput.value = "";
+    }
+  };
   return (
     <>
       <Header />
@@ -205,7 +224,7 @@ function MainChat() {
         <div className="rectangles-kalender"></div>
 
         <div className="chat-area">
-          <div className="chat-box">
+          <div className="chat-boxes">
             {messages.map((message) => (
               <div key={message.id} className={`message ${message.sender}`}>
                 {message.sender === "expert" && (
@@ -224,6 +243,17 @@ function MainChat() {
                         />
                       ) : (
                         message.text
+                      )}
+                      {message.file && (
+                        <div className="file-attachment">
+                          <img
+                            src={`http://localhost:3000/api/fileChat/${message.file}`}
+                            alt="File attachment"
+                            className="file-image"
+                            width="100px"
+                            height="100px"
+                          />
+                        </div>
                       )}
                     </div>
                   </>
@@ -244,6 +274,17 @@ function MainChat() {
                         />
                       ) : (
                         message.text
+                      )}
+                      {message.file && (
+                        <div className="file-attachment">
+                          <img
+                            src={`http://localhost:3000/api/fileChat/${message.file}`}
+                            alt="File attachment"
+                            className="file-image"
+                            width="100px"
+                            height="100px"
+                          />
+                        </div>
                       )}
                     </div>
                   </>
@@ -269,8 +310,27 @@ function MainChat() {
                 className="emoji-icon"
               />
             </button>
+
+            {imagePreview && (
+              <div
+                className="image-preview"
+                style={{
+                  position: "relative",
+                  marginRight: "10px",
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                <img src={imagePreview} alt="Preview" className="img-chat" />
+                <button onClick={removeImagePreview} className="btn-img-send">
+                  ✕
+                </button>
+              </div>
+            )}
+
             <input
               type="text"
+              id="message"
               placeholder="Ketik pesan Anda di sini..."
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
@@ -280,7 +340,7 @@ function MainChat() {
               accept="image/*"
               style={{ display: "none" }}
               id="imageUpload"
-              onChange={handleImageUpload}
+              onChange={handleFileSelect}
             />
             <button onClick={handleSendMessage}>Send</button>
           </div>
