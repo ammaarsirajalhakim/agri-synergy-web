@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import ChatSidebar from "../components/ChatSidebar";
 import ExpertSidebar from "../components/ExpertSidebar";
@@ -44,17 +45,17 @@ function MainChat() {
       const token = localStorage.getItem("jwtToken");
       const userId = localStorage.getItem("id_user");
       const userRole = localStorage.getItem("role");
-  
+
       if (!token) {
         navigate("/");
         return;
       }
-  
+
       try {
         axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-  
+
         const responseAhli = await axios.get("http://localhost:3000/api/ahli");
-  
+
         if (responseAhli.data.data.length > 0) {
           const transformedUsers = responseAhli.data.data.map((ahli) => ({
             id: ahli.id_user,
@@ -64,29 +65,31 @@ function MainChat() {
           }));
           setUsers(transformedUsers);
         }
-  
+
         const response = await axios.get("http://localhost:3000/api/send");
-  
+
         if (response.status === 401 || response.status === 403) {
           localStorage.removeItem("jwtToken");
           navigate("/");
           return;
         }
-  
+
         if (response.data?.data && response.data.data.length > 0) {
-          const filteredConsultations = response.data.data.filter((konsultasi) => {
-            if (userRole === "petani") {
-              return konsultasi.petani_id == userId; 
-            } else if (userRole === "ahli") {
-              return konsultasi.ahli_id == userId; 
+          const filteredConsultations = response.data.data.filter(
+            (konsultasi) => {
+              if (userRole === "petani") {
+                return konsultasi.petani_id == userId;
+              } else if (userRole === "ahli") {
+                return konsultasi.ahli_id == userId;
+              }
             }
-          });
-  
+          );
+
           if (filteredConsultations.length > 0) {
             // setCurrentConsultationId(filteredConsultations[0].id_konsultasi);
             setCurrentConsultationId(filteredConsultations[0]);
           }
-  
+
           const transformedMessages = filteredConsultations.flatMap(
             (konsultasi) =>
               konsultasi.send.map((message) => ({
@@ -100,7 +103,7 @@ function MainChat() {
                 file: message.file,
               }))
           );
-  
+
           setMessages(transformedMessages);
         } else {
           setMessages([]);
@@ -114,10 +117,10 @@ function MainChat() {
         console.log("Error Validating token:", error);
       }
     };
-  
+
     checkAuthentication();
   }, []);
-  
+
   const handleFileSelect = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -136,19 +139,26 @@ function MainChat() {
     const idUser = localStorage.getItem("id_user");
     const userRole = localStorage.getItem("role");
     let petaniId;
-  
+
     try {
       const responseAhli = await axios.get("http://localhost:3000/api/ahli");
-  
+
       if (responseAhli.data.data.length === 0) {
         alert("Tidak ada ahli yang tersedia");
+        toast.error("Tidak ada ahli yang tersedia", {
+          position: "top-right",
+          autoClose: 1500,
+        });
         return;
       }
-  
+
       const idAhli = responseAhli.data.data[0].id_user;
-  
+
       if (!Pesan.trim()) {
-        alert("Pesan tidak boleh kosong");
+        toast.error("Pesan tidak boleh kosong!", {
+          position: "top-right",
+          autoClose: 1500,
+        });
         return;
       }
 
@@ -158,31 +168,36 @@ function MainChat() {
         formData.append("ahli_id", idAhli);
       } else if (userRole === "ahli") {
         formData.append("ahli_id", idUser);
-         petaniId = currentConsultationId ? currentConsultationId?.petani_id : idUser;
-        formData.append("petani_id", petaniId); 
+        petaniId = currentConsultationId
+          ? currentConsultationId?.petani_id
+          : idUser;
+        formData.append("petani_id", petaniId);
       }
-  
+
       formData.append("id_sender", idUser);
       formData.append("message", Pesan);
-  
+
       if (currentConsultationId) {
         formData.append("id_konsultasi", currentConsultationId);
       }
-  
+
       formData.append("gambar", selectedFile);
-  
-      const respons = await axios.post("http://localhost:3000/api/send", formData);
+
+      const respons = await axios.post(
+        "http://localhost:3000/api/send",
+        formData
+      );
 
       window.location.reload();
-  
+
       if (!currentConsultationId) {
         setCurrentConsultationId(respons.data.data.konsultasi.id);
       }
-  
+
       document.getElementById("message").value = "";
       setSelectedFile(null);
       setImagePreview(null);
-  
+
       setMessages([
         ...messages,
         {
@@ -194,13 +209,14 @@ function MainChat() {
         },
       ]);
     } catch (err) {
-      console.error("Kesalahan mengirim pesan:", err);
-      alert("Gagal mengirim pesan. Silakan coba lagi.");
+      const errorMessage =
+        err.response?.data?.message || "Terjadi kesalahan pada server";
+      toast.error(errorMessage, {
+        position: "top-right",
+        autoClose: 1500,
+      });
     }
   };
-  
-  
-  
 
   const addEmojiToInput = (emoji) => {
     setInputText(inputText + emoji);
@@ -210,7 +226,7 @@ function MainChat() {
   const removeImagePreview = () => {
     setSelectedFile(null);
     setImagePreview(null);
-    // Clear the file input
+    
     const fileInput = document.getElementById("imageUpload");
     if (fileInput) {
       fileInput.value = "";
