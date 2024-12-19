@@ -1,5 +1,5 @@
 #main-containers {
-  padding: 0px 6rem 0px 6rem ;
+  
   align-items: center !important;
   position: relative !important;
   z-index: 1000 !important;
@@ -148,6 +148,7 @@
 }
 
 #main-containers h2 {
+  padding: 0px 6rem 0px 6rem ;
   color: white !important;
   font-size: 36px !important;
   font-style: italic !important;

@@ -1,119 +1,76 @@
-import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+// src/components/ProductPage.jsx
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import "../css/ProductPage.css";
 import Header from "./Header";
 import Footer from "./footer";
-import axios from "axios";
+import TepungJagungOrganik from "../assets/productpage/TepungJagungOrganik.png";
+import KriukJagungManis from "../assets/productpage/KriukJagungManis.png";
+import SirupJagungAlami from "../assets/productpage/SirupJagungAlami.png";
+import PopcornJagungPremium from "../assets/productpage/PopcornJagungPremium.png";
+import KacangJagungPedas from "../assets/productpage/KacangJagungPedas.png";
+import KeripikJagungPedasManis from "../assets/productpage/KeripikJagungPedasManis.png";
+import TepungJagungGlutenFree from "../assets/productpage/TepungJagungGluten-Free.png";
+import JagungSusuKeju from "../assets/productpage/JagungSusuKeju.png";
 
 const ProductPage = () => {
-  const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [activeCategory, setActiveCategory] = useState(""); // ID kategori aktif
-  const navigate = useNavigate();
+  const [activeCategory, setActiveCategory] = useState("Keripik Jagung");
 
-  const calculateAverageRating = (reviews) => {
-    if (!reviews || reviews.length === 0) return 0;
-    const ratings = reviews.map((review) => review.rating);
-    return Math.round(
-      ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length
-    );
-  };
+  const products = [
+    { id: 1, name: "Tepung Jagung Organik", price: "Rp 16.000", img: TepungJagungOrganik, rating: 5, tag: "HOT" },
+    { id: 2, name: "Kriuk Jagung Manis", price: "Rp 15.000", img: KriukJagungManis, rating: 4, tag: "" },
+    { id: 3, name: "Sirup Jagung Alami", price: "Rp 17.000", img: SirupJagungAlami, rating: 4, tag: "" },
+    { id: 4, name: "Popcorn Jagung Premium", price: "Rp 16.000", img: PopcornJagungPremium, rating: 5, tag: "" },
+    { id: 5, name: "Kacang Jagung Pedas", price: "Rp 16.000", img: KacangJagungPedas, rating: 3, tag: "" },
+    { id: 6, name: "Keripik Jagung Pedas Manis", price: "Rp 16.000", img: KeripikJagungPedasManis, rating: 5, tag: "" },
+    { id: 7, name: "Tepung Jagung Gluten-Free", price: "Rp 16.000", img: TepungJagungGlutenFree, rating: 4, tag: "" },
+    { id: 8, name: "Jagung Susu Keju", price: "Rp 16.000", img: JagungSusuKeju, rating: 5, tag: "" },
+  ];
 
-  const checkAuthentication = async () => {
-    const token = localStorage.getItem("jwtToken");
-    if (!token) {
-      navigate("/");
-      return;
-    }
-
-    try {
-      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-      const response = await axios.get("http://localhost:3000/api/produk");
-      if (response.data?.data) {
-        setProducts(response.data.data);
-      }
-    } catch (error) {
-      console.error("Error fetching products:", error);
-    }
-  };
-
-  const fetchCategories = async () => {
-    try {
-      const response = await axios.get("http://localhost:3000/api/kategori", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
-        },
-      });
-      if (response.data?.data) {
-        setCategories(response.data.data);
-      }
-    } catch (error) {
-      console.error("Error fetching categories:", error);
-    }
-  };
-
-  useEffect(() => {
-    checkAuthentication();
-    fetchCategories();
-  }, []);
-
-  // Filter produk berdasarkan kategori aktif
-  const filteredProducts = activeCategory
-    ? products.filter((product) => product.id_kategori === activeCategory)
-    : products;
+  const categories = [
+    "Keripik Jagung",
+    "Tepung Jagung",
+    "Popcorn",
+    "Camilan Jagung",
+    "Jagung Alami",
+    "Jagung Manis",
+    "Jagung Organik",
+    "Olahan Jagung"
+  ];
 
   return (
     <>
       <Header />
       <div className="container">
         <aside className="category-sidebar">
-          <h2 className="category-sidebar-h2">Kategori</h2>
+          <h2 className="category-sidebar-h2">Category</h2>
           <ul>
-            <li
-              className={!activeCategory ? "active" : ""}
-              onClick={() => setActiveCategory("")}
-            >
-              <a href="#">Semua</a>
-            </li>
-            {categories.map((kategori) => (
+            {categories.map((category) => (
               <li
-                key={kategori.id_kategori}
-                className={activeCategory === kategori.id_kategori ? "active" : ""}
-                onClick={() => setActiveCategory(kategori.id_kategori)}
+                key={category}
+                className={activeCategory === category ? "active" : ""}
+                onClick={() => setActiveCategory(category)}
               >
-                <a href="#">{kategori.nama}</a>
+                <a href="#">{category}</a>
               </li>
             ))}
           </ul>
         </aside>
         <div className="product-section">
           <div className="product-list">
-            {filteredProducts.length > 0 ? (
-              filteredProducts.map((product) => (
-                <div key={product.id_produk} className="product-page">
-                  <div>
-                    <img
-                      src={`http://localhost:3000/api/fileProduk/${product.foto_produk}`}
-                      alt={`Produk ${product.nama}`}
-                      id="product-image"
-                    />
-                  </div>
-                  <h3>{product.nama}</h3>
-                  <div className="rating">
-                    {"⭐".repeat(calculateAverageRating(product.reviews))}
-                  </div>
-                  <p className="product-description1">{product.deskripsi}</p>
-                  <p>{`Rp ${Number(product.harga).toLocaleString(
-                    "id-ID"
-                  )}. -`}</p>
-                  <Link to={`/detail/${product.id_produk}`}>
-                    <button>Detail</button>
-                  </Link>
+            {products.map((product) => (
+              <div key={product.id} className="product-page">
+                <div>
+                  <img src={product.img} alt={product.name} id="product-image" />
                 </div>
-              ))
-            ) : (
-              <div className="no-products">Tidak ada data produk.</div>
-            )}
+                <h3>{product.name}</h3>
+                <div className="rating">{"⭐".repeat(product.rating)}</div>
+                <p>{product.price}</p>
+                <Link to={`/detail/${product.id}`}>
+                  <button>Detail</button>
+                </Link>
+              </div>
+            ))}
           </div>
         </div>
       </div>

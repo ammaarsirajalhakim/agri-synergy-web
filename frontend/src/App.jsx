@@ -9,7 +9,7 @@ import Header from './components/Header'
 import Forgot from './pages/ForgotPage'
 import MainDropship from './pages/MainDropship'
 import SidebarProfile from './components/SidebarProfile'
-
+import ProfilePage from './components/ProfilePage';
 import Kategori from './pages/admin/Kategori'
 import Produk from './pages/admin/Produk'
 import DetailSaldo from './pages/admin/Detailsaldo'
@@ -68,6 +68,7 @@ function App() {
         <Route path="/orderhistory" element={<OrderHistoryPage />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/katalog-saya" element={<KatalogSaya />} />
+        <Route path="/profilepage" element={<ProfilePage />} />
       </Routes>
     </Router>
     </>

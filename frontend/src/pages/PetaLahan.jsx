@@ -4,13 +4,11 @@ import 'leaflet/dist/leaflet.css';
 import Footer from '../components/footer';
 import Header from '../components/Header';
 import '../css/mapstyle.css'
-
-
 function PetaLahan() {
   return (
     <>
     <Header />
-    <div className="main-peta-lahan">
+    <div className="App">
       <MapComponent />
     </div>
     <Footer/>
@@ -18,5 +16,4 @@ function PetaLahan() {
     
   );
 }
-
 export default PetaLahan;
